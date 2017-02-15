@@ -1,0 +1,13 @@
+---
+# - debug: "msg={{ kubeadm_join_command }}"
+
+- name: Join each minion to the master with the join command
+  shell: >
+    {{ kubeadm_join_command }}
+  args:
+    creates: /etc/.kubeadm-joined
+
+- name: Mark the minions as joined
+  file:
+    path: /etc/.kubeadm-joined
+    state: directory

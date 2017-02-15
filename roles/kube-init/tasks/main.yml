@@ -1,0 +1,62 @@
+---
+# Alright we're using the kubeadm init
+# You can reset this with:
+#  [root@kube-master centos]# kubeadm --help | grep reset
+#    reset       Run this to revert any changes made to this host by 'kubeadm init' or 'kubeadm join'.
+
+# Was trying to use flannel and running with:
+#     kubeadm init --pod-network-cidr {{ pod_network_cidr }}/16 > /etc/kubeadm.init.txt
+# abandonded for now...
+- name: Run kubeadm init
+  shell: >
+    kubeadm init > /etc/kubeadm.init.txt
+  args:
+    creates: /etc/.kubeadm-complete
+
+- name: Mark init complete
+  file:
+    path: /etc/.kubeadm-complete
+    state: directory
+
+- name: Get join command
+  shell: >
+    cat /etc/kubeadm.init.txt | grep "kubeadm join"
+  register: kubeadm_join_output
+
+- name: Set fact with join command
+  set_fact:
+    kubeadm_join_command: "{{ kubeadm_join_output.stdout }}"
+
+# Now we gotta define a CNI pod network.
+# More info here: https://kubernetes.io/docs/admin/addons/
+# I got the template from: https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
+
+# ---------------------------------------
+# This was flannel plain... abandoned   -
+# ---------------------------------------
+
+# - name: Template podnetwork.yaml (it's flannel for now.)
+#   template:
+#     src: podnetwork.yaml.j2
+#     dest: /etc/podnetwork.yaml
+
+# - name: Apply the podnetwork
+#   shell: >
+#     kubectl apply -f /etc/podnetwork.yaml > /var/log/podnetwork-apply.log
+#   args:
+#     creates: /etc/.kubeadm-podnetwork-complete
+
+# --------------------------------------- end flannel.
+
+- name: Apply the podnetwork (it's weave.)
+  shell: >
+    kubectl apply -f https://git.io/weave-kube > /var/log/podnetwork-apply.log
+  args:
+    creates: /etc/.kubeadm-podnetwork-complete
+
+
+- name: Mark podnetwork applied
+  file:
+    path: /etc/.kubeadm-podnetwork-complete
+    state: directory
+

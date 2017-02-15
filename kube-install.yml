@@ -1,0 +1,25 @@
+---
+- hosts: all_vms
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: kube-install }
+
+- hosts: master
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: kube-init }
+
+- hosts: minions
+  vars_files:
+    - vars/all.yml
+  pre_tasks: 
+    - name: Get kubeadm_join_command from master
+      set_fact: 
+        kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
+  tasks: []
+  roles:
+    - { role: kube-join-cluster }

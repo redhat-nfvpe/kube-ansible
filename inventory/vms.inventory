@@ -1,0 +1,22 @@
+kube-master ansible_host=192.168.122.213
+kube-minion-1 ansible_host=192.168.122.185
+kube-minion-2 ansible_host=192.168.122.125
+
+[master]
+kube-master
+
+[minions]
+kube-minion-1
+kube-minion-2
+
+[all_vms]
+kube-master
+kube-minion-1
+kube-minion-2
+
+[all_vms:vars]
+ansible_ssh_user=centos
+ansible_become=true
+ansible_become_user=root
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p root@192.168.1.119"'
+ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms
