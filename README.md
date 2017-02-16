@@ -1,6 +1,10 @@
 # kube-centos
 
-Install kubernetes 1.5 on a cluster of CentOS VMs.
+Install kubernetes 1.5 on a cluster of CentOS VMs, including CNI pod networking using Weave.
+
+## Want some more detail?
+
+This document is... Kind of terse. Want a complete walkthrough? Check out my [blog article detailing how to get it going from scratch](http://dougbtv.com/nfvpe/2017/02/16/kubernetes-1.5-centos/).
 
 ## Usage
 
