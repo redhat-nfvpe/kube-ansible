@@ -1,0 +1,4 @@
+---
+- name: Teardown kube nodes
+  shell: >
+    kubeadm reset

@@ -6,6 +6,16 @@ Install kubernetes 1.5 on a cluster of CentOS VMs, including CNI pod networking 
 
 This document is... Kind of terse. Want a complete walkthrough? Check out my [blog article detailing how to get it going from scratch](http://dougbtv.com/nfvpe/2017/02/16/kubernetes-1.5-centos/).
 
+## Playbooks
+
+| Playbook              | Inventory                        | Purpose                                            |
+|-----------------------|----------------------------------|----------------------------------------------------|
+| `virt-host-setup.yml` | `./inventory/virthost.inventory` | Provision a virtual machine host                   |
+| `kube-install.yml`    | `./inventory/vms.inventory`      | Install and configure a k8s cluster                |
+| `kube-teardown.yml`   | `./inventory/vms.inventory`      | Runs `kubeadm reset` on all nodes to tear down k8s |
+
+*(Table generated with [markdown tables](http://www.tablesgenerator.com/markdown_tables))*
+
 ## Usage
 
 Step 1. Modify `./inventory/virthost.inventory` to setup a virt host (skip to step 2 if you already have an inventory)
