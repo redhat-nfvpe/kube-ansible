@@ -1,0 +1,7 @@
+---
+- hosts: kubehost
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: vm-teardown }

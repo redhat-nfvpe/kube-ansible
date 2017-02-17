@@ -1,0 +1,11 @@
+---
+- name: Destroy all VMs
+  shell: >
+    virsh destroy {{ item }}
+  with_items: "{{ virtual_machines }}"
+  ignore_errors: yes
+
+- name: Undefine all VMs
+  shell: >
+    virsh undefine {{ item }}
+  with_items: "{{ virtual_machines }}"

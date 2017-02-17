@@ -13,6 +13,8 @@ This document is... Kind of terse. Want a complete walkthrough? Check out my [bl
 | `virt-host-setup.yml` | `./inventory/virthost.inventory` | Provision a virtual machine host                   |
 | `kube-install.yml`    | `./inventory/vms.inventory`      | Install and configure a k8s cluster                |
 | `kube-teardown.yml`   | `./inventory/vms.inventory`      | Runs `kubeadm reset` on all nodes to tear down k8s |
+| `vm-teardown.yml`     | `./inventory/virthost.inventory` | Destroys VMs on the virtual machine host           |
+
 
 *(Table generated with [markdown tables](http://www.tablesgenerator.com/markdown_tables))*
 
