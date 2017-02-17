@@ -2,3 +2,12 @@
 - name: Teardown kube nodes
   shell: >
     kubeadm reset
+
+- name: Remove all semaphores
+  file:
+    dest: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/.kubeadm-complete"
+    - "/etc/.kubeadm-podnetwork-complete"
+    - "/etc/.kubeadm-joined"
