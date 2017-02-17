@@ -1,0 +1,43 @@
+---
+- name: Installs deps
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - golang
+    - git
+
+- name: Clone multus-cni
+  git:
+    repo: https://github.com/Intel-Corp/multus-cni.git
+    dest: /usr/src/multus-cni
+    version: master
+  register: multus_clone
+
+- name: Compile multus-cni
+  shell: >
+    ./build
+  args:
+    chdir: /usr/src/multus-cni
+  when: multus_clone.changed
+
+- name: Clone sriov-cni
+  git: 
+    repo: https://github.com/Intel-Corp/sriov-cni.git
+    dest: /usr/src/sriov-cni
+    version: master
+  register: sriov_clone
+
+- name: Compile sriov-cni
+  shell: >
+    ./build
+  args:
+    chdir: /usr/src/sriov-cni
+  when: sriov_clone.changed
+
+- name: Copy compiled cni binaries
+  shell: >
+    cp {{ item }} /opt/cni/bin/
+  with_items:
+    - "/usr/src/sriov-cni/bin/*"
+    - "/usr/src/multus-cni/bin/*"
