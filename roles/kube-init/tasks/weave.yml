@@ -1,0 +1,10 @@
+---
+# ---------------------------------------
+# This is weave via cni                -
+# ---------------------------------------
+
+- name: Apply the podnetwork (it's weave.)
+  shell: >
+    kubectl apply -f https://git.io/weave-kube > /var/log/podnetwork-apply.log
+  args:
+    creates: /etc/.kubeadm-podnetwork-complete

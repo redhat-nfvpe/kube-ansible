@@ -4,12 +4,21 @@
 #  [root@kube-master centos]# kubeadm --help | grep reset
 #    reset       Run this to revert any changes made to this host by 'kubeadm init' or 'kubeadm join'.
 
+- name: Default pod-network-cidr
+  set_fact:
+    arg_pod_network: ""
+
+- name: Set pod-network-cidr when flannel
+  set_fact:
+    arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
+  when: pod_network_type == "flannel"
+
 # Was trying to use flannel and running with:
-#     kubeadm init --pod-network-cidr {{ pod_network_cidr }}/16 > /etc/kubeadm.init.txt
+#     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init > /etc/kubeadm.init.txt
+    kubeadm init {{ arg_pod_network }} > /etc/kubeadm.init.txt
   args:
     creates: /etc/.kubeadm-complete
 
@@ -27,36 +36,25 @@
   set_fact:
     kubeadm_join_command: "{{ kubeadm_join_output.stdout }}"
 
-# Now we gotta define a CNI pod network.
-# More info here: https://kubernetes.io/docs/admin/addons/
-# I got the template from: https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
-
-# ---------------------------------------
-# This was flannel plain... abandoned   -
-# ---------------------------------------
-
-# - name: Template podnetwork.yaml (it's flannel for now.)
-#   template:
-#     src: podnetwork.yaml.j2
-#     dest: /etc/podnetwork.yaml
-
-# - name: Apply the podnetwork
-#   shell: >
-#     kubectl apply -f /etc/podnetwork.yaml > /var/log/podnetwork-apply.log
-#   args:
-#     creates: /etc/.kubeadm-podnetwork-complete
-
 # --------------------------------------- end flannel.
 
-- name: Apply the podnetwork (it's weave.)
-  shell: >
-    kubectl apply -f https://git.io/weave-kube > /var/log/podnetwork-apply.log
-  args:
-    creates: /etc/.kubeadm-podnetwork-complete
+- include: flannel.yml
+  when: pod_network_type == "flannel"
 
+- include: weave.yml
+  when: pod_network_type == "weave"
 
 - name: Mark podnetwork applied
   file:
     path: /etc/.kubeadm-podnetwork-complete
     state: directory
 
+
+- name: Wait until the kube-dns pod is up and running
+  shell: >
+    kubectl get pods --all-namespaces | grep -P "kube-dns.+4/4.+Running"
+  register: kube_dns_result
+  until: kube_dns_result.rc == 0
+  retries: 60
+  delay: 3
+  ignore_errors: yes

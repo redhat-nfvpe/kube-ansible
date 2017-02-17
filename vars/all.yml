@@ -1,4 +1,11 @@
 ---
+# Pod net work types
+# Valid values:
+# - flannel
+# - weave
+pod_network_type: "flannel"
+
+# General config
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 centos_genericcloud_url: "http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1611.qcow2"
 image_destination_name: CentOS-7-x86_64-GenericCloud.qcow2
@@ -10,6 +17,6 @@ virtual_machines:
   - kube-minion-2
 vm_parameters:
   ram_mb: 2048
-  cpus: 1
+  cpus: 4
 # Unused. Was used when I was trying to use flannel plain.
 pod_network_cidr: "10.244.0.0"
