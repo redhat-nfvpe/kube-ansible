@@ -1,4 +1,4 @@
-# kube-centos
+# kube-centos-ansible
 
 Install kubernetes 1.5 on a cluster of CentOS VMs, including CNI pod networking using Weave.
 
