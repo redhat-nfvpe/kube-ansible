@@ -1,9 +1,11 @@
 ---
 # Pod net work types
+# A value of "none" will create no networking and will not join minions to cluster.
 # Valid values:
 # - flannel
 # - weave
-pod_network_type: "flannel"
+# - none
+pod_network_type: "none"
 
 # General config
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64

@@ -11,7 +11,7 @@
 - name: Set pod-network-cidr when flannel
   set_fact:
     arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
-  when: pod_network_type == "flannel"
+  when: pod_network_type == "flannel" or pod_network_type == "none"
 
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
@@ -48,7 +48,7 @@
   file:
     path: /etc/.kubeadm-podnetwork-complete
     state: directory
-
+  when: pod_network_type != "none"
 
 - name: Wait until the kube-dns pod is up and running
   shell: >
@@ -58,3 +58,4 @@
   retries: 60
   delay: 3
   ignore_errors: yes
+  when: pod_network_type != "none"
