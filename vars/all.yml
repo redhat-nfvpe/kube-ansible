@@ -5,7 +5,7 @@
 # - flannel
 # - weave
 # - none
-pod_network_type: "none"
+pod_network_type: "flannel"
 
 # General config
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
