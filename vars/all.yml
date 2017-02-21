@@ -1,8 +1,10 @@
 ---
 # Pod net work types
+# A value of "none" will create no networking and will not join minions to cluster.
 # Valid values:
 # - flannel
 # - weave
+# - none
 pod_network_type: "flannel"
 
 # General config
