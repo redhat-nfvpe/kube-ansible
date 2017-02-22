@@ -5,6 +5,7 @@
   tasks: []
   roles:
     - { role: kube-install }
+    - { role: multus-cni, when: pod_network_type == "multus" }
 
 - hosts: master
   vars_files:

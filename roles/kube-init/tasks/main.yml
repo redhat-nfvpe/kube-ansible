@@ -11,7 +11,7 @@
 - name: Set pod-network-cidr when flannel
   set_fact:
     arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
-  when: pod_network_type == "flannel" or pod_network_type == "none"
+  when: pod_network_type != "weave"
 
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
@@ -43,6 +43,9 @@
 
 - include: weave.yml
   when: pod_network_type == "weave"
+
+- include: multus.yml
+  when: pod_network_type == "multus"
 
 - name: Mark podnetwork applied
   file:

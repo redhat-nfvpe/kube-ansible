@@ -25,13 +25,13 @@ data:
           "mode": "bridge",
           "ipam": {
             "type": "host-local",
-            "subnet": "192.168.122.0/24",
-            "rangeStart": "192.168.122.200",
-            "rangeEnd": "192.168.122.216",
+            "subnet": "{{ multus_ipam_subnet }}",
+            "rangeStart": "{{ multus_ipam_rangeStart }}",
+            "rangeEnd": "{{ multus_ipam_rangeEnd }}",
             "routes": [
               { "dst": "0.0.0.0/0" }
             ],
-            "gateway": "192.168.122.1"
+            "gateway": "{{ multus_ipam_gateway }}"
          }
         },
         {
@@ -45,7 +45,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "10.244.0.0/16",
+      "Network": "{{ pod_network_cidr }}/16",
       "Backend": {
         "Type": "vxlan"
       }
