@@ -7,13 +7,13 @@
 # I got the template from: https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
 # I got a lot of help from https://github.com/kubernetes/kubernetes/issues/36575
 
-- name: Template podnetwork.yaml (it's flannel for now.)
+- name: Template flannel.yaml
   template:
-    src: podnetwork.yaml.j2
-    dest: /etc/podnetwork.yaml
+    src: flannel.yaml.j2
+    dest: /etc/flannel.yaml
 
 - name: Apply the podnetwork
   shell: >
-    kubectl apply -f /etc/podnetwork.yaml > /var/log/podnetwork-apply.log
+    kubectl apply -f /etc/flannel.yaml > /var/log/podnetwork-apply.log
   args:
     creates: /etc/.kubeadm-podnetwork-complete
