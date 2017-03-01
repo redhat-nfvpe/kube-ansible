@@ -4,6 +4,16 @@
   selinux:
     state: disabled  
 
+- name: "Stop iptables :("
+  service:
+    name: iptables
+    state: stopped
+
+- name: "Disable iptables :("
+  service:
+    name: iptables
+    enabled: no
+
 - name: Template kube RPM repo
   template:
     src: kubernetes.repo.j2
