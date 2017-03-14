@@ -1,6 +1,7 @@
-kube-master ansible_host=192.168.122.116
-kube-minion-1 ansible_host=192.168.122.129
-kube-minion-2 ansible_host=192.168.122.87
+kube-master ansible_host=192.168.122.65
+kube-minion-1 ansible_host=192.168.122.56
+kube-minion-2 ansible_host=192.168.122.62
+kube-minion-3 ansible_host=192.168.122.239
 
 [master]
 kube-master
@@ -8,11 +9,13 @@ kube-master
 [minions]
 kube-minion-1
 kube-minion-2
+kube-minion-3
 
 [all_vms]
 kube-master
 kube-minion-1
 kube-minion-2
+kube-minion-3
 
 [all_vms:vars]
 ansible_ssh_user=centos

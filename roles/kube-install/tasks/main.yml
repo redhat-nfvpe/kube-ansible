@@ -8,11 +8,13 @@
   service:
     name: iptables
     state: stopped
+  ignore_errors: yes
 
 - name: "Disable iptables :("
   service:
     name: iptables
     enabled: no
+  ignore_errors: yes
 
 - name: Template kube RPM repo
   template:
