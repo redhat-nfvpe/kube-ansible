@@ -26,7 +26,6 @@
     name: "{{ item }}"
     state: latest
   with_items:
-    - docker
     - kubelet
     - kubeadm
     - kubectl
