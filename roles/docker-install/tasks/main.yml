@@ -1,0 +1,34 @@
+---
+- name: Install primary deps (for ansible)
+  yum:
+    name: libselinux-python
+    state: present
+
+- name: Create Docker repo
+  copy: 
+    src: docker.repo
+    dest: /etc/yum.repos.d/docker.repo
+
+- name: Install docker
+  yum:
+    name: docker-engine
+    state: present
+
+- name: Create docker service systemd overrides
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: Set insecure registry in override.conf
+  copy:
+    src: override.conf
+    dest: /etc/systemd/system/docker.service.d/override.conf
+
+- name: Reload systemd units
+  command: systemctl daemon-reload
+
+- name: Enable and start docker
+  service: 
+    name: docker
+    enabled: yes
+    state: started
