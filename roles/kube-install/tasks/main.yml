@@ -31,10 +31,14 @@
     - kubectl
     - kubernetes-cni
 
+- name: Include kube 1.6.0 work-around
+  include: kube-16-workaround.yml
+  when: kube_16_workaround
+
 - name: Start and enable services
   service:
     name: "{{ item }}"
-    state: started
+    state: restarted
     enabled: yes
   with_items:
     - docker

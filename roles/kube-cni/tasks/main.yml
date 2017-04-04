@@ -1,0 +1,50 @@
+---
+
+# ----------- flannel
+- name: Apply the flannel podnetwork
+  shell: >
+    kubectl apply -f /etc/flannel.yaml > /tmp/podnetwork-apply.log
+  environment: "{{ kubectl_environment }}"
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "flannel"
+
+# ----------- weave
+- name: Apply the weave podnetwork
+  shell: >
+    kubectl apply -f https://git.io/weave-kube > /tmp/podnetwork-apply.log
+  environment: "{{ kubectl_environment }}"
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "weave"
+
+# ----------- multus
+- name: Apply the multus podnetwork
+  shell: >
+    kubectl apply -f /etc/multus.yaml > /tmp/podnetwork-apply.log
+  environment: "{{ kubectl_environment }}"
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "multus"
+
+# ----------- all network types
+- name: Mark podnetwork applied
+  file:
+    path: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+    state: directory
+  when: pod_network_type != "none"
+
+# --------------------------------------------------------------
+# --------------- This didn't work because it's not scheduled.
+# --------------- because no nodes were joined yet.
+# --------------------------------------------------------------
+# - name: Wait until the kube-dns pod is up and running
+#   shell: >
+#     kubectl get pods --all-namespaces | grep -P "kube-dns.+4/4.+Running"
+#   environment: "{{ kubectl_environment }}"
+#   register: kube_dns_result
+#   until: kube_dns_result.rc == 0
+#   retries: 60
+#   delay: 3
+#   ignore_errors: yes
+#   when: pod_network_type != "none"
