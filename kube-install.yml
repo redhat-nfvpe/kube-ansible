@@ -6,7 +6,7 @@
     - vars/all.yml
   tasks: []
   roles:
-    - { role: docker-install }
+    # - { role: docker-install }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 

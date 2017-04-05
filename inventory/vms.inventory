@@ -1,7 +1,7 @@
-kube-master ansible_host=192.168.122.130
-kube-minion-1 ansible_host=192.168.122.211
-kube-minion-2 ansible_host=192.168.122.40
-kube-minion-3 ansible_host=192.168.122.2
+kube-master ansible_host=192.168.122.227
+kube-minion-1 ansible_host=192.168.122.17
+kube-minion-2 ansible_host=192.168.122.216
+kube-minion-3 ansible_host=192.168.122.41
 
 [master]
 kube-master

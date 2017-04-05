@@ -26,6 +26,7 @@
     name: "{{ item }}"
     state: latest
   with_items:
+    - docker
     - kubelet
     - kubeadm
     - kubectl
@@ -34,6 +35,21 @@
 - name: Include kube 1.6.0 work-around
   include: kube-16-workaround.yml
   when: kube_16_workaround
+
+- name: Remove default kubadm.conf ExecStart
+  lineinfile:
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: 'KUBELET_EXTRA_ARGS$'
+    state: absent
+
+- name: Add custom kubadm.conf ExecStart
+  lineinfile:
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: 'systemd$'
+    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=systemd'
+
+- name: Reload systemd units after changing 10-kubeadm.conf
+  command: systemctl daemon-reload
 
 - name: Start and enable services
   service:
