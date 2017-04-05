@@ -18,7 +18,7 @@
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ arg_pod_network }} > /etc/kubeadm.init.txt
+    kubeadm init {{ arg_pod_network }} > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 
@@ -29,36 +29,35 @@
 
 - name: Get join command
   shell: >
-    cat /etc/kubeadm.init.txt | grep "kubeadm join"
+    cat /var/log/kubeadm.init.log | grep "kubeadm join"
   register: kubeadm_join_output
 
 - name: Set fact with join command
   set_fact:
     kubeadm_join_command: "{{ kubeadm_join_output.stdout }}"
 
-# --------------------------------------- end flannel.
+# -------- Copy in admin.conf
 
-- include: flannel.yml
-  when: pod_network_type == "flannel"
+# ---- Kube 1.6, apparently you can't use kubectl as root? weird/awesome.
 
-- include: weave.yml
-  when: pod_network_type == "weave"
+  # sudo cp /etc/kubernetes/admin.conf $HOME/
+  # sudo chown $(id -u):$(id -g) $HOME/admin.conf
+  # export KUBECONFIG=$HOME/admin.conf
 
-- include: multus.yml
-  when: pod_network_type == "multus"
-
-- name: Mark podnetwork applied
-  file:
-    path: /etc/.kubeadm-podnetwork-complete
-    state: directory
-  when: pod_network_type != "none"
-
-- name: Wait until the kube-dns pod is up and running
+- name: Copy admin.conf to kubectl user's home
   shell: >
-    kubectl get pods --all-namespaces | grep -P "kube-dns.+4/4.+Running"
-  register: kube_dns_result
-  until: kube_dns_result.rc == 0
-  retries: 60
-  delay: 3
-  ignore_errors: yes
-  when: pod_network_type != "none"
+    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/admin.conf
+  args:
+    creates: "{{ kubectl_home }}/admin.conf"
+
+- name: Set admin.conf ownership
+  file:
+    path: "{{ kubectl_home }}/admin.conf"
+    owner: "{{ kubectl_user }}"
+    group: "{{ kubectl_group }}"
+
+- name: Add KUBECONFIG env for admin.conf to .bashrc
+  lineinfile:
+    dest: "{{ kubectl_home }}/.bashrc"
+    regexp: "KUBECONFIG"
+    line: "export KUBECONFIG={{ kubectl_home }}/admin.conf"

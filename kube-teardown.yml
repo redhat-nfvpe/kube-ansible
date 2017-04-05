@@ -1,5 +1,7 @@
 ---
 - hosts: all_vms
+  become: true
+  become_user: root
   vars_files:
     - vars/all.yml
   tasks: []

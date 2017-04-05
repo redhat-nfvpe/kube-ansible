@@ -1,21 +1,42 @@
 ---
 - hosts: all_vms
+  become: true
+  become_user: root
   vars_files:
     - vars/all.yml
   tasks: []
   roles:
-    - { role: docker-install }
+    # - { role: docker-install }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
 - hosts: master
+  become: true
+  become_user: root
   vars_files:
     - vars/all.yml
   tasks: []
   roles:
     - { role: kube-init }
+    - { role: kube-template-cni }
+
+# ---- placeholder: kube-cni
+# without become.
+
+- hosts: master
+  vars_files:
+    - vars/all.yml
+  vars:
+    kubectl_environment:
+      KUBECONFIG: "{{ kubectl_home }}/admin.conf"
+  tasks: []
+  roles:
+    - { role: kube-cni }
+
 
 - hosts: minions
+  become: true
+  become_user: root
   vars_files:
     - vars/all.yml
   pre_tasks: 

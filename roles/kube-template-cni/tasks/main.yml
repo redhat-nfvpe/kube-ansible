@@ -1,0 +1,16 @@
+---
+
+- name: Template multus.yaml
+  template:
+    src: multus.yaml.j2
+    dest: /etc/multus.yaml
+
+- name: Template flannel.yaml
+  template:
+    src: flannel.yaml.j2
+    dest: /etc/flannel.yaml
+
+- name: Template flannel-rbac.yaml
+  template:
+    src: flannel-rbac.yaml.j2
+    dest: /etc/flannel-rbac.yaml
