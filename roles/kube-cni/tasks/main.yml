@@ -1,6 +1,14 @@
 ---
 
 # ----------- flannel
+- name: Apply the flannel RBAC
+  shell: >
+    kubectl create -f /etc/flannel-rbac.yaml
+  environment: "{{ kubectl_environment }}"
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "flannel"
+
 - name: Apply the flannel podnetwork
   shell: >
     kubectl apply -f /etc/flannel.yaml > /tmp/podnetwork-apply.log
@@ -8,6 +16,7 @@
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "flannel"
+
 
 # ----------- weave
 - name: Apply the weave podnetwork

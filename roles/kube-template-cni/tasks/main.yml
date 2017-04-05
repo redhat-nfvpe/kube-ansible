@@ -9,3 +9,8 @@
   template:
     src: flannel.yaml.j2
     dest: /etc/flannel.yaml
+
+- name: Template flannel-rbac.yaml
+  template:
+    src: flannel-rbac.yaml.j2
+    dest: /etc/flannel-rbac.yaml

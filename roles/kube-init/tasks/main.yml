@@ -46,7 +46,7 @@
 
 - name: Copy admin.conf to kubectl user's home
   shell: >
-    cp /etc/kubernetes/admin.conf {{ kubectl_home }}/admin.conf
+    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/admin.conf
   args:
     creates: "{{ kubectl_home }}/admin.conf"
 

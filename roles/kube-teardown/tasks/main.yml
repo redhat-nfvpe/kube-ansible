@@ -9,5 +9,6 @@
     state: absent
   with_items:
     - "/etc/.kubeadm-complete"
-    - "/etc/.kubeadm-podnetwork-complete"
+    - "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
     - "/etc/.kubeadm-joined"
+    - "{{ kubectl_home }}/admin.conf"
