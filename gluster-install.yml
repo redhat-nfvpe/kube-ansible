@@ -6,6 +6,13 @@
     - vars/all.yml
   tasks: []
   roles:
-    # - { role: docker-install }
     - { role: glusterfs-install }
 
+- hosts: master
+  become: true
+  become_user: root
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: glusterfs-probe-peers }
