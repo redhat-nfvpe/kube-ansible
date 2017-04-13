@@ -15,6 +15,7 @@ This document is... Kind of terse. Want a complete walkthrough? Check out my [bl
 | `kube-teardown.yml`   | `./inventory/vms.inventory`      | Runs `kubeadm reset` on all nodes to tear down k8s              |
 | `vm-teardown.yml`     | `./inventory/virthost.inventory` | Destroys VMs on the virtual machine host                        |
 | `multus-cni.yml`      | `./inventory/vms.inventory`      | Compiles [multus-cni](https://github.com/Intel-Corp/multus-cni) |
+| `vm-attach-disk.yml`  | `./inventory/virthost.inventory` | Attach spare disks to VMs (for GlusterFS, or otherwise)         |
 
 
 *(Table generated with [markdown tables](http://www.tablesgenerator.com/markdown_tables))*
