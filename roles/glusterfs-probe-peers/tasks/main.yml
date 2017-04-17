@@ -11,3 +11,45 @@
     gluster peer probe {{ hostvars[item]['ansible_host'] }}
   when: "'{{ hostvars[item]['ansible_host'] }}' not in peer_status.stdout"
   with_items: "{{ groups['minions'] }}"
+
+- name: Create brick directory
+  file:
+    dest: /bricks/brick1/brick
+    state: directory
+
+- name: Initialize fact for list of minions
+  set_fact: 
+    host_brick_string: "{{ hostvars[inventory_hostname]['ansible_host'] }}:/bricks/brick1/brick "
+    number_hosts: "{{ ( groups['minions'] | length ) + 1 }}"
+
+- name: Loop through and create "host:/brick/" string given list of minions
+  set_fact: 
+    host_brick_string: "{{ host_brick_string }}{{ hostvars[item]['ansible_host'] }}:/bricks/brick1/brick "
+  with_items: "{{ groups['minions'] }}"
+
+# - name: Debug list of gluster volume hosts
+#   debug: "msg={{host_brick_string}}"
+
+# - name: Debug number of replicas
+#   debug: "msg={{number_hosts}}"
+
+- name: Get list of gluster volumes
+  shell: >
+    gluster volume list
+  register: volume_list
+
+- name: Create glusterFS volume
+  shell: >
+    gluster volume create glustervol1 replica {{ number_hosts }} transport tcp {{ host_brick_string }}
+  when: '"glustervol1" not in "{{ volume_list.stdout }}"'
+
+- name: Get status of volume
+  shell: >
+    gluster volume status glustervol1
+  register: volume_status
+  ignore_errors: yes
+
+- name: Start gluster volume
+  shell: >
+    gluster volume start glustervol1
+  when: "{{ volume_status.rc }} != 0"
