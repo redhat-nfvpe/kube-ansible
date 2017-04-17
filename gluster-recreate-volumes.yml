@@ -1,0 +1,13 @@
+- hosts: master
+  become: true
+  become_user: root
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: glusterfs-probe-peers }
+    - { role: glusterfs-create-volume, delete_first: true, volume_appendix: 1 }
+    - { role: glusterfs-create-volume, delete_first: true, volume_appendix: 2 }
+    - { role: glusterfs-create-volume, delete_first: true, volume_appendix: 3 }
+    - { role: glusterfs-create-volume, delete_first: true, volume_appendix: 4 }
+    - { role: glusterfs-create-volume, delete_first: true, volume_appendix: 5 }
