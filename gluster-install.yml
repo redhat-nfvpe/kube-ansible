@@ -16,3 +16,10 @@
   tasks: []
   roles:
     - { role: glusterfs-probe-peers }
+
+- hosts: master
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: glusterfs-kube-config }

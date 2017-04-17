@@ -1,0 +1,11 @@
+---
+
+- name: Template endpoints json
+  template:
+    src: glusterfs-endpoints.json.j2
+    dest: /home/centos/glusterfs-endpoints.json
+
+- name: Template service json
+  template:
+    src: glusterfs-service.json.j2
+    dest: /home/centos/glusterfs-service.json
