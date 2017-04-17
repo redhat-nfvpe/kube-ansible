@@ -8,13 +8,6 @@
     host_brick_string: "{{ hostvars[inventory_hostname]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
     number_hosts: "{{ ( groups['minions'] | length ) + 1 }}"
 
-- name: Delete volume first if you'd like
-  shell: >
-    gluster volume stop glustervol{{ volume_appendix }};
-    gluster volume delete glustervol{{ volume_appendix }};
-  ignore_errors: yes
-  when: delete_first is defined
-
 - name: Loop through and create "host:/brick/" string given list of minions
   set_fact: 
     host_brick_string: "{{ host_brick_string }}{{ hostvars[item]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
