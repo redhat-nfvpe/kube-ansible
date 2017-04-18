@@ -8,7 +8,7 @@ spec:
   persistentVolumeReclaimPolicy: "Delete"
   storageClassName: "storage"
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   glusterfs:
     endpoints: "glusterfs-cluster"
     path: "glustervol1"
@@ -24,10 +24,10 @@ spec:
   persistentVolumeReclaimPolicy: "Delete"
   storageClassName: "storage"
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   glusterfs:
     endpoints: "glusterfs-cluster"
-    path: "glustervol1"
+    path: "glustervol2"
     readOnly: false
 ---
 apiVersion: "v1"
@@ -40,10 +40,10 @@ spec:
   persistentVolumeReclaimPolicy: "Delete"
   storageClassName: "storage"
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   glusterfs:
     endpoints: "glusterfs-cluster"
-    path: "glustervol1"
+    path: "glustervol3"
     readOnly: false
 ---
 apiVersion: "v1"
@@ -56,10 +56,10 @@ spec:
   persistentVolumeReclaimPolicy: "Delete"
   storageClassName: "storage"
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   glusterfs:
     endpoints: "glusterfs-cluster"
-    path: "glustervol1"
+    path: "glustervol4"
     readOnly: false
 ---
 apiVersion: "v1"
@@ -72,9 +72,9 @@ spec:
   persistentVolumeReclaimPolicy: "Delete"
   storageClassName: "storage"
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   glusterfs:
     endpoints: "glusterfs-cluster"
-    path: "glustervol1"
+    path: "glustervol5"
     readOnly: false
 ---
