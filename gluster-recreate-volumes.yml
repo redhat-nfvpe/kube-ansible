@@ -1,0 +1,48 @@
+- hosts: master
+  become: true
+  become_user: root
+  vars_files:
+    - vars/all.yml
+  tasks: 
+    - name: Remove gluster volumes -- NEXT STEP WILL DELETE ALL DATA.
+      shell: >
+        yes | gluster volume stop glustervol{{ item }};
+        yes | gluster volume delete glustervol{{ item }};
+      ignore_errors: yes
+      with_items:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+
+- hosts: all_vms
+  become: true
+  become_user: root
+  vars_files:
+    - vars/all.yml
+  tasks: 
+    - name: Remove back-end data.
+      file:
+        dest: "/bricks/brick1/brick{{ item }}"
+        state: absent
+      with_items:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+
+- hosts: master
+  become: true
+  become_user: root
+  vars_files:
+    - vars/all.yml
+  tasks: []
+  roles:
+    - { role: glusterfs-probe-peers }
+    - { role: glusterfs-create-volume, volume_appendix: 1 }
+    - { role: glusterfs-create-volume, volume_appendix: 2 }
+    - { role: glusterfs-create-volume, volume_appendix: 3 }
+    - { role: glusterfs-create-volume, volume_appendix: 4 }
+    - { role: glusterfs-create-volume, volume_appendix: 5 }

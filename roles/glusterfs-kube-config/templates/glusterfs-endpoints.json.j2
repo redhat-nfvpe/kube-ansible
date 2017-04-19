@@ -1,0 +1,23 @@
+{
+  "kind": "Endpoints",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "glusterfs-cluster"
+  },
+  "subsets": [
+    {% for machine in groups['all_vms'] %}
+    {
+      "addresses": [
+        {
+          "ip": "{{ hostvars[machine]['ansible_host'] }}"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1
+        }
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

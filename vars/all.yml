@@ -48,3 +48,11 @@ multus_ipam_rangeStart: "192.168.122.200"
 multus_ipam_rangeEnd: "192.168.122.216"
 multus_ipam_gateway: "192.168.122.1"
 
+# ----------------------------
+# glusterfs vars
+# ----------------------------
+spare_disk_size_megs: 4096
+spare_disk_location: "/var/lib/libvirt/images"
+spare_disk_dev: vdb
+# Default size is megs, "2G" would be 2 gigs.
+brick_size: "1980"
