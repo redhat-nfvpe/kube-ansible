@@ -24,7 +24,7 @@
     - samba
 
 - include: setup_partitions.yml
-  when: "1 == 0"
+  when: "1 == 1"
 
 - name: Start gluster service
   service:

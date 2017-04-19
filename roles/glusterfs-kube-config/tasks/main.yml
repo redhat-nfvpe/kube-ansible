@@ -12,5 +12,5 @@
 
 - name: Template volume yaml (IT'S STATIC RIGHT NOW, FIX THAT.)
   template:
-    src: glusterfs-volume.yaml.j2
-    dest: /home/centos/glusterfs-volume.yaml
+    src: glusterfs-volumes.yaml.j2
+    dest: /home/centos/glusterfs-volumes.yaml
