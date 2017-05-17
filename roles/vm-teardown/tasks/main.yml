@@ -11,15 +11,13 @@
   with_items: "{{ virtual_machines }}"
 
 - name: Remove spare disk images
-  file: 
+  file:
     dest: "{{ spare_disk_location }}/{{ item }}.img"
     state: absent
   with_items: "{{ virtual_machines }}"
 
 - name: Remove spare disk attached semaphor
-  file: 
+  file:
     dest: "{{ spare_disk_location }}/.attached-{{ item }}"
     state: absent
   with_items: "{{ virtual_machines }}"
-
-  
