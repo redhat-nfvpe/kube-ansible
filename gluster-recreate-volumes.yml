@@ -3,7 +3,7 @@
   become_user: root
   vars_files:
     - vars/all.yml
-  tasks: 
+  tasks:
     - name: Remove gluster volumes -- NEXT STEP WILL DELETE ALL DATA.
       shell: >
         yes | gluster volume stop glustervol{{ item }};
@@ -21,7 +21,7 @@
   become_user: root
   vars_files:
     - vars/all.yml
-  tasks: 
+  tasks:
     - name: Remove back-end data.
       file:
         dest: "/bricks/brick1/brick{{ item }}"

@@ -12,7 +12,7 @@
 
 # --- I'll leave this for posterity, but, I went for a simpler approach that didn't need xml
 # - name: Template disk xml
-#   template: 
+#   template:
 #     src: storage.xml.j2
 #     dest: "/tmp/storage-{{ item }}.xml"
 #   vars:

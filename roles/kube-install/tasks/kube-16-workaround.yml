@@ -1,5 +1,5 @@
-- name: Stat the complete semaphor 
-  stat: 
+- name: Stat the complete semaphor
+  stat:
     path: /etc/.kube16workaround_complete
   register: wsemaphor
 

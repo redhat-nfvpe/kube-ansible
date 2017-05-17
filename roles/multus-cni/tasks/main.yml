@@ -1,8 +1,8 @@
 ---
 - name: Installs deps
-  yum:
+  package:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - golang
     - git
@@ -22,7 +22,7 @@
   when: multus_clone.changed
 
 - name: Clone sriov-cni
-  git: 
+  git:
     repo: https://github.com/Intel-Corp/sriov-cni.git
     dest: /usr/src/sriov-cni
     version: master

@@ -1,16 +1,16 @@
 ---
 - name: Install primary deps (for ansible)
-  yum:
+  package:
     name: libselinux-python
     state: present
 
 - name: Create Docker repo
-  copy: 
+  copy:
     src: docker.repo
     dest: /etc/yum.repos.d/docker.repo
 
 - name: Install docker
-  yum:
+  package:
     name: docker-engine
     state: present
 
@@ -28,7 +28,7 @@
   command: systemctl daemon-reload
 
 - name: Enable and start docker
-  service: 
+  service:
     name: docker
     enabled: yes
     state: started

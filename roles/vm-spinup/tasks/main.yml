@@ -35,14 +35,14 @@
   debug: "msg={{ vm_ips_dict }}"
 
 - name: Flush out /etc/hosts, always (for simplicity)
-  lineinfile: 
+  lineinfile:
     dest: /etc/hosts
     state: absent
     regexp: '{{ item.key }}'
   with_dict: "{{ vm_ips_dict }}"
 
 - name: Build out /etc/hosts for each VM
-  lineinfile: 
+  lineinfile:
     dest: /etc/hosts
     line: '{{ item.value }} {{ item.key }}'
     regexp: '{{ item.key }}'
