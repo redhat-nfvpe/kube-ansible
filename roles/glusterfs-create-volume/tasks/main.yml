@@ -23,19 +23,22 @@
   shell: >
     gluster volume list
   register: volume_list
+- name: Create gluster volume name
+  set_fact:
+    gluster_volume_name = "glustervol{{ volume_appendix }}"
 
 - name: Create glusterFS volume
   shell: >
-    gluster volume create glustervol{{ volume_appendix }} replica {{ number_hosts }} transport tcp {{ host_brick_string }}
-  when: '"glustervol{{ volume_appendix }}" not in "{{ volume_list.stdout }}"'
+    gluster volume create {{ gluster_volume_name }} replica {{ number_hosts }} transport tcp {{ host_brick_string }}
+  when: '"gluster_volume_name" not in "volume_list.stdout"'
 
 - name: Get status of volume
   shell: >
-    gluster volume status glustervol{{ volume_appendix }}
+    gluster volume status {{ gluster_volume_name }}
   register: volume_status
   ignore_errors: yes
 
 - name: Start gluster volume
   shell: >
-    gluster volume start glustervol{{ volume_appendix }}
-  when: "{{ volume_status.rc }} != 0"
+    gluster volume start {{ gluster_volume_name }}
+  when: "volume_status.rc != 0"
