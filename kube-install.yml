@@ -39,9 +39,9 @@
   become_user: root
   vars_files:
     - vars/all.yml
-  pre_tasks: 
+  pre_tasks:
     - name: Get kubeadm_join_command from master
-      set_fact: 
+      set_fact:
         kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
   tasks: []
   roles:

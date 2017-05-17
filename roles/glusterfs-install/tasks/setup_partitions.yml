@@ -1,6 +1,6 @@
 - name: Create a new Physical Volume
   shell: >
-    pvcreate /dev/{{ spare_disk_dev }} && 
+    pvcreate /dev/{{ spare_disk_dev }} &&
     touch /etc/.pvcreated
   args:
     creates: /etc/.pvcreated
@@ -33,7 +33,7 @@
     lvcreate -L {{ brick_size }} -n brick1 vg_gluster &&
     lvcreate -L {{ brick_size }} -n brick2 vg_gluster &&
     touch /etc/.brickscreated
-  args: 
+  args:
     creates: /etc/.brickscreated
 
 - name: Setup XFS file systems

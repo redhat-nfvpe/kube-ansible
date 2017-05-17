@@ -2,7 +2,7 @@
 
 - name: "Disable SELinux :("
   selinux:
-    state: disabled  
+    state: disabled
 
 - name: "Stop iptables :("
   service:
@@ -22,9 +22,9 @@
     dest: /etc/yum.repos.d/kubernetes.repo
 
 - name: Install required packages
-  yum:
+  package:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - docker
     - kubelet

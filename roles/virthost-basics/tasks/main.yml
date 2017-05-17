@@ -1,7 +1,7 @@
 ---
 
 - name: Install required packages
-  yum:
+  package:
     name: "{{ item }}"
     state: present
   with_items:
@@ -11,8 +11,8 @@
     - nano
     - tcpdump
     - net-tools
-    - libvirt-client 
-    - virt-install 
+    - libvirt-client
+    - virt-install
     - genisoimage
 
 - name: Start and enable libvirtd

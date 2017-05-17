@@ -1,4 +1,4 @@
-kubehost ansible_host=192.168.1.119 ansible_ssh_user=root
+kubehost ansible_host=192.168.5.157 ansible_ssh_user=root
 
 [kubehost]
 kubehost

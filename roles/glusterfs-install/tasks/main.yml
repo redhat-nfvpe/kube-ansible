@@ -3,17 +3,17 @@
 # Based on: https://wiki.centos.org/HowTos/GlusterFSonCentOS
 
 - name: Install latest EPEL
-  yum:
+  package:
     name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     state: present
 
 - name: Enable GlusterFS repo
-  yum:
+  package:
     name: centos-release-gluster38
     state: present
 
 - name: Install required packages for GlusterFS
-  yum:
+  package:
     name: "{{ item }}"
     state: present
   with_items:

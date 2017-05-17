@@ -4,12 +4,12 @@
     state: directory
 
 - name: Initialize fact for list of minions
-  set_fact: 
+  set_fact:
     host_brick_string: "{{ hostvars[inventory_hostname]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
     number_hosts: "{{ ( groups['minions'] | length ) + 1 }}"
 
 - name: Loop through and create "host:/brick/" string given list of minions
-  set_fact: 
+  set_fact:
     host_brick_string: "{{ host_brick_string }}{{ hostvars[item]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
   with_items: "{{ groups['minions'] }}"
 
