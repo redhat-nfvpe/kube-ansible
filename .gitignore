@@ -1,3 +1,4 @@
 *.retry
 !inventory/virthost.inventory
 !inventory/vms.inventory
+inventory/
