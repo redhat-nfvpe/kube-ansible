@@ -25,7 +25,7 @@
   register: volume_list
 - name: Create gluster volume name
   set_fact:
-    gluster_volume_name = "glustervol{{ volume_appendix }}"
+    gluster_volume_name : "glustervol{{ volume_appendix }}"
 
 - name: Create glusterFS volume
   shell: >
