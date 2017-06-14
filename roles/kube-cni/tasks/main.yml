@@ -7,7 +7,7 @@
   environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "flannel"
+  when: pod_network_type == "flannel" or pod_network_type == "multus"
 
 - name: Apply the flannel podnetwork
   shell: >
