@@ -13,6 +13,10 @@
     arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
   when: pod_network_type != "weave"
 
+- name: Set bridge-nf-call-iptables to 1
+  shell: >
+    echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...

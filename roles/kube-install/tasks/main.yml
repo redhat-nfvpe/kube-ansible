@@ -33,10 +33,6 @@
     - kubectl
     - kubernetes-cni
 
-- name: Set bridge-nf-call-iptables to 1
-  shell: >
-    echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
-
 - name: Include kube 1.6.0 work-around
   include: kube-16-workaround.yml
   when: kube_16_workaround
