@@ -3,11 +3,12 @@
 # ----------- If the restart has happened to recently
 #             We need to wait for kubectl to return with a success.
 
-- name: Wait until the kubectl get pods returns ok.
+- name: Wait until kubectl get pods is ready
   shell: >
     kubectl get pods --all-namespaces
   environment: "{{ kubectl_environment }}"
-  until: kube_dns_result.rc == 0
+  register: get_pods_result
+  until: get_pods_result.rc == 0
   retries: 60
   delay: 3
   ignore_errors: yes
