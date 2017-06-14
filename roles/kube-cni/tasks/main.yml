@@ -16,7 +16,7 @@
 # ----------- flannel
 - name: Apply the flannel RBAC
   shell: >
-    kubectl create -f /etc/flannel-rbac.yaml
+    kubectl apply -f /etc/flannel-rbac.yaml
   environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
