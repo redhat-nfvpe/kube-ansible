@@ -1,0 +1,173 @@
+---
+# Some (lots!) borrowed from https://github.com/cri-o/cri-o-ansible
+
+- name: Check Golang version
+  shell: /usr/local/go/bin/go version
+  register: go_version
+  failed_when: false
+  changed_when: false
+
+- name: install Golang upstream
+  unarchive:
+    src: "https://golang.org/dl/go1.8.3.linux-amd64.tar.gz"
+    dest: "/usr/local"
+    remote_src: True
+  when: '"go1.8.3" not in go_version.stdout'
+
+- name: Set custom Golang path in RHEL/CentOS/Fedora
+  lineinfile:
+    dest: /root/.bashrc
+    line: 'export PATH=/usr/local/go/bin:$PATH'
+    insertafter: 'EOF'
+    regexp: 'export PATH=\/usr\/local\/go\/bin:\$PATH'
+    state: present
+  # when: ansible_distribution in ['Fedora', 'RedHat', 'CentOS']
+
+- name: link golang
+  file: src=/usr/local/go/bin/go dest=/usr/bin/go state=link
+
+- name: Install required packages for cri-o
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - wget
+    - git
+    - make
+    - gcc
+    - tar
+    - libseccomp-devel
+    - golang
+    - go-md2man
+    - glib2-devel
+    - glibc-static
+    - container-selinux
+    - btrfs-progs-devel
+    - device-mapper-devel
+    - glibc-devel
+    - gpgme-devel
+    - libassuan-devel
+    - libgpg-error-devel
+    - pkgconfig
+    - json-glib-devel
+    - skopeo-containers
+
+
+
+- name: Make directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+       - /usr/local/go
+       - /etc/systemd/system/kubelet.service.d/
+       - /var/lib/etcd
+       - /etc/cni/net.d
+       - /etc/containers
+
+- name: clone runc
+  git:
+    repo: https://github.com/opencontainers/runc
+    dest: /root/src/github.com/opencontainers/runc
+
+- name: clone CRI-O
+  git:
+    repo: https://github.com/kubernetes-incubator/cri-o
+    dest: /root/src/github.com/kubernetes-incubator/cri-o
+    version: kube-1.6.x
+
+- name: clone CNI
+  git:
+    repo: https://github.com/containernetworking/plugins
+    dest: /root/src/github.com/containernetworking/plugins
+
+- name: build runc
+  shell: |
+          cd /root/src/github.com/opencontainers/runc && \
+          export GOPATH=/root && \
+          make BUILDTAGS="seccomp selinux" && \
+          make install
+
+- name: link runc
+  file: src=/usr/local/sbin/runc dest=/usr/bin/runc state=link
+
+- name: build cri-o
+  shell: |
+          cd /root/src/github.com/kubernetes-incubator/cri-o && \
+          make install.tools && \
+          make && \
+          make install && \
+          make install.systemd && \
+          make install.config
+
+- name: build CNI stuff
+  shell: |
+          cd /root/src/github.com/containernetworking/plugins && \
+          ./build.sh && \
+          mkdir -p /opt/cni/bin && \
+          cp bin/* /opt/cni/bin/
+
+- name: run CRI-O with systemd cgroup manager
+  replace:
+    regexp: 'cgroupfs'
+    replace: 'systemd'
+    name: /etc/crio/crio.conf
+    backup: yes
+
+- name: run with overlay2
+  replace:
+    regexp: 'storage_driver = ""'
+    replace: 'storage_driver = "overlay2"'
+    name: /etc/crio/crio.conf
+    backup: yes
+
+- name: add overlay2 storage opts on RHEL/CentOS
+  lineinfile:
+    dest: /etc/crio/crio.conf
+    line: '"overlay2.override_kernel_check=1"'
+    insertafter: 'storage_option = \['
+    regexp: 'overlay2\.override_kernel_check=1'
+    state: present
+  
+- name: enable and start CRI-O
+  systemd:
+    name: crio
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: modprobe br_netfilter
+  command: "modprobe br_netfilter"
+  ignore_errors: true
+
+- name: tune sysctl
+  lineinfile:
+    line: "net/bridge/bridge-nf-call-iptables = 1"
+    dest: /etc/sysctl.conf
+    insertafter: 'EOF'
+    regexp: '\/net\/bridge\/bridge-nf-call-iptables = 1'
+    state: present
+  ignore_errors: true
+
+- name: reload sysctl
+  command: "sysctl -p"
+  ignore_errors: true
+
+- name: systemd dropin for kubeadm
+  shell: |
+          sh -c 'echo "[Service]
+          Environment=\"KUBELET_EXTRA_ARGS=--enable-cri=true --container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio.sock --container-runtime-endpoint /var/run/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+
+- name: flush iptables
+  command: "iptables -F"
+
+# - name: Permanently disable selinux
+#   lineinfile:
+#     dest: /etc/selinux/config
+#     line: 'SELINUX=permissive'
+#     regexp: '^SELINUX='
+#   when: (ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
+
+# - name: disable selinux
+#   command: "setenforce 0"
+#   when: (ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
