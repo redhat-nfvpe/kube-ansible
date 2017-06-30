@@ -29,8 +29,8 @@ bridge_name: virbr0
 virtual_machines:
   - kube-master
   - kube-minion-1
-  # - kube-minion-2
-  # - kube-minion-3
+  - kube-minion-2
+  - kube-minion-3
 vm_parameters:
   ram_mb: 2048
   cpus: 4
