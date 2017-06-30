@@ -1,4 +1,10 @@
 ---
+# What container runtime do we use?
+# valid values:
+# - docker
+# - crio
+container_runtime: docker
+
 # Pod net work types
 # A value of "none" will create no networking and will not join minions to cluster.
 # Valid values:

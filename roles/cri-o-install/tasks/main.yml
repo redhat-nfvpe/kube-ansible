@@ -1,0 +1,21 @@
+---
+
+- name: Force install by removing semaphor.
+  file:
+    dest: /etc/.crio-installed
+    state: absent
+  when: crio_force
+
+- name: Check for .crio-installed semaphor
+  stat: 
+    path: /etc/.crio-installed
+  register: crio_semaphor
+
+- name: Include the crio install plays
+  include: install.yml
+  when: crio_semaphor.stat.exists == False
+
+- name: Set .crio-installed semaphor file
+  file:
+    dest: /etc/.crio-installed
+    state: directory

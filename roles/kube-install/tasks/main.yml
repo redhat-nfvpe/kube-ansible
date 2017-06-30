@@ -27,11 +27,16 @@
     state: present
   with_items:
     - nano
-    - docker
     - kubelet
     - kubeadm
     - kubectl
     - kubernetes-cni
+
+- name: Install docker (when using docker mode)
+  package:
+    name: "docker"
+    state: present
+  when: "'{{ container_runtime }}' == 'docker'"
 
 - name: Include kube 1.6.0 work-around
   include: kube-16-workaround.yml
@@ -52,11 +57,15 @@
 - name: Reload systemd units after changing 10-kubeadm.conf
   command: systemctl daemon-reload
 
-- name: Start and enable services
+- name: Start and enable kubelet
   service:
-    name: "{{ item }}"
+    name: "kubelet"
     state: restarted
     enabled: yes
-  with_items:
-    - docker
-    - kubelet
+
+- name: Start docker when appropriate
+  service:
+    name: "docker"
+    state: restarted
+    enabled: yes
+  when: "'{{ container_runtime }}' == 'docker'"

@@ -1,6 +1,22 @@
 ---
 # - debug: "msg={{ kubeadm_join_command }}"
 
+- name: Set cri-o args if need be.
+  set_fact:
+    arg_crio: "--skip-preflight-checks"
+  when: container_runtime == "crio"
+
+- name: Change the given command
+  shell: >
+    echo {{ kubeadm_join_command }} | sed -e 's/join/join {{ arg_crio }} /'
+  register: modified_command
+  when: container_runtime == "crio"
+
+- name: Change the kubeadm_join_command fact when crio
+  set_fact:
+    kubeadm_join_command: "{{ modified_command.stdout }}"
+  when: container_runtime == "crio"
+
 - name: Join each minion to the master with the join command
   shell: >
     {{ kubeadm_join_command }}
