@@ -37,6 +37,15 @@ ansible-playbook -i inventory/vms.inventory kube-install.yml
 
 Want more VMs? Edit the `./vars/all.yml` and add them to the list (and then later to your inventory in step 2)
 
+## Using CRI-O
+
+You can also enable [cri-o](http://cri-o.io/) to have an OCI compatible runtime. Set the `container_runtime` variable in `./vars/all.yml` or as an extra var when you run the playbook: 
+
+```
+$ ansible-playbook -i inventory/vms.inventory kube-install.yml -e 'container_runtime=crio'
+```
+
+
 ## About
 
 Initially inspired by:
