@@ -1,27 +1,9 @@
 ---
 # Some (lots!) borrowed from https://github.com/cri-o/cri-o-ansible
 
-- name: Check Golang version
-  shell: /usr/local/go/bin/go version
-  register: go_version
-  failed_when: false
-  changed_when: false
-
-- name: install Golang upstream
-  unarchive:
-    src: "https://golang.org/dl/go1.8.3.linux-amd64.tar.gz"
-    dest: "/usr/local"
-    remote_src: True
-  when: '"go1.8.3" not in go_version.stdout'
-
-- name: Set custom Golang path in RHEL/CentOS/Fedora
-  lineinfile:
-    dest: /root/.bashrc
-    line: 'export PATH=/usr/local/go/bin:$PATH'
-    insertafter: 'EOF'
-    regexp: 'export PATH=\/usr\/local\/go\/bin:\$PATH'
-    state: present
-  # when: ansible_distribution in ['Fedora', 'RedHat', 'CentOS']
+- name: Create a path for us
+  set_fact:
+    extended_path: "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/centos/.local/bin:/home/centos/bin/:/usr/local/go/bin"
 
 - name: link golang
   file: src=/usr/local/go/bin/go dest=/usr/bin/go state=link
@@ -87,14 +69,19 @@
           export GOPATH=/root && \
           make BUILDTAGS="seccomp selinux" && \
           make install
+  environment:
+    PATH: "{{ extended_path }}"
 
 - name: link runc
   file: src=/usr/local/sbin/runc dest=/usr/bin/runc state=link
 
 - name: Check go version
   shell: >
+    source /root/.bashrc && 
     go version
   register: go_version_check
+  environment:
+    PATH: "{{ extended_path }}"
 
 - name: Debug go version
   debug:
@@ -102,12 +89,16 @@
 
 - name: build cri-o
   shell: |
+          source /root/.bashrc && \
+          go version && \
           cd /root/src/github.com/kubernetes-incubator/cri-o && \
           make install.tools && \
           make && \
           make install && \
           make install.systemd && \
           make install.config
+  environment:
+    PATH: "{{ extended_path }}"
 
 - name: build CNI stuff
   shell: |
@@ -115,6 +106,8 @@
           ./build.sh && \
           mkdir -p /opt/cni/bin && \
           cp bin/* /opt/cni/bin/
+  environment:
+    PATH: "{{ extended_path }}"
 
 - name: run CRI-O with systemd cgroup manager
   replace:
