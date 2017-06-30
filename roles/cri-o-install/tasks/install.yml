@@ -91,6 +91,15 @@
 - name: link runc
   file: src=/usr/local/sbin/runc dest=/usr/bin/runc state=link
 
+- name: Check go version
+  shell: >
+    go version
+  register: go_version_check
+
+- name: Debug go version
+  debug:
+    msg: "{{ go_version_check.stdout }} <-- go version"
+
 - name: build cri-o
   shell: |
           cd /root/src/github.com/kubernetes-incubator/cri-o && \

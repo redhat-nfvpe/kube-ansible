@@ -17,12 +17,21 @@
   shell: >
     echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
 
+- name: Default cri-o flags to empty
+  set_fact:
+    arg_crio: ""
+
+- name: Set cri-o flags 
+  set_fact:
+    arg_crio: "--skip-preflight-checks"
+  when: container_runtime == "crio"
+
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ arg_pod_network }} > /var/log/kubeadm.init.log
+    kubeadm init {{ arg_crio }} {{ arg_pod_network }} > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 
