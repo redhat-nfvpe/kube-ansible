@@ -1,7 +1,5 @@
 ---
 - hosts: all_vms
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: multus-cni }

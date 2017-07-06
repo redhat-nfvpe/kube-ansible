@@ -2,8 +2,6 @@
 - hosts: all_vms
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: kube-teardown }

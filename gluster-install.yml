@@ -2,8 +2,6 @@
 - hosts: all_vms
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: glusterfs-install }
@@ -11,8 +9,6 @@
 - hosts: master
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: glusterfs-probe-peers }
@@ -23,8 +19,6 @@
     - { role: glusterfs-create-volume, volume_appendix: 5 }
 
 - hosts: master
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: glusterfs-kube-config }
