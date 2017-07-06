@@ -2,8 +2,6 @@
 - hosts: all_vms
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     # - { role: docker-install }
@@ -17,8 +15,6 @@
 - hosts: master
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   tasks: []
   roles:
     - { role: kube-init }
@@ -28,8 +24,6 @@
 # without become.
 
 - hosts: master
-  vars_files:
-    - vars/all.yml
   vars:
     kubectl_environment:
       KUBECONFIG: "{{ kubectl_home }}/admin.conf"
@@ -41,8 +35,6 @@
 - hosts: minions
   become: true
   become_user: root
-  vars_files:
-    - vars/all.yml
   pre_tasks:
     - name: Get kubeadm_join_command from master
       set_fact:

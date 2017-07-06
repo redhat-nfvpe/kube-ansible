@@ -7,7 +7,7 @@
   when: crio_force
 
 - name: Check for .crio-installed semaphor
-  stat: 
+  stat:
     path: /etc/.crio-installed
   register: crio_semaphor
 
