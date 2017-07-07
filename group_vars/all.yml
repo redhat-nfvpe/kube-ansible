@@ -13,10 +13,11 @@ container_runtime: docker
 # - none
 # - multus
 pod_network_type: "flannel"
+pod_network_cidr: "10.244.0.0"
 
 # General config
 
-# Stable. (currently... busted.)
+# Stable. (was busted at 1.6 release, may work now, untested for a couple months)
 # kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 
 # Unstable
@@ -34,8 +35,6 @@ virtual_machines:
 vm_parameters:
   ram_mb: 2048
   cpus: 4
-# Unused. Was used when I was trying to use flannel plain.
-pod_network_cidr: "10.244.0.0"
 
 # Kubernetes 1.6 additions
 kubectl_user: centos
@@ -62,3 +61,13 @@ spare_disk_location: "/var/lib/libvirt/images"
 spare_disk_dev: vdb
 # Default size is megs, "2G" would be 2 gigs.
 brick_size: "1980"
+
+# ----------------------------
+# virt-host vars.
+# ----------------------------
+# Enables a bridge to the outside LAN
+# (as opposed to using virbr0)
+bridge_networking: false
+bridge_physical_nic: "enp1s0f1"
+bridge_network_name: "br0"
+bridge_network_cidr: 192.168.1.0/24
