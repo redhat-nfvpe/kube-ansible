@@ -1,4 +1,6 @@
 ---
+# Setup variables
+- include: variables.yml
 
 - name: "Disable SELinux :("
   selinux:
@@ -6,13 +8,13 @@
 
 - name: "Stop iptables :("
   service:
-    name: iptables
+    name: "{{ __firewall_service }}"
     state: stopped
   ignore_errors: yes
 
 - name: "Disable iptables :("
   service:
-    name: iptables
+    name: "{{ __firewall_service }}"
     enabled: no
   ignore_errors: yes
 
