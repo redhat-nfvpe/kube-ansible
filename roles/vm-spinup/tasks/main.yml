@@ -20,11 +20,19 @@
   when: "'{{ item }}' not in '{{ virsh_list.stdout }}'"
   with_items: "{{ virtual_machines }}"
 
+# - name: Get IP Addresses for all VMs
+#   shell: >
+#     grep -B1 $(virsh dumpxml {{ item }} | awk -F\' '/mac address/ {print $2}') /var/lib/libvirt/dnsmasq/{{ bridge_name }}.status | head -n 1 | awk '{print $2}' | sed -e s/\"//g -e s/,//
+#   register: vm_ip_addresses
+#   with_items: "{{ virtual_machines }}"
+#   when: bridge_networking
+
 - name: Get IP Addresses for all VMs
   shell: >
-    grep -B1 $(virsh dumpxml {{ item }} | awk -F\' '/mac address/ {print $2}') /var/lib/libvirt/dnsmasq/{{ bridge_name }}.status | head -n 1 | awk '{print $2}' | sed -e s/\"//g -e s/,//
+    cat /tmp/{{ item }}.ip.txt
   register: vm_ip_addresses
   with_items: "{{ virtual_machines }}"
+  when: bridge_networking
 
 - name: Populate dictionary of IPs
   set_fact:
