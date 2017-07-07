@@ -21,7 +21,7 @@
   set_fact:
     arg_crio: ""
 
-- name: Set cri-o flags 
+- name: Set cri-o flags
   set_fact:
     arg_crio: "--skip-preflight-checks"
   when: container_runtime == "crio"

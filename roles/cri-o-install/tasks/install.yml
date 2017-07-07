@@ -9,9 +9,9 @@
   file: src=/usr/local/go/bin/go dest=/usr/bin/go state=link
 
 - name: Install required packages for cri-o
-  yum:
+  package:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - wget
     - git
@@ -51,6 +51,7 @@
   git:
     repo: https://github.com/opencontainers/runc
     dest: /root/src/github.com/opencontainers/runc
+    version: master
 
 - name: clone CRI-O
   git:
@@ -62,6 +63,7 @@
   git:
     repo: https://github.com/containernetworking/plugins
     dest: /root/src/github.com/containernetworking/plugins
+    version: master
 
 - name: build runc
   shell: |
@@ -77,7 +79,7 @@
 
 - name: Check go version
   shell: >
-    source /root/.bashrc && 
+    source /root/.bashrc && \
     go version
   register: go_version_check
   environment:
@@ -130,7 +132,7 @@
     insertafter: 'storage_option = \['
     regexp: 'overlay2\.override_kernel_check=1'
     state: present
-  
+
 - name: enable and start CRI-O
   systemd:
     name: crio
