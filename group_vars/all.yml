@@ -67,7 +67,7 @@ brick_size: "1980"
 # ----------------------------
 # Enables a bridge to the outside LAN
 # (as opposed to using virbr0)
-bridge_networking: false
+bridge_networking: true
 bridge_physical_nic: "enp1s0f1"
 bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
