@@ -12,6 +12,14 @@
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
+- hosts: all_vms
+  become: true
+  become_user: root
+  tasks:
+    - name: Set bridge-nf-call-iptables to 1
+      shell: >
+        echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+
 - hosts: master
   become: true
   become_user: root

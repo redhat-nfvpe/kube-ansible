@@ -25,14 +25,14 @@
 #     grep -B1 $(virsh dumpxml {{ item }} | awk -F\' '/mac address/ {print $2}') /var/lib/libvirt/dnsmasq/{{ bridge_name }}.status | head -n 1 | awk '{print $2}' | sed -e s/\"//g -e s/,//
 #   register: vm_ip_addresses
 #   with_items: "{{ virtual_machines }}"
-#   when: bridge_networking
+#   when: not bridge_networking
 
 - name: Get IP Addresses for all VMs
   shell: >
     cat /tmp/{{ item }}.ip.txt
   register: vm_ip_addresses
   with_items: "{{ virtual_machines }}"
-  when: bridge_networking
+  # when: bridge_networking
 
 - name: Populate dictionary of IPs
   set_fact:
