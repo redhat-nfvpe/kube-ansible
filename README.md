@@ -1,6 +1,6 @@
 # kube-centos-ansible
 
-Install kubernetes 1.5 on a cluster of CentOS VMs, including CNI pod networking (defaults to Flannel, also has ability to deploy Weave and Multus).
+Install a kubernetes cluster on CentOS VMs (or baremetal), including CNI pod networking (defaults to Flannel, also has ability to deploy Weave and Multus).
 
 ## Want some more detail?
 
