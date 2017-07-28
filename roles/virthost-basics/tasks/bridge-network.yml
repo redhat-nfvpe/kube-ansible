@@ -18,11 +18,13 @@
   template:
     src: bridge-device.conf.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ bridge_network_name }}"
+  register: bridge_device_template
 
 - name: Restart networking
   service:
     name: network
     state: restarted
+  when: bridge_device_template.changed
 
 - name: Override bridge name
   set_fact:
