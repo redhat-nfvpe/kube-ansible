@@ -9,6 +9,7 @@
   shell: >
     virsh undefine {{ item }}
   with_items: "{{ virtual_machines }}"
+  ignore_errors: yes
 
 - name: Remove spare disk images
   file:

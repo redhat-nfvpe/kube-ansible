@@ -38,7 +38,7 @@
   package:
     name: "docker"
     state: present
-  when: "'{{ container_runtime }}' == 'docker'"
+  when: "container_runtime == 'docker'"
 
 - name: Include kube 1.6.0 work-around
   include: kube-16-workaround.yml
@@ -70,4 +70,4 @@
     name: "docker"
     state: restarted
     enabled: yes
-  when: "'{{ container_runtime }}' == 'docker'"
+  when: "container_runtime == 'docker'"
