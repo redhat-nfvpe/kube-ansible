@@ -27,7 +27,7 @@
 - name: Create glusterFS volume
   shell: >
     gluster volume create glustervol{{ volume_appendix }} replica {{ number_hosts }} transport tcp {{ host_brick_string }}
-  when: '"glustervol{{ volume_appendix }}" not in "{{ volume_list.stdout }}"'
+  when: '"glustervol" ~ volume_appendix not in volume_list.stdout'
 
 - name: Get status of volume
   shell: >
@@ -38,4 +38,4 @@
 - name: Start gluster volume
   shell: >
     gluster volume start glustervol{{ volume_appendix }}
-  when: "{{ volume_status.rc }} != 0"
+  when: "volume_status.rc != 0"
