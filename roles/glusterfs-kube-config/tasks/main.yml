@@ -14,3 +14,8 @@
   template:
     src: glusterfs-volumes.yaml.j2
     dest: /home/centos/glusterfs-volumes.yaml
+
+- name: Template GlusterFS gk-deploy topology json
+  template:
+    src: glusterfs-topology.json.j2
+    dest: /home/centos/glusterfs-topology.json
