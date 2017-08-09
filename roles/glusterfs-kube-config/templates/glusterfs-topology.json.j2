@@ -2,60 +2,24 @@
   "clusters": [
     {
       "nodes": [
+        {% for machine in groups['minions'] %}
         {
           "node": {
             "hostnames": {
               "manage": [
-                "node0"
+                "{{ machine }}"
               ],
               "storage": [
-                "192.168.10.100"
+                "{{ hostvars[machine]['ansible_host'] }}"
               ]
             },
             "zone": 1
           },
           "devices": [
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
+            "/dev/{{ spare_disk_dev }}"
           ]
-        },
-        {
-          "node": {
-            "hostnames": {
-              "manage": [
-                "node1"
-              ],
-              "storage": [
-                "192.168.10.101"
-              ]
-            },
-            "zone": 1
-          },
-          "devices": [
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
-          ]
-        },
-        {
-          "node": {
-            "hostnames": {
-              "manage": [
-                "node2"
-              ],
-              "storage": [
-                "192.168.10.102"
-              ]
-            },
-            "zone": 1
-          },
-          "devices": [
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
-          ]
-        }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
       ]
     }
   ]

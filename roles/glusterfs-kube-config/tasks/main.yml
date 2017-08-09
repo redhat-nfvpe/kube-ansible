@@ -1,5 +1,12 @@
 ---
 
+- name: Install git
+  become: true
+  become_user: root
+  yum:
+    name: git
+    state: present
+
 - name: Template endpoints json
   template:
     src: glusterfs-endpoints.json.j2
@@ -15,7 +22,54 @@
     src: glusterfs-volumes.yaml.j2
     dest: /home/centos/glusterfs-volumes.yaml
 
+- name: Template namespace yaml
+  template:
+    src: glusterfs-namespace.yaml.j2
+    dest: /home/centos/glusterfs-namespace.yaml
+
+- name: Get list of namespaces
+  shell: >
+    kubectl get namespaces
+  register: namespaces_list
+
+- name: Create gluster namespace if necessary
+  shell: >
+    kubectl create -f /home/centos/glusterfs-namespace.yaml
+  when: "'gluster' not in namespaces_list.stdout"
+
+- name: Clone gluster-kubernetes
+  git:
+    repo: https://github.com/gluster/gluster-kubernetes.git
+    dest: /home/centos/gluster-kubernetes
+    version: master
+
 - name: Template GlusterFS gk-deploy topology json
   template:
     src: glusterfs-topology.json.j2
-    dest: /home/centos/glusterfs-topology.json
+    dest: /home/centos/gluster-kubernetes/deploy/topology.json
+
+- name: Download heketi cli tarball
+  get_url:
+    url: https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-v4.0.0.linux.amd64.tar.gz
+    dest: /home/centos/heketi.tar.gz
+
+- name: Create directory for extraction of tarball
+  file:
+    path: /home/centos/heketi
+    state: directory
+
+- name: Extract heketi cli tarball
+  unarchive:
+    src: /home/centos/heketi.tar.gz
+    dest: /home/centos/heketi
+    remote_src: yes
+
+- name: Copy heketi-cli bin into place
+  become: true
+  become_user: root
+  shell: >
+    cp /home/centos/heketi/heketi/heketi-cli /usr/local/bin/heketi-cli
+  args:
+    creates: /usr/local/bin/heketi-cli
+
+# ./gk-deploy -n gluster -g -y
