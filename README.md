@@ -37,6 +37,14 @@ ansible-playbook -i inventory/vms.inventory kube-install.yml
 
 Want more VMs? Edit the `./vars/all.yml` and add them to the list (and then later to your inventory in step 2)
 
+### Setting a specific version
+
+You may optionally set the `kube_version` variable to install a specific version. This version number comes from a `yum search kubelet --showduplicates`. For example:
+
+```
+ansible-playbook -i inventory/vms.inventory kube-install.yml -e 'kube_version=1.6.7-0'
+```
+
 ## Using CRI-O
 
 You can also enable [cri-o](http://cri-o.io/) to have an OCI compatible runtime. Set the `container_runtime` variable in `./vars/all.yml` or as an extra var when you run the playbook: 

@@ -23,16 +23,54 @@
     src: kubernetes.repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
 
-- name: Install required packages
+- name: Install optional packages
   package:
     name: "{{ item }}"
     state: present
   with_items:
     - nano
-    - kubelet
-    - kubeadm
-    - kubectl
+
+# The kube_version variable can be from this list...
+# That is, the `yum search kubelet --showduplicates`
+# (as of 8/9/17)
+# 
+# e.g. you would use "1.6.6-0" for kube 1.6.6
+#
+# kubelet-1.5.4-0.x86_64 : Container cluster management
+# kubelet-1.6.0-0.x86_64 : Container cluster management
+# kubelet-1.6.1-0.x86_64 : Container cluster management
+# kubelet-1.6.2-0.x86_64 : Container cluster management
+# kubelet-1.6.3-0.x86_64 : Container cluster management
+# kubelet-1.6.4-0.x86_64 : Container cluster management
+# kubelet-1.6.5-0.x86_64 : Container cluster management
+# kubelet-1.6.6-0.x86_64 : Container cluster management
+# kubelet-1.6.7-0.x86_64 : Container cluster management
+# kubelet-1.7.0-0.x86_64 : Container cluster management
+# kubelet-1.7.1-0.x86_64 : Container cluster management
+# kubelet-1.7.2-0.x86_64 : Container cluster management
+# kubelet-1.7.3-1.x86_64 : Container cluster management
+# kubelet-1.7.3-1.x86_64 : Container cluster management
+
+- name: Default kube version fact
+  set_fact: 
+    kube_version_parameter: ""
+
+- name: Default kube version fact
+  set_fact: 
+    kube_version_parameter: "-{{ kube_version }}"
+  when: kube_version is defined
+
+- name: Install required packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - kubelet{{ kube_version_parameter }}
+    - kubeadm{{ kube_version_parameter }}
+    - kubectl{{ kube_version_parameter }}
     - kubernetes-cni
+
+
 
 - name: Install docker (when using docker mode)
   package:
