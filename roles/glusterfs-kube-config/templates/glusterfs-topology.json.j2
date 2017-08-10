@@ -1,0 +1,26 @@
+{
+  "clusters": [
+    {
+      "nodes": [
+        {% for machine in groups['minions'] %}
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "{{ machine }}"
+              ],
+              "storage": [
+                "{{ hostvars[machine]['ansible_host'] }}"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/{{ spare_disk_dev }}"
+          ]
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+  ]
+}

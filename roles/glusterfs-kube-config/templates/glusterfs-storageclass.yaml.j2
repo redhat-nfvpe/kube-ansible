@@ -1,0 +1,12 @@
+---
+apiVersion: storage.k8s.io/v1beta1
+kind: StorageClass
+metadata:
+  name: gluster
+provisioner: kubernetes.io/glusterfs 
+# If it could be resolved, could be improved to:
+# resturl: "http://heketi.gluster.svc.cluster.local:8080"
+parameters:
+  resturl: "http://{{ heketi_ip }}:8080"
+  restuser: "this_is_unused"
+  restuserkey: "boy_thats_pretty_insecure"
