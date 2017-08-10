@@ -72,4 +72,42 @@
   args:
     creates: /usr/local/bin/heketi-cli
 
-# ./gk-deploy -n gluster -g -y
+- name: Deploy GlusterFS on Kubernetes with gk-deploy (note -- this is coffee break worthy, it takes a while)
+  shell: >
+    ./gk-deploy -n gluster -g -y
+  args:
+    chdir: /home/centos/gluster-kubernetes/deploy
+    creates: /home/centos/.gk-deployed
+
+- name: Mark that gk-deploy is complete
+  file:
+    path: /home/centos/.gk-deployed
+    state: directory
+
+- name: Get the heketi IP address
+  shell: >
+    kubectl get svc --namespace=gluster | grep 8080 | awk '{print $2}'
+  register: heketi_ipaddress_raw
+
+- name: Set the heketi IP
+  set_fact:
+    heketi_ip: "{{ heketi_ipaddress_raw.stdout }}"
+
+- name: Template the storage class yaml
+  template:
+    src: glusterfs-storageclass.yaml.j2
+    dest: /home/centos/glusterfs-storageclass.yaml
+
+- name: List the storage classes
+  shell: >
+    kubectl get storageclass
+  register: storageclass_list
+
+- name: Create the storage class
+  shell: >
+    kubectl create -f /home/centos/glusterfs-storageclass.yaml
+  when: "'gluster' not in storageclass_list.stdout"
+
+# Get heketi URL.
+# [centos@kube-master ~]$ kubectl get svc --namespace=gluster | grep 8080 | awk '{print $2}'
+# 10.105.179.111
