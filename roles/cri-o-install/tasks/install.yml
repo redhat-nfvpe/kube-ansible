@@ -33,8 +33,8 @@
     - pkgconfig
     - json-glib-devel
     - skopeo-containers
-
-
+    - ostree
+    - ostree-devel
 
 - name: Make directories
   file:
@@ -57,7 +57,7 @@
   git:
     repo: https://github.com/kubernetes-incubator/cri-o
     dest: /root/src/github.com/kubernetes-incubator/cri-o
-    version: kube-1.6.x
+    version: "{{ crio_version }}"
 
 - name: clone CNI
   git:
@@ -160,7 +160,7 @@
 - name: systemd dropin for kubeadm
   shell: |
           sh -c 'echo "[Service]
-          Environment=\"KUBELET_EXTRA_ARGS=--enable-cri=true --container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio.sock --container-runtime-endpoint /var/run/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+          Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio.sock --container-runtime-endpoint /var/run/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
 
 - name: flush iptables
   command: "iptables -F"
