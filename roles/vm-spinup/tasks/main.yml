@@ -6,6 +6,12 @@
     dest: /root/spinup.sh
     mode: 0755
 
+- name: Template the virtual machine "get IP" script
+  template:
+    src: getip.sh.j2
+    dest: /root/getip.sh
+    mode: 0755
+
 - name: Get the virsh list
   shell: >
     virsh list
