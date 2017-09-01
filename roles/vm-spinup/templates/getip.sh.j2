@@ -1,0 +1,5 @@
+#!/bin/bash
+mac=$(virsh domiflist $1 | grep -i "virtio" | awk '{print $5}')
+IP=$(nmap -sP {{ bridge_network_cidr }} | grep -i "$mac" -B 2 | head -n1 | sed -e 's/[()]//g' | awk '{print $6}')
+echo "IP is: $IP"
+
