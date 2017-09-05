@@ -5,7 +5,7 @@
 
 - name: Create images for spare disks
   shell: >
-    dd if=/dev/zero of={{ spare_disk_location }}/{{ item }}.img bs=1M count={{ spare_disk_size_megs }}
+    qemu-img create -f raw {{ spare_disk_location }}/{{ item }}.img {{ spare_disk_size_megs }}M
   args:
     creates: "{{ spare_disk_location }}/{{ item }}.img"
   with_items: "{{ virtual_machines }}"
