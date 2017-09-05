@@ -29,5 +29,7 @@
 
 - hosts: master
   tasks: []
+  environment:
+      KUBECONFIG: /home/centos/admin.conf
   roles:
     - { role: glusterfs-kube-config }
