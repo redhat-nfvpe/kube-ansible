@@ -7,7 +7,7 @@
 
 - name: Undefine all VMs
   shell: >
-    virsh undefine {{ item }}
+    virsh undefine --remove-all-storage {{ item }}
   with_items: "{{ virtual_machines }}"
   ignore_errors: yes
 
