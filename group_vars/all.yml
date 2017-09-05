@@ -39,7 +39,7 @@ virtual_machines:
   - kube-master
   - kube-minion-1
   - kube-minion-2
-  - kube-minion-3
+#  - kube-minion-3
 vm_parameters:
   ram_mb: 2048
   cpus: 4
@@ -64,6 +64,7 @@ multus_ipam_gateway: "192.168.122.1"
 # ----------------------------
 # glusterfs vars
 # ----------------------------
+gluster_kubernetes_version: "v1.2.0"
 spare_disk_size_megs: 10240
 spare_disk_location: "/var/lib/libvirt/images"
 spare_disk_dev: vdb

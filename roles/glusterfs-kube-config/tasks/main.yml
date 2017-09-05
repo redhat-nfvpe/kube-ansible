@@ -41,7 +41,7 @@
   git:
     repo: https://github.com/gluster/gluster-kubernetes.git
     dest: /home/centos/gluster-kubernetes
-    version: master
+    version: "{{ gluster_kubernetes_version }}"
 
 - name: Template GlusterFS gk-deploy topology json
   template:
