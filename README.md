@@ -17,7 +17,6 @@ This document is... Kind of terse. Want a complete walkthrough? Check out my
 | `kube-teardown.yml`   | `./inventory/vms.inventory`      | Runs `kubeadm reset` on all nodes to tear down k8s               |
 | `vm-teardown.yml`     | `./inventory/virthost.inventory` | Destroys VMs on the virtual machine host                         |
 | `multus-cni.yml`      | `./inventory/vms.inventory`      | Compiles [multus-cni](https://github.com/Intel-Corp/multus-cni)  |
-| `vm-attach-disk.yml`  | `./inventory/virthost.inventory` | Attach spare disks to VMs (for GlusterFS, or otherwise)          |
 | `gluster-install.yml` | `inventory/vms.inventory`        | Install a GlusterFS cluster across VMs (requires vm-attach-disk) |
 
 
@@ -60,17 +59,8 @@ host (skip to step 3 if you already have an inventory)
 > * `ssh_proxy_host: virthost`  _hostname or IP of virthost_
 > * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
 
-
 ```
 ansible-playbook -i inventory/virthost/virthost.inventory virt-host-setup.yml
-```
-
-
-Step 2b (optional). If you plan to load up some persistent storage using
-GlusterFS you'll want to attach some extra disk images to the virtual machines.
-
-```
-ansible-playbook -i inventory/virthost/virthost.inventory vm-attach-disk.yml
 ```
 
 Step 3. During the execution of _Step 1_ a local inventory should have been
