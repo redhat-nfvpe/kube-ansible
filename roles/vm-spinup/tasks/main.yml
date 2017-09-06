@@ -60,7 +60,7 @@
     dest: /etc/hosts
     line: '{{ item.value }} {{ item.key }}'
     regexp: '{{ item.key }}'
-    with_dict: "{{ vm_ips_dict }}"
+  with_dict: "{{ vm_ips_dict }}"
 
 - name: Build a local inventory
   template:
