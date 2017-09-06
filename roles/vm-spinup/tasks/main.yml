@@ -60,4 +60,10 @@
     dest: /etc/hosts
     line: '{{ item.value }} {{ item.key }}'
     regexp: '{{ item.key }}'
-  with_dict: "{{ vm_ips_dict }}"
+    with_dict: "{{ vm_ips_dict }}"
+
+- name: Build a local inventory
+  template:
+    src: vms.local.j2
+    dest: inventory/vms.local.generated
+  delegate_to: 127.0.0.1

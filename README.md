@@ -1,10 +1,12 @@
 # kube-centos-ansible
 
-Install a kubernetes cluster on CentOS VMs (or baremetal), including CNI pod networking (defaults to Flannel, also has ability to deploy Weave and Multus).
+Install a kubernetes cluster on CentOS VMs (or baremetal), including CNI pod
+networking (defaults to Flannel, also has ability to deploy Weave and Multus).
 
 ## Want some more detail?
 
-This document is... Kind of terse. Want a complete walkthrough? Check out my [blog article detailing how to get it going from scratch](http://dougbtv.com/nfvpe/2017/02/16/kubernetes-1.5-centos/).
+This document is... Kind of terse. Want a complete walkthrough? Check out my
+[blog article detailing how to get it going from scratch](http://dougbtv.com/nfvpe/2017/02/16/kubernetes-1.5-centos/).
 
 ## Playbooks
 
@@ -23,36 +25,92 @@ This document is... Kind of terse. Want a complete walkthrough? Check out my [bl
 
 ## Usage
 
-Step 1. Modify `./inventory/virthost.inventory` to setup a virt host (skip to step 2 if you already have an inventory)
+Step 1. Copy the example virthost inventory into a new directory
 
 ```
-ansible-playbook -i inventory/virthost.inventory virt-host-setup.yml 
+cp -r inventory/examples/virthost inventory/virthost
 ```
 
-Step 2. Modify `./inventory/vms.inventory` Setup kube on all the hosts. If you used step 1, towards the end of the output there there will be hints on which IPs for each VM created.
+Step 2. Modify `./inventory/virthost/virthost.inventory` to setup a virtual
+host (skip to step 3 if you already have an inventory)
+
+> **NOTE**
+>
+> There are a few extra variables you may wish to set against the virtual host
+> which can be satisfied in the `inventory/virthost/host_vars/virthost.yml`
+> file of your local inventory configuration in `inventory/virthost/` that you
+> just created.
+>
+> Primarily, this is for overriding the default variables located in the
+> `group_vars/all.yml` file, or overriding the default values associated with
+> the roles.
+>
+> Some common variables you may wish to override include:
+>
+> * `bridge_networking: false`  _disable bridge networking setup_
+> * `images_directory: /home/images/kubelab`  _override image directory
+>   location_
+> * `spare_disk_location: /home/images/kubelab`  _override spare disk location_
+>
+> The following values are used in the generation of the dynamic inventory file
+> `vms.inventory.generated`
+>
+> * `ssh_proxy_enabled: true`  _proxy via jump host (remote virthost)_
+> * `ssh_proxy_user: root`  _username to SSH into virthost_
+> * `ssh_proxy_host: virthost`  _hostname or IP of virthost_
+> * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
+
 
 ```
-ansible-playbook -i inventory/vms.inventory kube-install.yml
+ansible-playbook -i inventory/virthost/virthost.inventory virt-host-setup.yml
 ```
 
-Want more VMs? Edit the `./vars/all.yml` and add them to the list (and then later to your inventory in step 2)
+
+Step 2b (optional). If you plan to load up some persistent storage using
+GlusterFS you'll want to attach some extra disk images to the virtual machines.
+
+```
+ansible-playbook -i inventory/virthost/virthost.inventory vm-attach-disk.yml
+```
+
+Step 3. During the execution of _Step 1_ a local inventory should have been
+generated for you called `inventory/vms.local.generated` that contains the
+hosts and their IP addresses. You should be able to pass this inventory to the
+`kube-install.yml` playbook.
+
+Alternatively you can ignore the generated inventory and copy the example
+inventory directory from `inventory/examples/vms/` and modify to your hearts
+content.
+
+```
+ansible-playbook -i inventory/vms.local.generated kube-install.yml
+```
+
+
+Want more VMs? Edit the `inventory/virthost/host_vars/virthost.yml` and add
+an override list via `virtual_machines` (template in `group_vars/all.yml`).
+
 
 ### Setting a specific version
 
-You may optionally set the `kube_version` variable to install a specific version. This version number comes from a `yum search kubelet --showduplicates`. For example:
+You may optionally set the `kube_version` variable to install a specific
+version. This version number comes from a `yum search kubelet
+--showduplicates`. For example:
 
 ```
-ansible-playbook -i inventory/vms.inventory kube-install.yml -e 'kube_version=1.6.7-0'
+ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'kube_version=1.6.7-0'
 ```
 
 ## Using CRI-O
 
-You can also enable [cri-o](http://cri-o.io/) to have an OCI compatible runtime. Set the `container_runtime` variable in `./vars/all.yml` or as an extra var when you run the playbook: 
+You can also enable [cri-o](http://cri-o.io/) to have an OCI compatible
+runtime. Set the `container_runtime` variable in
+`inventory/vms.local.generated` under `[all_vms:vars]` or as an extra var when
+you run the playbook:
 
 ```
-$ ansible-playbook -i inventory/vms.inventory kube-install.yml -e 'container_runtime=crio'
+$ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
 ```
-
 
 ## About
 
