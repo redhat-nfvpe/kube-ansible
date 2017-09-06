@@ -1,5 +1,0 @@
----
-- hosts: kubehost
-  tasks: []
-  roles:
-    - { role: attach-disks }
