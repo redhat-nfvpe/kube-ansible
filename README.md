@@ -93,7 +93,7 @@ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'kube_vers
 
 ## Using CRI-O
 
-You can also enable [cri-o](http://cri-o.io/) to have an OCI compatible
+You can also enable [CRI-O](http://cri-o.io/) to have an OCI compatible
 runtime. Set the `container_runtime` variable in
 `inventory/vms.local.generated` under `[all_vms:vars]` or as an extra var when
 you run the playbook:
@@ -101,6 +101,8 @@ you run the playbook:
 ```
 $ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
 ```
+
+Additionally, the compilation of CRI-O requires a beefier machine, memory-wise. It's recommended you spin up the machines with 4 gigs of ram or greater. During the VM creation phase, should you use it. One may wish to add the parameters `-e "ram_mb=4096" ` to your playbook run of `virt-host-setup.yml`.
 
 ## About
 
