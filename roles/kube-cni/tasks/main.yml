@@ -4,7 +4,6 @@
 - name: Apply the flannel RBAC
   shell: >
     kubectl create -f /etc/flannel-rbac.yaml
-  environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "flannel"
@@ -12,7 +11,6 @@
 - name: Apply the flannel podnetwork
   shell: >
     kubectl apply -f /etc/flannel.yaml > /tmp/podnetwork-apply.log
-  environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "flannel"
@@ -22,7 +20,6 @@
 - name: Apply the weave podnetwork
   shell: >
     kubectl apply -f https://git.io/weave-kube > /tmp/podnetwork-apply.log
-  environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "weave"
@@ -31,7 +28,6 @@
 - name: Apply the multus podnetwork
   shell: >
     kubectl apply -f /etc/multus.yaml > /tmp/podnetwork-apply.log
-  environment: "{{ kubectl_environment }}"
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "multus"
@@ -50,7 +46,6 @@
 # - name: Wait until the kube-dns pod is up and running
 #   shell: >
 #     kubectl get pods --all-namespaces | grep -P "kube-dns.+4/4.+Running"
-#   environment: "{{ kubectl_environment }}"
 #   register: kube_dns_result
 #   until: kube_dns_result.rc == 0
 #   retries: 60

@@ -35,6 +35,7 @@
     - skopeo-containers
     - ostree
     - ostree-devel
+    - iptables
 
 - name: Make directories
   file:

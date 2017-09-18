@@ -31,8 +31,6 @@ kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 # Unstable
 # kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
 
-centos_genericcloud_url: "http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1611.qcow2"
-image_destination_name: CentOS-7-x86_64-GenericCloud.qcow2
 images_directory: /home/images
 bridge_name: virbr0
 virtual_machines:
@@ -42,11 +40,6 @@ virtual_machines:
   - kube-minion-3
 vm_parameters_ram_mb: 2048
 vm_parameters_cpus: 4
-
-# Kubernetes 1.6 additions
-kubectl_user: centos
-kubectl_group: centos
-kubectl_home: /home/centos
 
 # Implement a work-around for this:
 # https://github.com/kubernetes/kubernetes/issues/43815
