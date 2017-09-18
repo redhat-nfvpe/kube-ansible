@@ -1,7 +1,7 @@
 ---
 
 - name: Install deps for Buildah
-  yum: 
+  package: 
     name: "{{ item }}"
     state: present
   with_items:

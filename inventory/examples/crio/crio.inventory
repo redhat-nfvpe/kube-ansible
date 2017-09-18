@@ -1,0 +1,36 @@
+kube-master ansible_host=master.example.local
+kube-minion-1 ansible_host=minion.example.local
+
+kubehost ansible_host=192.168.1.119 ansible_ssh_user=root
+
+[kubehost]
+kubehost
+
+[kubehost:vars]
+# Using Fedora
+centos_genericcloud_url=https://download.fedoraproject.org/pub/fedora/linux/releases/26/CloudImages/x86_64/images/Fedora-Cloud-Base-26-1.5.x86_64.qcow2
+image_destination_name=Fedora-Cloud-Base-26-1.5.x86_64.qcow2
+
+[master]
+kube-master
+
+[minions]
+kube-minion-1
+# kube-minion-2
+# kube-minion-3
+
+[all_vms]
+kube-master
+kube-minion-1
+# kube-minion-2
+# kube-minion-3
+
+[all_vms:vars]
+ansible_ssh_user=fedora
+ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms
+# Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
+# container_runtime=crio
+# Using Fedora
+kubectl_home=/home/fedora
+kubectl_user=fedora
+kubectl_group=fedora

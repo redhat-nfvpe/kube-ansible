@@ -102,7 +102,13 @@ you run the playbook:
 $ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
 ```
 
-Additionally, the compilation of CRI-O requires a beefier machine, memory-wise. It's recommended you spin up the machines with 4 gigs of ram or greater. During the VM creation phase, should you use it. One may wish to add the parameters `-e "ram_mb=4096" ` to your playbook run of `virt-host-setup.yml`.
+Additionally, the compilation of CRI-O requires a beefier machine, memory-wise. It's recommended you spin up the machines with 4 gigs of ram or greater during the VM creation phase, should you use it. One may wish to add the parameters `-e "vm_parameters_ram_mb=4096"` to your playbook run of `virt-host-setup.yml`.
+
+## Using Fedora
+
+Use of Fedora is currently suggested should you require the use of Buildah. Buildah requires functionality in later Linux kernels that are unavailable in recent versions of CentOS.
+
+Take a gander at the `./inventory/examples/crio/crio.inventory` for an example of how to override the proper variables to use Fedora.
 
 ## About
 
