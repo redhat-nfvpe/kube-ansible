@@ -27,10 +27,26 @@
     path: "{{ images_directory }}"
     state: directory
 
-- name: Download CentOS cloud image
+- name: Download CentOS (or Fedora) cloud image
   get_url:
     url: "{{ centos_genericcloud_url }}"
     dest: "{{ images_directory }}/{{ image_destination_name }}"
+  register: download_image
+
+- name: Default to not resizing cloud image
+  set_fact:
+    resize_image: false
+
+- name: Flag for resizing
+  set_fact:
+    resize_image: true
+  when: increase_root_size_gigs is defined
+
+- name: Increase root disk size (optionally)
+  shell: >
+    qemu-img resize {{ images_directory }}/{{ image_destination_name }} +{{ increase_root_size_gigs }}G
+  when: resize_image and download_image.changed
+
 
 - name: Generate an ssh key for root
   user:
