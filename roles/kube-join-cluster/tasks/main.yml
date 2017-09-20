@@ -17,14 +17,14 @@
     kubeadm_join_command: "{{ modified_command.stdout }}"
   when: container_runtime == "crio"  or skip_preflight_checks
 
-- name: Join each minion to the master with the join command
+- name: Join each node to the master with the join command
   shell: >
     {{ kubeadm_join_command }}
   args:
     creates: /etc/.kubeadm-joined
   # when: pod_network_type != "none"
 
-- name: Mark the minions as joined
+- name: Mark the nodes as joined
   file:
     path: /etc/.kubeadm-joined
     state: directory
