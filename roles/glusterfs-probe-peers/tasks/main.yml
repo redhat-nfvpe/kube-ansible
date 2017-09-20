@@ -10,4 +10,4 @@
   shell: >
     gluster peer probe {{ hostvars[item]['ansible_host'] }}
   when: "hostvars[item]['ansible_host'] not in peer_status.stdout"
-  with_items: "{{ groups['minions'] }}"
+  with_items: "{{ groups['nodes'] }}"

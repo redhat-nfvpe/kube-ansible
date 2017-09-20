@@ -10,7 +10,7 @@ container_runtime: docker
 crio_version: v1.0.0-rc1
 
 # Pod net work types
-# A value of "none" will create no networking and will not join minions to cluster.
+# A value of "none" will create no networking and will not join nodes to cluster.
 # Valid values:
 # - flannel
 # - weave
@@ -35,9 +35,9 @@ images_directory: /home/images
 bridge_name: virbr0
 virtual_machines:
   - kube-master
-  - kube-minion-1
-  - kube-minion-2
-  - kube-minion-3
+  - kube-node-1
+#  - kube-node-2
+#  - kube-node-3
 vm_parameters_ram_mb: 2048
 vm_parameters_cpus: 4
 

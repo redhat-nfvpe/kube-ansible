@@ -1,5 +1,5 @@
 kube-master ansible_host=master.example.local
-kube-minion-1 ansible_host=minion.example.local
+kube-node-1 ansible_host=node.example.local
 kubehost ansible_host=virt-host.example.local ansible_ssh_user=root
 
 [kubehost]
@@ -14,12 +14,12 @@ increase_root_size_gigs=10
 [master]
 kube-master
 
-[minions]
-kube-minion-1
+[nodes]
+kube-node-1
 
 [all_vms]
 kube-master
-kube-minion-1
+kube-node-1
 
 [all_vms:vars]
 # Using Fedora

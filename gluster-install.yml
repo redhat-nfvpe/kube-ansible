@@ -18,7 +18,7 @@
 #     - { role: glusterfs-create-volume, volume_appendix: 4 }
 #     - { role: glusterfs-create-volume, volume_appendix: 5 }
 
-- hosts: minions
+- hosts: nodes
   become: true
   become_user: root
   tasks: 

@@ -37,7 +37,7 @@
     - { role: kube-cni }
 
 
-- hosts: minions
+- hosts: nodes
   become: true
   become_user: root
   pre_tasks:
