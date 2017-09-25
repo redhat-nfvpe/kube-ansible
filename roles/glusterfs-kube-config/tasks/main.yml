@@ -43,6 +43,13 @@
     dest: /home/centos/gluster-kubernetes
     version: "{{ gluster_kubernetes_version }}"
 
+- name: Change heketi image tag (hackish sed, I know. I know. But, as a stop gap.)
+  shell: >
+    find . -type f -print0 | xargs -0 sed -i 's|heketi/heketi:dev|{{ heketi_image_name }}|g'
+  args:
+    chdir: /home/centos/gluster-kubernetes
+  when: "heketi_image_name != 'heketi/heketi:dev'"
+
 - name: Template GlusterFS gk-deploy topology json
   template:
     src: glusterfs-topology.json.j2
@@ -74,7 +81,7 @@
 
 - name: Deploy GlusterFS on Kubernetes with gk-deploy (note -- this is coffee break worthy, it takes a while)
   shell: >
-    ./gk-deploy -n gluster -g -y
+    ./gk-deploy -n gluster -w {{ gk_deploy_wait_seconds }} -g -y
   args:
     chdir: /home/centos/gluster-kubernetes/deploy
     creates: /home/centos/.gk-deployed
