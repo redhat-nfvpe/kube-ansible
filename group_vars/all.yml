@@ -27,6 +27,7 @@ skip_preflight_checks: true
 
 # Stable. (was busted at 1.6 release, may work now, untested for a couple months)
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+kube_version: 1.7.5-0
 
 # Unstable
 # kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
