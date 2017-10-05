@@ -57,6 +57,7 @@ host (skip to step 3 if you already have an inventory)
 > * `ssh_proxy_enabled: true`  _proxy via jump host (remote virthost)_
 > * `ssh_proxy_user: root`  _username to SSH into virthost_
 > * `ssh_proxy_host: virthost`  _hostname or IP of virthost_
+> * `ssh_proxy_port: 2222` _port of the virthost (optional, default 22)_
 > * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
 
 ```
@@ -116,6 +117,3 @@ Initially inspired by:
 
 * [k8s 1.5 on Centos](http://linoxide.com/containers/setup-kubernetes-kubeadm-centos/)
 * [kubeadm getting started](https://kubernetes.io/docs/getting-started-guides/kubeadm/)
-
-
-
