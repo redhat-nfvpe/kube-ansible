@@ -1,0 +1,7 @@
+# vim: set ft=ansible
+
+# Deploy OpenStack virtual machines
+- include: openstack.yml
+
+# Install Kubernetes?
+- include: kube-install.yml

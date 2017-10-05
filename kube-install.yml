@@ -1,5 +1,5 @@
 ---
-- hosts: all_vms
+- hosts: all
   become: true
   become_user: root
   tasks: []
@@ -12,7 +12,7 @@
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
-- hosts: all_vms
+- hosts: all
   become: true
   become_user: root
   tasks:
@@ -36,6 +36,16 @@
   roles:
     - { role: kube-cni }
 
+- hosts: master
+  tasks:
+    - name: Wait for kube-master to be ready
+      shell: >
+        kubectl get nodes | grep kube-master | awk '{print $2}' | grep -P "^Ready"
+      register: result
+      until: result|success
+      retries: 300
+      delay: 5
+      no_log: True
 
 - hosts: nodes
   become: true

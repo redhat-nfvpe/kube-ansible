@@ -1,0 +1,51 @@
+# vim: set ft=ansible
+- name: Deploy on OpenStack
+  hosts: localhost
+  tags:
+    - always
+
+  gather_facts: false
+  vars_files:
+    - ~/.ansible/vars/rdo_vars.yml
+
+  tasks:
+    - name: Deploy an instance
+      os_server:
+        name: "{{ cloud_name_prefix }}-{{ item.name }}"
+        state: present
+        cloud: "{{ cloud_name }}"
+        region_name: "{{ cloud_region_name }}"
+        availability_zone: "{{ cloud_availability_zone }}"
+        image: "{{ cloud_image }}"
+        flavor: "{{ cloud_flavor }}"
+        key_name: "{{ cloud_key_name }}"
+        boot_from_volume: true
+        terminate_volume: true
+        volume_size: 20
+        security_groups: "{{ item.security_groups }}"
+        auto_ip: yes
+        timeout: 200
+      register: instances
+      with_items: "{{ instance_list }}"
+
+    - name: Validate the host is available
+      command: >
+        ssh -o BatchMode=yes -o StrictHostKeyChecking=no
+        centos@{{ item.server.public_v4 }}
+      register: result
+      until: result|success
+      retries: 300
+      delay: 5
+      with_items: "{{ instances.results }}"
+      changed_when: false
+      no_log: True
+
+    - name: Add host to inventory
+      add_host:
+        name: "{{ item.item.name }}"
+        groups: "{{ item.item.group }}"
+        ansible_host: "{{ item.server.public_v4 }}"
+        ansible_user: centos
+        #ansible_become: true
+      with_items: "{{ instances.results }}"
+      no_log: True
