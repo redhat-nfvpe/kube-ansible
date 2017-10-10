@@ -27,7 +27,15 @@ skip_preflight_checks: true
 
 # Stable. (was busted at 1.6 release, may work now, untested for a couple months)
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
-kube_version: 1.7.5-0
+
+# Kube Version
+# Accepts "latest" or the version part of an RPM (typically based on the kubelet RPM).
+# For example if you were to look at `yum search kubelet --showduplicates`
+# You'd see things like "kubelet-1.7.5-0.x86_64"
+# You'd use "1.7.5-0" here, such as:
+# kube_version: 1.7.5-0
+# The default is... "latest"
+kube_version: "latest"
 
 # Unstable
 # kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
@@ -45,6 +53,9 @@ vm_parameters_cpus: 4
 # Implement a work-around for this:
 # https://github.com/kubernetes/kubernetes/issues/43815
 kube_16_workaround: false
+
+# Kubectl proxy.
+kubectl_proxy_port: 8088
 
 # --------------------------- -
 # multus-cni vars          - -

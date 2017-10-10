@@ -47,3 +47,10 @@
   tasks: []
   roles:
     - { role: kube-join-cluster }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: kubectl-proxy-systemd }

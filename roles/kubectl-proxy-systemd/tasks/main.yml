@@ -1,0 +1,30 @@
+# Creates a systemd unit and starts kubectl proxy.
+# https://kubernetes.io/docs/user-guide/kubectl/v1.8/#proxy
+
+- name: Install jq binary
+  get_url:
+    url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+    dest: /usr/bin/jq
+    mode: 0755
+
+- name: Template kubectl proxy systemd unit
+  template:
+    src: kubectl-proxy.service.j2
+    dest: /etc/systemd/system/kubectl-proxy.service
+  register: template_kubectlproxy_unit
+
+- name: Systemctl daemon-reload when appropriate
+  shell: >
+    systemctl daemon-reload
+  when: template_kubectlproxy_unit.changed
+
+- name: Restart proxy when changed
+  service: 
+    name: kubectl-proxy
+    state: restarted
+  when: template_kubectlproxy_unit.changed
+
+- name: Always ensure proxy is started
+  service: 
+    name: kubectl-proxy
+    state: started

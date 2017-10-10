@@ -42,6 +42,7 @@
     repo: https://github.com/gluster/gluster-kubernetes.git
     dest: /home/centos/gluster-kubernetes
     version: "{{ gluster_kubernetes_version }}"
+    force: yes
 
 - name: Change heketi image tag (hackish sed, I know. I know. But, as a stop gap.)
   shell: >
@@ -91,10 +92,18 @@
     path: /home/centos/.gk-deployed
     state: directory
 
-- name: Get the heketi IP address
+- name: Query the API for the heketi IP address
   shell: >
-    kubectl get svc --namespace=gluster | grep 8080 | awk '{print $2}'
+    curl -s localhost:{{ kubectl_proxy_port }}/api/v1/namespaces/gluster/services/heketi | jq -r .spec.clusterIP
   register: heketi_ipaddress_raw
+
+- name: Fail when there's no IP address (this could use grooming)
+  fail:
+    msg: "That sure doesn't look like an IP address in the heketi service response from the kube api"
+  when: heketi_ipaddress_raw.stdout == "null"
+
+- debug:
+    msg: "The heketi ip address is: {{ heketi_ipaddress_raw.stdout }}"
 
 - name: Set the heketi IP
   set_fact:
