@@ -13,18 +13,15 @@
     dest: /etc/systemd/system/kubectl-proxy.service
   register: template_kubectlproxy_unit
 
-- name: Systemctl daemon-reload when appropriate
-  shell: >
-    systemctl daemon-reload
-  when: template_kubectlproxy_unit.changed
-
 - name: Restart proxy when changed
-  service: 
+  systemd:
     name: kubectl-proxy
     state: restarted
+    daemon_reload: yes
   when: template_kubectlproxy_unit.changed
-
+  
 - name: Always ensure proxy is started
-  service: 
+  systemd:
     name: kubectl-proxy
     state: started
+    daemon_reload: yes
