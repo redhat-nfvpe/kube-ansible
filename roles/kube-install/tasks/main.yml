@@ -55,10 +55,10 @@
   set_fact: 
     kube_version_parameter: ""
 
-- name: Default kube version fact
+- name: Set kube version fact to specific version when specified
   set_fact: 
     kube_version_parameter: "-{{ kube_version }}"
-  when: kube_version is defined
+  when: kube_version != "latest"
 
 - name: Install required packages
   package:
