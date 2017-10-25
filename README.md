@@ -1,7 +1,12 @@
-# kube-centos-ansible
+# Kucean
 
 Install a kubernetes cluster on CentOS VMs (or baremetal), including CNI pod
 networking (defaults to Flannel, also has ability to deploy Weave and Multus).
+
+kube-centos-ansible is the project name, which can be compactly referred to as
+_kucean_ i.e. (ku)bernetes-(ce)ntos-(an)sible
+
+**kucean** p. koo-see-ehn
 
 ## Want some more detail?
 
