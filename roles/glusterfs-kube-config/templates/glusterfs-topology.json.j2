@@ -7,10 +7,10 @@
           "node": {
             "hostnames": {
               "manage": [
-                "{{ machine }}"
+                "{{ hostvars[machine]['ansible_hostname'] }}"
               ],
               "storage": [
-                "{{ hostvars[machine]['ansible_host'] }}"
+                "{{ hostvars[machine]['ansible_default_ipv4']['address'] }}"
               ]
             },
             "zone": 1

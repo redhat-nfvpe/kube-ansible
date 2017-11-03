@@ -5,12 +5,12 @@
 
 - name: Initialize fact for list of nodes
   set_fact:
-    host_brick_string: "{{ hostvars[inventory_hostname]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
+    host_brick_string: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:/bricks/brick1/brick{{ volume_appendix }} "
     number_hosts: "{{ ( groups['nodes'] | length ) + 1 }}"
 
 - name: Loop through and create "host:/brick/" string given list of nodes
   set_fact:
-    host_brick_string: "{{ host_brick_string }}{{ hostvars[item]['ansible_host'] }}:/bricks/brick1/brick{{ volume_appendix }} "
+    host_brick_string: "{{ host_brick_string }}{{ hostvars[item]['ansible_default_ipv4']['address'] }}:/bricks/brick1/brick{{ volume_appendix }} "
   with_items: "{{ groups['nodes'] }}"
 
 # - name: Debug list of gluster volume hosts

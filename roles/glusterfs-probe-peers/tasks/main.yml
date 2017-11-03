@@ -8,6 +8,6 @@
 # [root@kube-master ~]# gluster peer detach 192.168.122.17
 - name: Probe each peer not in the status.
   shell: >
-    gluster peer probe {{ hostvars[item]['ansible_host'] }}
-  when: "hostvars[item]['ansible_host'] not in peer_status.stdout"
+    gluster peer probe {{ hostvars[item]['ansible_default_ipv4']['address'] }}
+  when: "hostvars[item]['ansible_default_ipv4']['address'] not in peer_status.stdout"
   with_items: "{{ groups['nodes'] }}"
