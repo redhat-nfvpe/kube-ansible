@@ -17,11 +17,17 @@ kube-master
 [nodes]
 kube-node-1
 
-[all_vms]
-kube-master
-kube-node-1
+[master:vars]
+# Using Fedora
+ansible_ssh_user=fedora
+ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms
+kubectl_home=/home/fedora
+kubectl_user=fedora
+kubectl_group=fedora
+# Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
+# container_runtime=crio
 
-[all_vms:vars]
+[nodes:vars]
 # Using Fedora
 ansible_ssh_user=fedora
 ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms

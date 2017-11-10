@@ -1,5 +1,5 @@
 ---
-- hosts: all_vms
+- hosts: master,nodes
   become: true
   become_user: root
   tasks: []
@@ -12,7 +12,7 @@
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
-- hosts: all_vms
+- hosts: master,nodes
   become: true
   become_user: root
   tasks:
