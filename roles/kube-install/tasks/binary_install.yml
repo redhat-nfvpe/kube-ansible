@@ -1,0 +1,50 @@
+---
+
+- name: Check for download complete semaphor
+  stat:
+    path: "{{ kubectl_home }}/.kube-binary-download-complete"
+  register: download_complete_semaphor
+
+- name: Delete existing binaries when necessary
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items:
+    - path: /usr/bin/kubelet
+      url_is_set: "{{ binary_kubelet_url is defined }}"
+    - path: /usr/bin/kubectl
+      url_is_set: "{{ binary_kubectl_url is defined }}"
+    - path: /usr/bin/kubeadm
+      url_is_set: "{{ binary_kubeadm_url is defined }}"
+  when: >
+    item.url_is_set and
+    (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
+
+- name: Download kubelet
+  get_url:
+    url: "{{ binary_kubelet_url }}"
+    dest: /usr/bin/kubelet
+    mode: 0755
+    force: "{{ binary_install_force_redownload }}"
+  when: binary_kubelet_url is defined
+
+- name: Download kubectl
+  get_url:
+    url: "{{ binary_kubectl_url }}"
+    dest: /usr/bin/kubectl
+    mode: 0755
+    force: "{{ binary_install_force_redownload }}"
+  when: binary_kubectl_url is defined
+
+- name: Download kubeadm
+  get_url:
+    url: "{{ binary_kubeadm_url }}"
+    dest: /usr/bin/kubeadm
+    mode: 0755
+    force: "{{ binary_install_force_redownload }}"
+  when: binary_kubeadm_url is defined
+
+- name: Mark download complete
+  file:
+    path: "{{ kubectl_home }}/.kube-binary-download-complete"
+    state: directory

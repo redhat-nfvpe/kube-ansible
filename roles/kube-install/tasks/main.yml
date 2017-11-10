@@ -70,7 +70,9 @@
     - kubeadm{{ kube_version_parameter }}
     - kubernetes-cni
 
-
+- name: Optionally include playbook for binary install
+  include: binary_install.yml
+  when: binary_install
 
 - name: Install docker (when using docker mode)
   package:
