@@ -28,6 +28,9 @@ skip_preflight_checks: true
 # Stable. (was busted at 1.6 release, may work now, untested for a couple months)
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 
+# Unstable
+# kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
+
 # Kube Version
 # Accepts "latest" or the version part of an RPM (typically based on the kubelet RPM).
 # For example if you were to look at `yum search kubelet --showduplicates`
@@ -37,8 +40,13 @@ kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 # The default is... "latest"
 kube_version: "latest"
 
-# Unstable
-# kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
+# Binary install
+# Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
+# binary_install: true
+# binary_install_force_redownload: false
+# binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
+# binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
+# binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
 
 images_directory: /home/images
 bridge_name: virbr0
