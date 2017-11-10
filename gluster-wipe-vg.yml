@@ -1,4 +1,4 @@
-- hosts: all_vms
+- hosts: master,nodes
   become: true
   become_user: root
   tasks:
@@ -11,6 +11,5 @@
       shell: >
         vgremove {{ vgoutput.stdout }}
       when: "'vg_' in vgoutput.stdout"
-      
-  roles: []
 
+  roles: []

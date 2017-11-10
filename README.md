@@ -99,9 +99,14 @@ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'kube_vers
 
 ## Install specific binaries
 
-By default, we install the kubelet (and `kubeadm`, `kubectl` and the core CNI plugins) via RPM. However, if you'd like to install specific binaries for either the kubelet, kubeadm or kubetl -- you can do so by specifying that you'd like to perform a binary install and specify URLs (that point to, say, binaries in a GitHub release).
+By default, we install the kubelet (and `kubeadm`, `kubectl` and the core CNI
+plugins) via RPM. However, if you'd like to install specific binaries for
+either the kubelet, kubeadm or kubetl -- you can do so by specifying that you'd
+like to perform a binary install and specify URLs (that point to, say, binaries
+in a GitHub release).
 
-There are sample variables provided in the `./group_vars/all.yml` file, and you can set them up such as:
+There are sample variables provided in the `./group_vars/all.yml` file, and you
+can set them up such as:
 
 ```
 binary_install: true
@@ -115,20 +120,26 @@ binary_install_force_redownload: false
 
 You can also enable [CRI-O](http://cri-o.io/) to have an OCI compatible
 runtime. Set the `container_runtime` variable in
-`inventory/vms.local.generated` under `[all_vms:vars]` or as an extra var when
-you run the playbook:
+`inventory/vms.local.generated` under `[master:vars]` and `[nodes:vars]`, or as
+an extra var when you run the playbook:
 
 ```
 $ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
 ```
 
-Additionally, the compilation of CRI-O requires a beefier machine, memory-wise. It's recommended you spin up the machines with 4 gigs of ram or greater during the VM creation phase, should you use it. One may wish to add the parameters `-e "vm_parameters_ram_mb=4096"` to your playbook run of `virt-host-setup.yml`.
+Additionally, the compilation of CRI-O requires a beefier machine, memory-wise.
+It's recommended you spin up the machines with 4 gigs of ram or greater during
+the VM creation phase, should you use it. One may wish to add the parameters
+`-e "vm_parameters_ram_mb=4096"` to your playbook run of `virt-host-setup.yml`.
 
 ## Using Fedora
 
-Use of Fedora is currently suggested should you require the use of Buildah. Buildah requires functionality in later Linux kernels that are unavailable in recent versions of CentOS.
+Use of Fedora is currently suggested should you require the use of Buildah.
+Buildah requires functionality in later Linux kernels that are unavailable in
+recent versions of CentOS.
 
-Take a gander at the `./inventory/examples/crio/crio.inventory` for an example of how to override the proper variables to use Fedora.
+Take a gander at the `./inventory/examples/crio/crio.inventory` for an example
+of how to override the proper variables to use Fedora.
 
 ## About
 

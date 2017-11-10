@@ -1,5 +1,5 @@
 ---
-- hosts: all_vms
+- hosts: master,nodes
   tasks: []
   roles:
     - { role: multus-cni }
