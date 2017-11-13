@@ -33,7 +33,7 @@
 # The kube_version variable can be from this list...
 # That is, the `yum search kubelet --showduplicates`
 # (as of 8/9/17)
-# 
+#
 # e.g. you would use "1.6.6-0" for kube 1.6.6
 #
 # kubelet-1.5.4-0.x86_64 : Container cluster management
@@ -52,11 +52,11 @@
 # kubelet-1.7.3-1.x86_64 : Container cluster management
 
 - name: Default kube version fact
-  set_fact: 
+  set_fact:
     kube_version_parameter: ""
 
 - name: Set kube version fact to specific version when specified
-  set_fact: 
+  set_fact:
     kube_version_parameter: "-{{ kube_version }}"
   when: kube_version != "latest"
 
