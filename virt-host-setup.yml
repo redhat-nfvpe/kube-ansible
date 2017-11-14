@@ -1,6 +1,7 @@
 ---
-- hosts: kubehost
+- hosts: virthost
   tasks: []
+
   roles:
     - { role: virthost-basics }
     - { role: vm-spinup }
