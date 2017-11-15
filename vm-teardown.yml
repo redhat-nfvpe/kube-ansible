@@ -1,5 +1,5 @@
 ---
-- hosts: kubehost
+- hosts: virthost
   tasks: []
   roles:
     - { role: vm-teardown }
