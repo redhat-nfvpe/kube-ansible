@@ -66,7 +66,7 @@ host (skip to step 3 if you already have an inventory)
 > * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
 
 ```
-ansible-playbook -i inventory/virthost/ virt-host-setup.yml
+ansible-playbook -i inventory/virthost/ playbooks/virt-host-setup.yml
 ```
 
 Step 3. During the execution of _Step 1_ a local inventory should have been
@@ -79,7 +79,7 @@ inventory directory from `inventory/examples/vms/` and modify to your hearts
 content.
 
 ```
-ansible-playbook -i inventory/vms.local.generated kube-install.yml
+ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
 ```
 
 
@@ -94,7 +94,9 @@ version. This version number comes from a `yum search kubelet
 --showduplicates`. For example:
 
 ```
-ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'kube_version=1.6.7-0'
+ansible-playbook -i inventory/vms.local.generated \
+    playbooks/kube-install.yml \
+    -e 'kube_version=1.6.7-0'
 ```
 
 ## Install specific binaries
@@ -124,7 +126,9 @@ runtime. Set the `container_runtime` variable in
 an extra var when you run the playbook:
 
 ```
-$ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
+$ ansible-playbook -i inventory/vms.local.generated \
+    playbooks/kube-install.yml \
+    -e 'container_runtime=crio'
 ```
 
 Additionally, the compilation of CRI-O requires a beefier machine, memory-wise.
