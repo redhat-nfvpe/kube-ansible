@@ -1,28 +1,27 @@
 # Kucean
 
-Install a kubernetes cluster on CentOS VMs (or baremetal), including CNI pod
-networking (defaults to Flannel, also has ability to deploy Weave and Multus).
+**Kucean** (p. koo-see-ehn) is a set of Ansible playbooks and roles that allows
+you to instantiate a vanilla Kubernetes cluster on CentOS virtual machines or
+baremetal.
 
-kube-centos-ansible is the project name, which can be compactly referred to as
-_kucean_ i.e. (ku)bernetes-(ce)ntos-(an)sible
+Additionally, kucean includes CNI pod networking (defaulting to Flannel, with
+an ability to deploy Weave and Multus).
 
-**kucean** p. koo-see-ehn
-
-## Want some more detail?
-
-This document is... Kind of terse. Want a complete walkthrough? Check out my
-[blog article detailing how to get it going from scratch](http://dougbtv.com/nfvpe/2017/02/16/kubernetes-1.5-centos/).
+`kube-centos-ansible` is the project name, which can be compactly referred to
+as _kucean_ i.e. (_ku_)bernetes-(_ce_)ntos-(_an_)sible
 
 ## Playbooks
 
-| Playbook              | Inventory                         | Purpose                                                          |
-|-----------------------|-----------------------------------|------------------------------------------------------------------|
-| `virt-host-setup.yml` | `./inventory/virthost/`           | Provision a virtual machine host                                 |
-| `kube-install.yml`    | `./inventory/vms.local.generated` | Install and configure a k8s cluster                              |
-| `kube-teardown.yml`   | `./inventory/vms.local.generated` | Runs `kubeadm reset` on all nodes to tear down k8s               |
-| `vm-teardown.yml`     | `./inventory/virthost/`           | Destroys VMs on the virtual machine host                         |
-| `multus-cni.yml`      | `./inventory/vms.local.generated` | Compiles [multus-cni](https://github.com/Intel-Corp/multus-cni)  |
-| `gluster-install.yml` | `inventory/vms.local.generated`   | Install a GlusterFS cluster across VMs (requires vm-attach-disk) |
+| Playbook                         | Inventory                             | Purpose                                                            |
+| -------------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| `virt-host-setup.yml`            | `./inventory/virthost/`               | Provision a virtual machine host                                   |
+| `kube-install.yml`               | `./inventory/vms.local.generated`     | Install and configure a k8s cluster                                |
+| `kube-teardown.yml`              | `./inventory/vms.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
+| `vm-teardown.yml`                | `./inventory/virthost/`               | Destroys VMs on the virtual machine host                           |
+| `multus-cni.yml`                 | `./inventory/vms.local.generated`     | Compiles [multus-cni](https://github.com/Intel-Corp/multus-cni)    |
+| `gluster-install.yml`            | `./inventory/vms.local.generated`     | Install a GlusterFS cluster across VMs (requires vm-attach-disk)   |
+| `fedora-python-bootstrapper.yml` | `./inventory/vms.local.generated`     | Bootstrapping Python dependencies on cloud images                  |
+
 
 
 *(Table generated with [markdown tables](http://www.tablesgenerator.com/markdown_tables))*
@@ -66,7 +65,7 @@ host (skip to step 3 if you already have an inventory)
 > * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
 
 ```
-ansible-playbook -i inventory/virthost/ virt-host-setup.yml
+ansible-playbook -i inventory/virthost/ playbooks/virt-host-setup.yml
 ```
 
 Step 3. During the execution of _Step 1_ a local inventory should have been
@@ -79,7 +78,7 @@ inventory directory from `inventory/examples/vms/` and modify to your hearts
 content.
 
 ```
-ansible-playbook -i inventory/vms.local.generated kube-install.yml
+ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
 ```
 
 
@@ -94,7 +93,9 @@ version. This version number comes from a `yum search kubelet
 --showduplicates`. For example:
 
 ```
-ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'kube_version=1.6.7-0'
+ansible-playbook -i inventory/vms.local.generated \
+    playbooks/kube-install.yml \
+    -e 'kube_version=1.6.7-0'
 ```
 
 ## Install specific binaries
@@ -124,7 +125,9 @@ runtime. Set the `container_runtime` variable in
 an extra var when you run the playbook:
 
 ```
-$ ansible-playbook -i inventory/vms.local.generated kube-install.yml -e 'container_runtime=crio'
+$ ansible-playbook -i inventory/vms.local.generated \
+    playbooks/kube-install.yml \
+    -e 'container_runtime=crio'
 ```
 
 Additionally, the compilation of CRI-O requires a beefier machine, memory-wise.
