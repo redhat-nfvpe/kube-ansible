@@ -62,6 +62,11 @@
     regexp: '{{ item.key }}'
   with_dict: "{{ vm_ips_dict }}"
 
+- name: Setup default ssh_proxy_host
+  set_fact:
+    ssh_proxy_host: "{{ ansible_host }}"
+  when: not ssh_proxy_host is defined and ssh_proxy_enabled
+
 - name: Build a local inventory
   template:
     src: vms.local.j2

@@ -1,4 +1,3 @@
 ---
 ssh_proxy_enabled: false
 ssh_proxy_user: root
-ssh_proxy_host: virthost
