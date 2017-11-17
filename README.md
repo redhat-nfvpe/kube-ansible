@@ -167,8 +167,15 @@ Once you're logged into your Kubernetes master node, run the following command
 to check the state of your cluster.
 
 ```
-kubectl 
+kubectl get nodes
+NAME          STATUS    ROLES     AGE       VERSION
+kube-master   Ready     master    10m       v1.8.3
+kube-node-1   Ready     <none>    9m        v1.8.3
+kube-node-2   Ready     <none>    9m        v1.8.3
+kube-node-3   Ready     <none>    9m        v1.8.3
 ```
+
+Everything should be marked as ready. If so, you're good to go!
 
 # Additional Scenarios and Usage
 
