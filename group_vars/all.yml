@@ -102,3 +102,5 @@ bridge_name: virbr0
 bridge_physical_nic: "enp1s0f1"
 bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
+
+ipv6: false
