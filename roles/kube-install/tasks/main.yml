@@ -95,19 +95,25 @@
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: 'systemd$'
     line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=systemd'
+  notify: "restart kubelet"
 
-- name: Reload systemd units after changing 10-kubeadm.conf
-  command: systemctl daemon-reload
+- name: Change cluster dns ip in kubadm.conf for ipv6
+  lineinfile:
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: 'cluster-dns'
+    line: 'Environment="KUBELET_DNS_ARGS=--cluster-dns=fd00:1234::10 --cluster-domain=cluster.local"'
+  notify: "restart kubelet"
+  when: ipv6
 
-- name: Start and enable kubelet
+- name: make sure kubelet is started and enabled
   service:
     name: "kubelet"
-    state: restarted
+    state: started
     enabled: yes
 
 - name: Start docker when appropriate
   service:
     name: "docker"
-    state: restarted
+    state: started
     enabled: yes
   when: "container_runtime == 'docker'"
