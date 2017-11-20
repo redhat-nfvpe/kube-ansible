@@ -8,17 +8,14 @@ kube-master
 [nodes]
 kube-node-1
 kube-node-2
-kube-node-3
 
-{% set kube_groups = ['master','nodes'] %}
-{% for kube_group in kube_groups %}
-[{{ kube_group }}:vars]
+[all:vars]
 ansible_user=centos
+ansible_become=true
+ansible_become_user=root
 {% if ssh_proxy_enabled %}
 ansible_ssh_common_args='-o ProxyCommand="ssh{% if ssh_proxy_port is defined %}-p {{ ssh_proxy_port }}{% endif %} -W %h:%p {{ ssh_proxy_user }}@{{ ssh_proxy_host }}"'
 {% endif %}
 {% if vm_ssh_key_path is defined %}
 ansible_ssh_private_key_file={{ vm_ssh_key_path }}
 {% endif %}
-
-{% endfor %}

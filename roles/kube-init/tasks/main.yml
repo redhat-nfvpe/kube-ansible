@@ -11,7 +11,17 @@
 - name: Set pod-network-cidr when flannel
   set_fact:
     arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
-  when: pod_network_type != "weave"
+  when: pod_network_type != "weave" and not ipv6
+
+- name: Use config file for ipv6 for pod-network-cidr
+  set_fact:
+    arg_pod_network: "--config=/root/kubeadm_v6.cfg"
+  when: ipv6
+
+- name: create kubadm_v6.cfg
+  copy:
+    src: kubeadm_v6.cfg
+    dest: /root/kubeadm_v6.cfg
 
 - name: Default cri-o flags to empty
   set_fact:

@@ -1,0 +1,3 @@
+---
+cni_subnet: fd00:101::/64
+cni_gateway: fd00:101::1
