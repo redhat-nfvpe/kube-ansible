@@ -38,6 +38,11 @@
     - { role: kube-niceties }
 
 
+- hosts: master
+  tasks: []
+  roles:
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd"}
+
 - hosts: nodes
   become: true
   become_user: root
