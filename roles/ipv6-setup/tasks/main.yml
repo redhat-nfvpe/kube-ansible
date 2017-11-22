@@ -42,6 +42,11 @@
     name: br_netfilter
     state: present
 
+- name: load ip6table_filter
+  modprobe:
+    name: ip6table_filter
+    state: present
+
 - name: configure bridge-nf-call-ip6tables
   sysctl:
     name: net.bridge.bridge-nf-call-ip6tables
