@@ -70,6 +70,18 @@
     - kubeadm{{ kube_version_parameter }}
     - kubernetes-cni
 
+- name: Install CNI plugins 0.6.0 for ipv6
+  shell: |
+    ARCHIVE=cni-plugins-amd64-v0.6.0.tgz
+    mkdir -p /opt/cni/bin
+    cd /opt/cni/bin
+    rm -f *
+    sudo curl -SLO https://github.com/containernetworking/plugins/releases/download/v0.6.0/$ARCHIVE
+    if sudo tar -xzvf $ARCHIVE; then
+      sudo rm $ARCHIVE
+    fi
+  when: ipv6
+
 - name: Optionally include playbook for binary install
   include: binary_install.yml
   when: binary_install
