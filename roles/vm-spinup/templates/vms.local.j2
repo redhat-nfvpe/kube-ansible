@@ -2,12 +2,13 @@
 {{ key }} ansible_host={{ value }}
 {% endfor %}
 
-[master]
-kube-master
+{% for grouper, list in virtual_machines|groupby('role') %}
+[{{ grouper }}]
+{% for server in list %}
+{{ server.name }}
+{% endfor %}
 
-[nodes]
-kube-node-1
-kube-node-2
+{% endfor %}
 
 [all:vars]
 ansible_user=centos
