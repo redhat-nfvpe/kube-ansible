@@ -16,32 +16,9 @@ metadata:
 data:
   cni-conf.json: |
     {
-      "name": "multus-demo",
+      "name": "minion-cni-network",
       "type": "multus",
-      "delegates": [
-        {
-          "type": "macvlan",
-          "master": "eth0",
-          "mode": "bridge",
-          "ipam": {
-            "type": "host-local",
-            "subnet": "{{ multus_ipam_subnet }}",
-            "rangeStart": "{{ multus_ipam_rangeStart }}",
-            "rangeEnd": "{{ multus_ipam_rangeEnd }}",
-            "routes": [
-              { "dst": "0.0.0.0/0" }
-            ],
-            "gateway": "{{ multus_ipam_gateway }}"
-         }
-        },
-        {
-          "type": "flannel",
-          "masterplugin": true,
-          "delegate": {
-            "isDefaultGateway": true
-          }
-        }
-      ]
+      "kubeconfig": "/etc/kubernetes/kubelet.conf"
     }
   net-conf.json: |
     {
