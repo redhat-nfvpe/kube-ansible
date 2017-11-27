@@ -1,24 +1,24 @@
 ---
 - name: Destroy all VMs
   shell: >
-    virsh destroy {{ item }}
+    virsh destroy {{ item.name }}
   with_items: "{{ virtual_machines }}"
   ignore_errors: yes
 
 - name: Undefine all VMs
   shell: >
-    virsh undefine --remove-all-storage {{ item }}
+    virsh undefine --remove-all-storage {{ item.name }}
   with_items: "{{ virtual_machines }}"
   ignore_errors: yes
 
 - name: Remove spare disk images
   file:
-    dest: "{{ spare_disk_location }}/{{ item }}.img"
+    dest: "{{ spare_disk_location }}/{{ item.name }}.img"
     state: absent
   with_items: "{{ virtual_machines }}"
 
 - name: Remove spare disk attached semaphor
   file:
-    dest: "{{ spare_disk_location }}/.attached-{{ item }}"
+    dest: "{{ spare_disk_location }}/.attached-{{ item.name }}"
     state: absent
   with_items: "{{ virtual_machines }}"
