@@ -1,4 +1,7 @@
 ---
+- include: ipv6-lab.yml
+  when: ipv6_enabled
+
 - hosts: master,nodes
   become: true
   become_user: root

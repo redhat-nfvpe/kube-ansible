@@ -22,8 +22,8 @@
 
 - name: Run spinup for each host that doesn't exist
   shell: >
-    /root/spinup.sh {{ item }}
-  when: "item not in virsh_list.stdout"
+    /root/spinup.sh {{ item.name }}
+  when: "item.name not in virsh_list.stdout"
   with_items: "{{ virtual_machines }}"
 
 # - name: Get IP Addresses for all VMs
@@ -35,14 +35,14 @@
 
 - name: Get IP Addresses for all VMs
   shell: >
-    cat /tmp/{{ item }}.ip.txt
+    cat /tmp/{{ item.name }}.ip.txt
   register: vm_ip_addresses
   with_items: "{{ virtual_machines }}"
   # when: bridge_networking
 
 - name: Populate dictionary of IPs
   set_fact:
-    vm_ips_dict: "{{ vm_ips_dict|default({}) | combine( {item.item: item.stdout} ) }}"
+    vm_ips_dict: "{{ vm_ips_dict|default({}) | combine( {item.item.name: item.stdout} ) }}"
   with_items: "{{ vm_ip_addresses.results }}"
 
 - name: Here are the IPs of the VMs

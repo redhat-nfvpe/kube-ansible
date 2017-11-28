@@ -15,6 +15,8 @@
     - virt-install
     - genisoimage
     - nmap
+    - libvirt-python
+    - python-lxml
 
 - name: Start and enable libvirtd
   service:
@@ -93,3 +95,27 @@
 - name: "Include bridge network playbook if necessary"
   include: bridge-network.yml
   when: bridge_networking
+
+- name: Create ipv6 network
+  block:
+    - virt_net:
+        name: k8s-ipv6-private
+        command: define
+        xml: >
+          <network ipv6='yes'>
+            <name>k8s-ipv6-private</name>
+          </network>
+    - virt_net:
+        name: k8s-ipv6-private
+        state: active
+    - virt_net:
+        name: k8s-ipv6-private
+        autostart: yes
+  when: ipv6_enabled
+
+- name: enable ipv6 forwarding
+  sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: 1
+    sysctl_set: yes
+    state: present
