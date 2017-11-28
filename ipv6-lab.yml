@@ -2,21 +2,13 @@
 - hosts: kube-nat64-dns64
   tasks:
     - name: update kernel
-      yum:
+      package:
         name: kernel
         state: latest
       notify: "restart server"
   handlers:
-    - name: restart server
-      shell: sleep 2 && /sbin/shutdown -r now "System reboot"
-      async: 1
-      poll: 0
-      listen: "restart server"
-    - name: Wait for reboot
-      wait_for_connection:
-        delay: 5
-        timeout: 60
-      listen: "restart server"
+    - include: roles/ipv6-setup/handlers/main.yml
+      static: yes
 
 - hosts: all
   tasks: []
@@ -98,15 +90,11 @@
 - hosts: kube-nat64-dns64
   tasks:
     - name: install the 'Development tools' package group
-      yum:
+      package:
         name: "@Development tools"
         state: latest
-#    - name: install epel
-#      yum:
-#        name: epel-release
-#        state: present
     - name: install packages
-      yum:
+      package:
         name: "{{ item }}"
         state: latest
       with_items:
@@ -176,14 +164,24 @@
             enabled: true
   handlers:
     - name: restart named
-      service: name=named state=restarted
+      service:
+        name: named
+        state: restarted
 
 - hosts: master,nodes
   tasks:
     - name: ping nat64 node
       shell: ping6 -c 5 fd00::64
+      register: ping_nat64_result
+    - assert:
+        that:
+          "ping_nat64_result.rc == 0"
     - name: ping google's ipv6 address
       shell: ping6 -c 5 64:ff9b::216.58.217.78
+      register: ping_google_result
+    - assert:
+        that:
+          "ping_google_result.rc == 0"
 
 - hosts: master,nodes
   tasks:

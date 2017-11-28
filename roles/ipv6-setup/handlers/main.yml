@@ -17,3 +17,15 @@
     name: sshd
     state: restarted
   listen: 'restart sshd'
+
+- name: restart server
+  shell: sleep 2 && /sbin/shutdown -r now "System reboot"
+  async: 1
+  poll: 0
+  listen: "restart server"
+
+- name: Wait for reboot
+  wait_for_connection:
+    delay: 5
+    timeout: 60
+  listen: "restart server"

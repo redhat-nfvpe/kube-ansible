@@ -42,8 +42,8 @@ BRIDGE={{ bridge_name }}
 
 # IPv6 flag
 ipv6_net=''
-{% if ipv6 %}
-  ipv6_net='--network network=k8s-ipv6-private,model=virtio'
+{% if ipv6_enabled %}
+ipv6_net='--network network=k8s-ipv6-private,model=virtio'
 {% endif %}
 
 # Start clean

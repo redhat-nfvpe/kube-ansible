@@ -111,7 +111,7 @@
     - virt_net:
         name: k8s-ipv6-private
         autostart: yes
-  when: ipv6
+  when: ipv6_enabled
 
 - name: enable ipv6 forwarding
   sysctl:

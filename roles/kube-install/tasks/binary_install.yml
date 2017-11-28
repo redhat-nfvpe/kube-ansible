@@ -21,7 +21,7 @@
     (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
 
 - name: make sure wget is installed
-  yum:
+  package:
     name: wget
 
 - name: Download kubelet
