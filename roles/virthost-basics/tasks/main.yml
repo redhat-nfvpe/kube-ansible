@@ -15,6 +15,8 @@
     - virt-install
     - genisoimage
     - nmap
+    - libvirt-python
+    - python-lxml
 
 - name: Start and enable libvirtd
   service:
