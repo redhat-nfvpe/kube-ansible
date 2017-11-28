@@ -80,7 +80,7 @@
     if sudo tar -xzvf $ARCHIVE; then
       sudo rm $ARCHIVE
     fi
-  when: ipv6
+  when: ipv6_enabled
 
 - name: Optionally include playbook for binary install
   include: binary_install.yml
@@ -115,7 +115,7 @@
     regexp: 'cluster-dns'
     line: 'Environment="KUBELET_DNS_ARGS=--cluster-dns=fd00:1234::10 --cluster-domain=cluster.local"'
   notify: "restart kubelet"
-  when: ipv6
+  when: ipv6_enabled
 
 - name: make sure kubelet is started and enabled
   service:

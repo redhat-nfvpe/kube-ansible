@@ -31,7 +31,7 @@
     state: present
 
 - name: install bind and bind-utils
-  yum:
+  package:
     name: "{{ item }}"
   with_items:
     - bind

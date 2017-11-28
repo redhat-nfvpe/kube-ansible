@@ -6,11 +6,11 @@ all:
       bridge_networking: false
       virtual_machines:
         - name: kube-master
-          role: master
+          node_type: master
         - name: kube-node-1
-          role: nodes
+          node_type: nodes
         - name: kube-node-2
-          role: nodes
+          node_type: nodes
         - name: kube-nat64-dns64
-          role: other
-      ipv6: true
+          node_type: other
+      ipv6_enabled: true

@@ -1,6 +1,6 @@
 ---
 - include: ipv6-lab.yml
-  when: ipv6
+  when: ipv6_enabled
 
 - hosts: master,nodes
   become: true
