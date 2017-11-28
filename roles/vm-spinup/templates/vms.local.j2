@@ -9,6 +9,12 @@
 {% endfor %}
 
 {% endfor %}
+{% if ipv6 %}
+[ipv6-lab]
+{% for vm in virtual_machines %}
+{{ vm.name }}
+{% endfor %}
+{% endif %}
 
 [all:vars]
 ansible_user=centos
