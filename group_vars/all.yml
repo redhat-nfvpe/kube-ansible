@@ -50,10 +50,14 @@ kube_version: "latest"
 
 images_directory: /home/images
 virtual_machines:
-  - kube-master
-  - kube-node-1
-  - kube-node-2
-  - kube-node-3
+  - name: kube-master
+    node_type: master
+  - name: kube-node-1
+    node_type: nodes
+  - name: kube-node-2
+    node_type: nodes
+  - name: kube-node-3
+    node_type: nodes
 vm_parameters_ram_mb: 2048
 vm_parameters_cpus: 4
 
