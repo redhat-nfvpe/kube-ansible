@@ -190,13 +190,3 @@
     - include_role:
         name: ipv6-setup
         tasks_from: nodes
-
-- include: kube-install.yml
-  vars:
-    ipv6: true
-    pod_network_type: bridge
-    binary_install: true
-    binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
-    binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
-    binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
-    binary_install_force_redownload: false
