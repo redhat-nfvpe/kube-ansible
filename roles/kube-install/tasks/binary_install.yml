@@ -20,29 +20,33 @@
     item.url_is_set and
     (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
 
+- name: make sure wget is installed
+  package:
+    name: wget
+
 - name: Download kubelet
-  get_url:
-    url: "{{ binary_kubelet_url }}"
-    dest: /usr/bin/kubelet
-    mode: 0755
-    force: "{{ binary_install_force_redownload }}"
+  shell: |
+    wget -O /usr/bin/kubelet {{ binary_kubelet_url }}
   when: binary_kubelet_url is defined
 
 - name: Download kubectl
-  get_url:
-    url: "{{ binary_kubectl_url }}"
-    dest: /usr/bin/kubectl
-    mode: 0755
-    force: "{{ binary_install_force_redownload }}"
+  shell: |
+    wget -O /usr/bin/kubectl {{ binary_kubectl_url }}
   when: binary_kubectl_url is defined
 
 - name: Download kubeadm
-  get_url:
-    url: "{{ binary_kubeadm_url }}"
-    dest: /usr/bin/kubeadm
-    mode: 0755
-    force: "{{ binary_install_force_redownload }}"
+  shell: |
+    wget -O /usr/bin/kubeadm {{ binary_kubeadm_url }}
   when: binary_kubeadm_url is defined
+
+- name: Make sure binaries have proper permission
+  file:
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - /usr/bin/kubelet
+    - /usr/bin/kubectl
+    - /usr/bin/kubeadm
 
 - name: Mark download complete
   file:
