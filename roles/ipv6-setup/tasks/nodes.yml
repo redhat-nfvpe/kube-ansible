@@ -1,7 +1,9 @@
 # Tasks only performed on nodes
 ---
 - name: ensure cni config directory exists
-  file: path=/etc/cni/net.d state=directory
+  file:
+    path: /etc/cni/net.d
+    state: directory
 
 - name: generate CNI config file
   template:

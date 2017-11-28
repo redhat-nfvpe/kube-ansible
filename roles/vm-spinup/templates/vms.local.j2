@@ -2,14 +2,14 @@
 {{ key }} ansible_host={{ value }}
 {% endfor %}
 
-{% for grouper, list in virtual_machines|groupby('role') %}
+{% for grouper, list in virtual_machines|groupby('node_type') %}
 [{{ grouper }}]
 {% for server in list %}
 {{ server.name }}
 {% endfor %}
 
 {% endfor %}
-{% if ipv6 %}
+{% if ipv6_enabled %}
 [ipv6-lab]
 {% for vm in virtual_machines %}
 {{ vm.name }}
