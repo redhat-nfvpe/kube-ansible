@@ -50,10 +50,16 @@ kube_version: "latest"
 
 images_directory: /home/images
 virtual_machines:
-  - kube-master
-  - kube-node-1
-  - kube-node-2
-  - kube-node-3
+  - name: kube-master
+    node_type: master
+  - name: kube-node-1
+    node_type: nodes
+  - name: kube-node-2
+    node_type: nodes
+  - name: kube-node-3
+    node_type: nodes
+# - name: my-support-node
+#   node_type: other
 vm_parameters_ram_mb: 2048
 vm_parameters_cpus: 4
 
@@ -103,3 +109,5 @@ bridge_name: virbr0
 bridge_physical_nic: "enp1s0f1"
 bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
+
+ipv6_enabled: false

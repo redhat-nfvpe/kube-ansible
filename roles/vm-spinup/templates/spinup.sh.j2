@@ -40,6 +40,12 @@ DISK=$1.qcow2
 # Bridge for VMs (default on Fedora is {{ bridge_name }})
 BRIDGE={{ bridge_name }}
 
+# IPv6 flag
+ipv6_net=''
+{% if ipv6_enabled %}
+ipv6_net='--network network=k8s-ipv6-private,model=virtio'
+{% endif %}
+
 # Start clean
 rm -rf $DIR/$1
 mkdir -p $DIR/$1
@@ -97,13 +103,13 @@ _EOF_
     echo "[INFO] Installing with the following parameters:"
     echo "virt-install --import --name $1 --ram $MEM --vcpus $CPUS --disk \
     $DISK,format=qcow2,bus=virtio --disk $CI_ISO,device=cdrom --network \
-    bridge={{ bridge_name }},model=virtio --os-type=linux --os-variant=rhel6 --noautoconsole"
+    bridge={{ bridge_name }},model=virtio $ipv6_net --os-type=linux --os-variant=rhel6 --noautoconsole"
 
     virt-install --import --name $1 --ram $MEM --vcpus $CPUS --disk \
     $DISK,format=qcow2,bus=virtio --disk $CI_ISO,device=cdrom --network \
-    bridge={{ bridge_name }},model=virtio --os-type=linux --os-variant=rhel6 --noautoconsole
+    bridge={{ bridge_name }},model=virtio $ipv6_net --os-type=linux --os-variant=rhel6 --noautoconsole
 
-    MAC=$(virsh dumpxml $1 | awk -F\' '/mac address/ {print $2}')
+    MAC=$(virsh domiflist $1 | grep {{ bridge_name }} | awk '{print $5}')
     while true
     do
         if [ -e "/var/lib/libvirt/dnsmasq/$BRIDGE.status" ]; then
