@@ -49,6 +49,8 @@ kube_version: "latest"
 # binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
 
 images_directory: /home/images
+system_default_ram_mb: 2048
+system_default_cpus: 4
 virtual_machines:
   - name: kube-master
     node_type: master
@@ -60,8 +62,8 @@ virtual_machines:
     node_type: nodes
 # - name: my-support-node
 #   node_type: other
-vm_parameters_ram_mb: 2048
-vm_parameters_cpus: 4
+#   system_ram_mb: 8192
+#   system_cpus: 8
 
 # Implement a work-around for this:
 # https://github.com/kubernetes/kubernetes/issues/43815

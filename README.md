@@ -67,7 +67,11 @@ Modify `./inventory/virthost/virthost.inventory` to setup a virtual
 host (skip to step 3 if you already have an inventory).
 
 Want more VMs? Edit `inventory/virthost/group_vars/virthost.yml` and add
-an override list via `virtual_machines` (template in `group_vars/all.yml`).
+an override list via `virtual_machines` (template in `group_vars/all.yml`). You
+can also define separate vCPU and vRAM for each of the virtual machines with
+`system_ram_mb` and `system_cpus`. The default values are setup via
+`system_default_ram_mb` and `system_default_cpus` which can also be overridden
+if you wish different default values. (Current defaults are 2048MB and 4 vCPU.)
 
 > **WARNING**
 >
