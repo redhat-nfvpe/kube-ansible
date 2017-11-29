@@ -4,7 +4,6 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - golang
     - git
 
 - name: Clone multus-cni

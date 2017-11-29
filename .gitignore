@@ -7,3 +7,6 @@ inventory/*
 # ignore group_vars files except for the all.yml (allow for override)
 group_vars/
 !group_vars/all.yml
+
+# ignore externally installed roles
+roles/install-go
