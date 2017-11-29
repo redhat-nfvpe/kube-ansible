@@ -6,7 +6,6 @@
 - name: Wait until kubectl get pods is ready
   shell: >
     kubectl get pods --all-namespaces
-  environment: "{{ kubectl_environment }}"
   register: get_pods_result
   until: get_pods_result.rc == 0
   retries: 60

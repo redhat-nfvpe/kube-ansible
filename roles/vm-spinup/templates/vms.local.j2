@@ -18,8 +18,6 @@
 
 [all:vars]
 ansible_user=centos
-ansible_become=true
-ansible_become_user=root
 {% if ssh_proxy_enabled %}
 ansible_ssh_common_args='-o ProxyCommand="ssh{% if ssh_proxy_port is defined %}-p {{ ssh_proxy_port }}{% endif %} -W %h:%p {{ ssh_proxy_user }}@{{ ssh_proxy_host }}"'
 {% endif %}
