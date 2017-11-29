@@ -1,13 +1,11 @@
 ---
 
 - name: Install deps for Buildah
-  package: 
+  package:
     name: "{{ item }}"
     state: present
   with_items:
     - make
-    - golang
-    # - bats
     - btrfs-progs-devel
     - device-mapper-devel
     - glib2-devel
@@ -22,20 +20,19 @@
 
 - name: Make gocode structure in /usr/src
   file:
-    dest: /usr/src/gocode/src/github.com/projectatomic
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/projectatomic"
     state: directory
 
 - name: Clone Buildah
   git:
     repo: https://github.com/projectatomic/buildah.git
-    dest: /usr/src/gocode/src/github.com/projectatomic/buildah
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/projectatomic/buildah"
 
 - name: Build Buildah, it's a dollah twenty five pah.
   shell: >
-    export GOPATH=/usr/src/gocode/;
     make && make install
   args:
-    chdir: /usr/src/gocode/src/github.com/projectatomic/buildah
+    chdir: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/projectatomic/buildah"
     creates: /usr/local/bin/buildah
 
 - name: Run buildah
