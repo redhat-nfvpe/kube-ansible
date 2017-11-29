@@ -1,5 +1,4 @@
 ---
-
 - name: Template the SSH spinup script
   template:
     src: spinup.sh.j2
@@ -22,7 +21,7 @@
 
 - name: Run spinup for each host that doesn't exist
   shell: >
-    /root/spinup.sh {{ item.name }}
+    /root/spinup.sh {{ item.name }} {{ item.system_ram_mb | default(system_default_ram_mb) }} {{ item.system_cpus | default(system_default_cpus) }}
   when: "item.name not in virsh_list.stdout"
   with_items: "{{ virtual_machines }}"
 

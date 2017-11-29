@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Take one argument from the commandline: VM name
-if ! [ $# -eq 1 ]; then
-    echo "Usage: $0 <node-name>"
+if [ $# -gt 3 ] || [ $# -lt 1 ]; then
+    echo "Usage: $0 <node-name> {memory-MB} {vCPUs}"
     exit 1
 fi
 
@@ -26,10 +26,10 @@ DIR={{ images_directory }}
 IMAGE={{ images_directory }}/{{ image_destination_name }}
 
 # Amount of RAM in MB
-MEM={{ vm_parameters_ram_mb }}
+MEM=${2:-{{ system_default_ram_mb }}}
 
 # Number of virtual CPUs
-CPUS={{ vm_parameters_cpus }}
+CPUS=${3:-{{ system_default_cpus }}}
 
 # Cloud init files
 USER_DATA=user-data
