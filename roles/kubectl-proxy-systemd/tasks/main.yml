@@ -2,7 +2,9 @@
 # https://kubernetes.io/docs/user-guide/kubectl/v1.8/#proxy
 
 - name: Install jq binary
-  shell: wget -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+  get_url:
+    url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+    dest: /usr/bin/jq
 
 - name: set jq binary permission
   file:

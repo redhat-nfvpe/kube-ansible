@@ -1,5 +1,7 @@
 ---
 - hosts: kube-nat64-dns64
+  become: true
+  become_user: root
   tasks:
     - name: update kernel
       package:
@@ -11,11 +13,15 @@
       static: yes
 
 - hosts: all
+  become: true
+  become_user: root
   tasks: []
   roles:
     - { role: ipv6-setup }
 
 - hosts: master,nodes
+  become: true
+  become_user: root
   tasks:
     - name: Remove default ipv4 route
       shell: |
@@ -24,6 +30,8 @@
         fi
 
 - hosts: kube-master
+  become: true
+  become_user: root
   tasks:
     - name: configure routing
       lineinfile:
@@ -40,6 +48,8 @@
       static: yes
 
 - hosts: kube-node-1
+  become: true
+  become_user: root
   tasks:
     - name: configure routing
       lineinfile:
@@ -57,6 +67,8 @@
 
 
 - hosts: kube-node-2
+  become: true
+  become_user: root
   tasks:
     - name: configure routing
       lineinfile:
@@ -73,6 +85,8 @@
       static: yes
 
 - hosts: kube-nat64-dns64
+  become: true
+  become_user: root
   tasks:
     - name: configure routing
       lineinfile:
@@ -88,6 +102,8 @@
       static: yes
 
 - hosts: kube-nat64-dns64
+  become: true
+  become_user: root
   tasks:
     - name: install the 'Development tools' package group
       package:
@@ -169,6 +185,8 @@
         state: restarted
 
 - hosts: master,nodes
+  become: true
+  become_user: root
   tasks:
     - name: ping nat64 node
       shell: ping6 -c 5 fd00::64
@@ -184,6 +202,8 @@
           "ping_google_result.rc == 0"
 
 - hosts: master,nodes
+  become: true
+  become_user: root
   tasks:
     - include_role:
         name: ipv6-setup
