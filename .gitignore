@@ -10,3 +10,4 @@ group_vars/
 
 # ignore externally installed roles
 roles/install-go
+roles/install-docker
