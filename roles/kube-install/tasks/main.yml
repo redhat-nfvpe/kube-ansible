@@ -23,13 +23,6 @@
     src: kubernetes.repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
 
-- name: Install optional packages
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - nano
-
 # The kube_version variable can be from this list...
 # That is, the `yum search kubelet --showduplicates`
 # (as of 8/9/17)
@@ -86,12 +79,6 @@
   include: binary_install.yml
   when: binary_install
 
-- name: Install docker (when using docker mode)
-  package:
-    name: "docker"
-    state: present
-  when: "container_runtime == 'docker'"
-
 - name: Include kube 1.6.0 work-around
   include: kube-16-workaround.yml
   when: kube_16_workaround
@@ -122,10 +109,3 @@
     name: "kubelet"
     state: started
     enabled: yes
-
-- name: Start docker when appropriate
-  service:
-    name: "docker"
-    state: started
-    enabled: yes
-  when: "container_runtime == 'docker'"

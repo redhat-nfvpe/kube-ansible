@@ -53,6 +53,14 @@ created with the IP addresses and hostname of the virtual machines. The
 
 ## Usage
 
+### Step 0. Install dependent roles
+
+Install role dependencies with `ansible-galaxy`.
+
+```
+ansible-galaxy install -r requirements.yml
+```
+
 ### Step 1. Create virtual host inventory
 
 Copy the example `virthost` inventory into a new directory.
