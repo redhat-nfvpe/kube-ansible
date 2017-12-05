@@ -1,0 +1,16 @@
+# vim: set tabstop=2 shiftwidth=2 expandtab:
+---
+
+- hosts: builder
+  tasks:
+    # TODO: the auto-kube-dev has a hosts: line. Break it out in the repo so
+    # I can consume the roles list directly, without the hosts. Create a new site.yml
+    # that will have the hosts line required for auto-kube-dev. Now you can avoid
+    # duplication.
+    - include: roles/auto-kube-dev/auto-kube-dev.yaml
+      when: builder_setup
+
+    - name: Run build
+      command: ./../planter/planter.sh make bazel-release
+      args:
+        chdir: "{{ ansible_env.HOME }}/src/go/src/k8s.io/kubernetes"
