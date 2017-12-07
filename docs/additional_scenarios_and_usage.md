@@ -6,7 +6,9 @@ of a specific version or binary of Kubernetes, or using CRI-O as a backend.
 
 ## IPv6 Laboratory
 
-Using the `ipv6_enabled` variable set to true, you can set up a lab for testing IPv6. For more detailed instructions, visit the [IPv6 documentation contained in this repository](docs/ipv6.md).
+Using the `ipv6_enabled` variable set to true, you can set up a lab for testing
+IPv6. For more detailed instructions, visit the
+[IPv6 documentation contained in this repository](ipv6.md).
 
 ## Setting a specific version
 
@@ -16,7 +18,7 @@ version. This version number comes from a `yum search kubelet
 
 ```
 ansible-playbook -i inventory/vms.local.generated \
-    -e 'kube_version=1.6.7-0' \
+    -e 'kube_version=1.8.3-0' \
     kube-install.yml
 ```
 
