@@ -3,11 +3,7 @@
 
 - hosts: builder
   tasks:
-    # TODO: the auto-kube-dev has a hosts: line. Break it out in the repo so
-    # I can consume the roles list directly, without the hosts. Create a new site.yml
-    # that will have the hosts line required for auto-kube-dev. Now you can avoid
-    # duplication.
-    - include: roles/auto-kube-dev/auto-kube-dev.yaml
+    - import_tasks: builder-setup.yml
       when: builder_setup
 
     - name: Run build

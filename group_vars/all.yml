@@ -60,13 +60,13 @@ virtual_machines:
     node_type: nodes
   - name: kube-node-3
     node_type: nodes
-  - name: builder
-    node_type: builder
-    system_ram_mb: 24576
-# - name: my-support-node
-#   node_type: other
-#   system_ram_mb: 8192
-#   system_cpus: 8
+#  - name: builder
+#    node_type: builder
+#    system_ram_mb: 24576
+#  - name: my-support-node
+#    node_type: other
+#    system_ram_mb: 8192
+#    system_cpus: 8
 
 # Implement a work-around for this:
 # https://github.com/kubernetes/kubernetes/issues/43815
