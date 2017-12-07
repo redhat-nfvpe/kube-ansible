@@ -42,12 +42,12 @@
 - name: Flag for resizing
   set_fact:
     resize_image: true
-  when: increase_root_size_gigs is defined
+  when: set_root_disk_gb is defined
 
 - name: Increase root disk size (optionally)
   shell: >
-    qemu-img resize {{ images_directory }}/{{ image_destination_name }} +{{ increase_root_size_gigs }}G
-  when: resize_image and download_image.changed
+    qemu-img resize {{ images_directory }}/{{ image_destination_name }} {{ set_root_disk_gb }}G
+  when: resize_image
 
 - name: Generate an ssh key for root
   user:
@@ -65,11 +65,13 @@
 
 - name: Setup facts and directory structure for root keys
   block:
-    - set_fact:
+    - name: Set vm_ssh_key_path optionally
+      set_fact:
         vm_ssh_key_path: "{{ lookup('env', 'HOME') }}/.ssh/{{ inventory_hostname }}/id_vm_rsa"
       when: not vm_ssh_key_path is defined
 
-    - file:
+    - name: Set proper mode on vm_ssh_key_path directory
+      file:
         state: directory
         path: "{{ vm_ssh_key_path | dirname }}"
         mode: 0700

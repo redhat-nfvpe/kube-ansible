@@ -5,3 +5,6 @@
 - src: https://github.com/redhat-nfvpe/ansible-role-install-docker
   name: install-docker
   version: master
+- src: https://github.com/redhat-nfvpe/auto-kube-dev
+  name: auto-kube-dev
+  version: master

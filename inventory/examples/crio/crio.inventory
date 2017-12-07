@@ -9,7 +9,7 @@ vmhost
 # Using Fedora
 centos_genericcloud_url=https://download.fedoraproject.org/pub/fedora/linux/releases/26/CloudImages/x86_64/images/Fedora-Cloud-Base-26-1.5.x86_64.qcow2
 image_destination_name=Fedora-Cloud-Base-26-1.5.x86_64.qcow2
-increase_root_size_gigs=10
+set_root_disk_gb=18
 
 [master]
 kube-master

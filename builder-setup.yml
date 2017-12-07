@@ -1,0 +1,31 @@
+# vim: set tabstop=2 shiftwidth=2 expandtab:
+---
+  - import_role:
+      name: auto-kube-dev/roles/verify-environment
+    when: perform_hardware_checks
+
+  - import_role:
+      name: auto-kube-dev/roles/install-deps-utils
+    vars:
+      become: true
+      become_user: "root"
+
+  - import_role:
+      name: install-go
+
+  - import_role:
+      name: install-docker
+    vars:
+      become: true
+      become_user: "root"
+
+  - import_role:
+      name: auto-kube-dev/roles/setup-repos
+
+  - import_role:
+      name: auto-kube-dev/roles/install-bazel
+    when: "use_bazel_rpm"
+
+  - import_role:
+      name: auto-kube-dev/roles/install-planter
+    when: "use_planter"

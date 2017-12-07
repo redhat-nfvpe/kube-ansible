@@ -1,0 +1,12 @@
+# vim: set tabstop=2 shiftwidth=2 expandtab:
+---
+
+- hosts: builder
+  tasks:
+    - import_tasks: builder-setup.yml
+      when: builder_setup
+
+    - name: Run build
+      command: ./../planter/planter.sh make bazel-release
+      args:
+        chdir: "{{ ansible_env.HOME }}/src/go/src/k8s.io/kubernetes"
