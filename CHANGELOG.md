@@ -1,3 +1,28 @@
+# Release 0.1.6
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/ba786202b0fcf7916fb2fb131e713a3a18f5e80f) -- Allow customization of VM vCPU and vRAM values 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/a742a2221df5cf614fe963da45caa812f3afbd9d) -- [WIP] Update to using install-go external role 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/704e91e42307d9759f43b1c6fb7e3a2f06cba37c) -- Drop when clause in var include for kube-install 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/809bf2b738fb5ce6e662bcea8865c9d7ce12c540) -- Migrate to using install-docker role 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/5e579caba56761a17cd33a29386161439c33be3a) -- Fix proxy ssh failure in vms.local.generated 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/f0443b46c343b0d52b06871934af3eab836f114a) -- Adds ability to build k8s 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/9317b6ef1f46f587403c434d688ac8659d182986) -- Moves additional scenarios and usage 
+
+# Release 0.1.6
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/44136f7f4af41d4af94e3872726f206635e3f821) -- Convert kube-centos-ansible to kucean 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/920fc8381410a2ea96601c2947c72c60303b2310) -- Avoid use of ansible_host and machine UUID 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/03408112e2d93b1ff109f25196f19243e0ba2cf2) -- [feature] adds 'binary install' option to override kubelet, kubectl and kubeadm with custom binaries. addresses #81 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/199d37964987151666aeffe15fc38167e33d36cc) -- Drop the use of all_vms 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/2071e69431d56d90d5ffa457cd0ddcaaeb384235) -- Add new role to gather kube niceties 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/1a0e5305c5d7722f1cf7477538669357b49bf615) -- Load virthost privkey onto source machine 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/186696d759cbbcdd99c8b250276c49e6a491d4a6) -- Drop old GlusterFS playbooks 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/8464f881d7398286c8877cff9bbd111e6b0bbe74) -- Enhance documentation and usage experience 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/aea24e7a22e600d3a156c67f28f12621788a1888) -- [HotFix] Complete missing documentation for kubectl 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/d8ff428e0074629387160f6f4a12194fcb793b7b) -- Add LICENSE file to the project 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/0822a412af3905c337db4d498b5a59a7816b3031) -- [multus][upgrade] Adds latest Multus including CRD functionality. Address #78 and #72 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/509ca38a99370137b0ae4c6f369b4952d648c4cc) -- Add AUTHORS and CHANGELOG 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/38dca9194515bb1a61a017b21f9b6ef11f351da4) -- Add base IPv6 lab functionality (#106) 
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/b1db349673aa565227a1662e7b56e3726016aaef) -- [ipv6][docs][bugfix] Has some required (minor) fixes to get the IPv6 deploy running and includes some docs to help one initially get there 
+
 # Release 0.1.5
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/a916eb5697e5d6fbc7d510c7184f27e5f0511648) -- [bugfix][workaround] workaround to get proper kubectl version 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/2711d41882db0c2ae10a329c86d21a7a5f73d69c) -- Lock version of kubernetes 
@@ -8,19 +33,13 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/9c5a6574c00283ee3de233bd4a8ae236d996b277) -- [minor] updates to latest stable Heketi 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/41e4e09606454cd3ce705dbf7d09ac3d25b30155) -- Clean up some missing values 
 
-
-
 # Release 0.1.4
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/96be541ae41062c1be30391bb99315219c2a7a33) -- [docs] sweeping find & replace of 'minion' with 'node' 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/c40c9ea706353b678a35ab4e32005a4d687bd0b2) -- [bugfix][glusterfs] oops missed removing environment after refactoring admin.conf for kube 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/c6e58b212caa7b0b7de51b743d9c785f97273934) -- [gluster][workaround] Works around upstream gluster-kubernetes with pinning heketi image tag 
 
-
-
 # Release 0.1.3
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/7ce47b6ae3738eb6b3992bc7be7c0b1dc4e3c7d1) -- [crio][bugfix] Turns out with Fedora, you sometimes need to expand the root disk, on the VM side 
-
-
 
 # Release 0.1.2
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/12b6c616b0b10dd17ef933c8eb738e3ef0640738) -- Further cleanup of the inventory 
@@ -41,14 +60,10 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/cc1369b9cf9d1420205378cf14a78686ef4383f4) -- [crio][refactor] Addresses #52 for refactor to support Fedora (specifically to address Buildah requirements) 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/00092dd59a0fc9a291287665f9e2739ecf838e07) -- [crio][docs] update docs for readme clarity / voice, and clean up inventory 
 
-
-
 # Release 0.1.1
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/b10f9912a4101fec790216e65c8f5a8ced7d6e18) -- [minor][inventory] current inventory style 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/a4380c09246ff6982b24aff1e7614c5440df1de0) -- [minor] adds a handy-dandy get-ip script for getting IPs of VMs 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/d3ab8b01ad0c4ef999bc627f04034c6e3d6333b2) -- [crio] updates for crio, trying to get to work with 1.7 but didn't work 
-
-
 
 # Release 0.1.0
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/ae9f7f4f51fb52377589ec439520a6134243d5bd) -- [glusterdynamic][stub] stubbing in json template for glusterfs topology 
@@ -57,15 +72,11 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/a716993ea75ab8d31511e12754381063118df247) -- [glusterdynamic][significant] allows for manual running of gk-deploy which finishes successfully (unverified) 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/3c01fef4ea322863ce906a37ff1cbf2991f34b85) -- [glusterdynamic] steps for running the gk-deploy and creating storage class 
 
-
-
 # Release 0.0.6
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/3cc2ea6b25edb2e68917f16c49d5f708597d3f05) -- [ansible23][minor] ignore errors in undefine all vms play 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/2828f3ed92700435173e652e456d3b888f3f852b) -- [ansible23] fixes for virt host setup 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/ab155a269018dfafa08041c2b76b0b8c115fd21f) -- [ansible23] syntax fixes for deprecation of jinja2 in conditionals 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/bd1f113d8fe74f6bfca9aa3ffd24dce7d3bded6a) -- [bugfix][minor] missing refactor for group vars in gluster-recreate-volumes playbook 
-
-
 
 # Release 0.0.5
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/463605c0254ff79369c4b81826cabbccc42d802d) -- Clean up some Ansible lint issues 
@@ -76,9 +87,7 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/b6fd6e681c5c7c02c8062cca42ca126c83d45647) -- [bugfix] sets /proc/sys/net/bridge/bridge-nf-call-iptables in tasks 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/54fad01761991b02f95495a03fac57d636974239) -- [docs] updates readme to remove 1.5 reference 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/9e651231888791dba62512ba976a67b0b2831377) -- [minor] skip network restart when bridge network is not freshly templated 
-* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/125b3179bda867443f0825dd1a509ad1dd9eaa29) -- [vars] adds option to skip-preflight-checks when necessary (in this case to bypass kubadm join bug in kube 1.7.2 dist) 
-
-
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/125b3179bda867443f0825dd1a509ad1dd9eaa29) -- [vars] adds option to skip-preflight-checks when necessary (in this case to bypass kubadm join bug in kube 1.7.2 dist)
 
 # Release 0.0.4
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/34f72e065f7342cd8cc0d90cc887f13b4a645108) -- [crio][stub] mostly stubs in from existing crio ansible playbook 
@@ -88,8 +97,6 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/e13802cbea4ddaa4ef128983ac4c9a5236dad639) -- [cri-o] cleanup inventory and vars 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/bff2a4e2744b407358bf1c8a3fe8da89e3ae3861) -- [cri-o][docs] updates readme for extra var 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/c31b0edfb2e22b7b6174e5aba2e7e4c60e32cf74) -- Allow for easier variable overrides 
-
-
 
 # Release 0.0.3
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/29a2117fb4cb8f819266b243c2e111f416692b12) -- [glusterfs] has playbook for attaching spare disk to VMs 
@@ -113,12 +120,7 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/58ae61d2ae97966eb18923c5a685c2518d0959d3) -- [bugfix] fixes #6 for bridge-nf-call-iptables 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/c94b6ee7a7939fca1783676bc1fb25633704dbbd) -- [fixbridge][bugfix] wrong spot for changing /proc/sys/net/bridge/bridge-nf-call-iptables 
 
-
-
 # Release 0.0.2
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/138ddf4e4b54731a44d3de9dc6b009065e1184f0) -- [increment][no-cni] has an install generally working, no e2e test complete with it. DNS pod not coming up, flannel not coming up 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/b81f47123ac9a216245b452bac37cd0aa22a9c3a) -- [upgrade16] adds flannel rbac, and has had a successful run getting flannel pods up (and dns pod) but can't curl an nginx pod, pods can't reach wan 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/258fdb38ccd7dbd584ff917bdbff80c362a9ff7f) -- [upgrade16] has a working k8s 1.6.1 beta install, downgraded docker to 1.12.x 
-
-
-
