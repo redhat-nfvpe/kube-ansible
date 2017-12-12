@@ -1,0 +1,7 @@
+---
+- name: Install optional packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ optional_packages }}"
+  when: optional_packages is defined and optional_packages.0 is defined
