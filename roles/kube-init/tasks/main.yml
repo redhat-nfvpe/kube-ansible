@@ -18,7 +18,7 @@
     arg_pod_network: "--config=/root/kubeadm_v6.cfg"
   when: ipv6_enabled
 
-- name: create kubadm_v6.cfg
+- name: create kubeadm_v6.cfg
   copy:
     src: kubeadm_v6.cfg
     dest: /root/kubeadm_v6.cfg

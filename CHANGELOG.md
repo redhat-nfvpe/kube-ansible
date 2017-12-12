@@ -87,7 +87,7 @@
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/b6fd6e681c5c7c02c8062cca42ca126c83d45647) -- [bugfix] sets /proc/sys/net/bridge/bridge-nf-call-iptables in tasks 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/54fad01761991b02f95495a03fac57d636974239) -- [docs] updates readme to remove 1.5 reference 
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/9e651231888791dba62512ba976a67b0b2831377) -- [minor] skip network restart when bridge network is not freshly templated 
-* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/125b3179bda867443f0825dd1a509ad1dd9eaa29) -- [vars] adds option to skip-preflight-checks when necessary (in this case to bypass kubadm join bug in kube 1.7.2 dist)
+* [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/125b3179bda867443f0825dd1a509ad1dd9eaa29) -- [vars] adds option to skip-preflight-checks when necessary (in this case to bypass kubeadm join bug in kube 1.7.2 dist)
 
 # Release 0.0.4
 * [view commit](http://github.com/redhat-nfvpe/kube-centos-ansible/commit/34f72e065f7342cd8cc0d90cc887f13b4a645108) -- [crio][stub] mostly stubs in from existing crio ansible playbook 
