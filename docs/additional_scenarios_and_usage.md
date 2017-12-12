@@ -68,3 +68,23 @@ recent versions of CentOS.
 Take a gander at the `./inventory/examples/crio/crio.inventory` for an example
 of how to override the proper variables to use Fedora.
 
+## Installing optional packages
+
+Sometimes, one might like to install additional packages across the hosts in
+their cluster, one can do so by setting the `optional_packages` variable as a
+list of RPM packages.
+
+For example, one may have a `./inventory/optional.yaml` and therein specify:
+
+```
+---
+optional_packages:
+  - tcpdump
+  - bind-utils
+```
+
+You may then include that when you kick off your playbook for example...
+
+```
+ansible-playbook -i inventory/your.inventory -e "@./inventory/optional.yaml" kube-install.yaml
+```

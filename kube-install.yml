@@ -7,8 +7,9 @@
   become_user: root
   tasks: []
   roles:
-    # You can add "crio_force: true" if you need to run the builds again.
+    - { role: optional-packages }
     - { role: install-go, when: container_runtime == 'crio' }
+    # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
     - { role: buildah-install, when: container_runtime == 'crio' }
     - { role: install-docker, when: container_runtime == 'docker' }
