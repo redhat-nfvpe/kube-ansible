@@ -83,20 +83,20 @@
   include: kube-16-workaround.yml
   when: kube_16_workaround
 
-- name: Remove default kubadm.conf ExecStart
+- name: Remove default kubeadm.conf ExecStart
   lineinfile:
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: 'KUBELET_EXTRA_ARGS$'
     state: absent
 
-- name: Add custom kubadm.conf ExecStart
+- name: Add custom kubeadm.conf ExecStart
   lineinfile:
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: 'systemd$'
     line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=systemd'
   notify: "restart kubelet"
 
-- name: Change cluster dns ip in kubadm.conf for ipv6
+- name: Change cluster dns ip in kubeadm.conf for ipv6
   lineinfile:
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: 'cluster-dns'
