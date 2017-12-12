@@ -78,4 +78,15 @@ machine, Kubernetes repositories will be cloned, Docker setup, and Planter
 executed to build the release.
 
 The resulting release binaries will be on the builder virtual machine in
-`/home/centos/src/go/src/k8s.io/kubernetes/bazel-bin/build/release-tars/`.
+`/home/centos/src/go/src/k8s.io/kubernetes/bazel-bin/build/`.
+
+## Copying Artifacts to Kubernetes Nodes
+
+When you run the `builder.yml`, at the end of the build, the artifacts will be
+copied over to your Kubernetes nodes (assuming you're consuming the
+automatically built inventory file `vms.local.generated`, otherwise you need to
+specify your own inventory file that contains the `master` and `nodes` groups
+of your Kubernetes nodes).
+
+Artifacts are copied onto the Kubernetes nodes and placed in the
+`/opt/k8s/artifacts/` directory.

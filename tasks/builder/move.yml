@@ -1,0 +1,46 @@
+---
+- name: Create temporary artifacts directory
+  file:
+    state: directory
+    path: /tmp/k8s_artifacts/
+    mode: 0755
+
+- name: Create artifacts directory on k8s nodes
+  become: true
+  become_user: root
+  file:
+    state: directory
+    path: /opt/k8s/artifacts
+    mode: 0755
+
+- name: Get list of files in tmp archive
+  find:
+    path: /tmp/k8s_artifacts/
+  register: k8s_artifacts
+
+- name: Copy files from tmp into opt as root
+  become: true
+  become_user: root
+  copy:
+    src: "{{ item.path }}"
+    dest: /opt/k8s/artifacts/
+    owner: root
+    group: root
+    remote_src: yes
+  with_items: "{{ k8s_artifacts.files }}"
+
+- name: Remove the temporary archive directory
+  file:
+    state: absent
+    path: /tmp/k8s_artifacts
+
+- name: Set proper permissions on k8s artifacts directory
+  become: true
+  become_user: root
+  file:
+    state: directory
+    path: /opt/k8s/artifacts
+    recurse: yes
+    owner: root
+    group: root
+  delegate_to: "{{ inventory_hostname }}"

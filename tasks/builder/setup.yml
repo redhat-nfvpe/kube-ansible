@@ -6,18 +6,16 @@
 
   - import_role:
       name: auto-kube-dev/roles/install-deps-utils
-    vars:
-      become: true
-      become_user: "root"
+    become: true
+    become_user: "root"
 
   - import_role:
       name: install-go
 
   - import_role:
       name: install-docker
-    vars:
-      become: true
-      become_user: "root"
+    become: true
+    become_user: "root"
 
   - import_role:
       name: auto-kube-dev/roles/setup-repos
