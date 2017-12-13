@@ -8,7 +8,7 @@
 
 - name: Template CRD flavored multus.yaml
   template:
-    src: multus.yaml.j2
+    src: multus-crd.yaml.j2
     dest: /etc/multus-crd.yaml
   when: multus_use_crd
 
