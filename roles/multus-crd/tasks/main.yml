@@ -16,6 +16,8 @@
       dest: "flannel.yml"
     - src: macvlan.yml.j2
       dest: "macvlan.yml"
+    - src: clusterrole.yml.j2
+      dest: "clusterrole.yml"
 
 - name: Check to see if CRD is present
   shell: >
@@ -55,6 +57,17 @@
     - 'macvlan-conf'
     - 'flannel-conf'
 
+- name: Get the clusteroles
+  shell: >
+    kubectl get clusterroles
+  register: output_clusterroles
+
+- name: Create clusterrole
+  shell: >
+    kubectl create -f {{ ansible_env.HOME }}/multus-resources/clusterrole.yml
+  when: >
+    "multus-crd-overpowered" not in output_clusterroles.stdout
+
 - name: Get the clusterrolebindings
   shell: >
     kubectl get clusterrolebindings
@@ -63,7 +76,7 @@
 - name: Create clusterrolebindings for each machine
   shell: >
     kubectl create clusterrolebinding multus-node-{{ hostvars[item]['inventory_hostname'] }}
-    --clusterrole=system:node
+    --clusterrole=multus-crd-overpowered
     --user=system:node:{{ hostvars[item]['inventory_hostname'] }}
   with_items:
     - "{{ groups['nodes'] + groups['master'] }}"
