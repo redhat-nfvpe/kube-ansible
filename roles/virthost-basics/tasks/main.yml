@@ -45,7 +45,7 @@
   when: set_root_disk_gb is defined
 
 - name: Increase root disk size (optionally)
-  shell: >
+  command: >
     qemu-img resize {{ images_directory }}/{{ image_destination_name }} {{ set_root_disk_gb }}G
   when: resize_image
 
@@ -83,9 +83,12 @@
     flat: yes
 
 - name: Get the public key
-  shell: >
+  command: >
     cat /root/.ssh/id_vm_rsa.pub
   register: cat_id_pub
+  tags:
+    - skip_ansible_lint
+    # Skip ANSIBLE0012 because we always want to get this public key
 
 - name: Set the public key as a fact
   set_fact:
@@ -100,17 +103,22 @@
 
 - name: Create ipv6 network
   block:
-    - virt_net:
+    - name: Define network namespace
+      virt_net:
         name: k8s-ipv6-private
         command: define
         xml: >
           <network ipv6='yes'>
             <name>k8s-ipv6-private</name>
           </network>
-    - virt_net:
+
+    - name: Set network active
+      virt_net:
         name: k8s-ipv6-private
         state: active
-    - virt_net:
+
+    - name: Set network to autostart
+      virt_net:
         name: k8s-ipv6-private
         autostart: yes
   when: ipv6_enabled
