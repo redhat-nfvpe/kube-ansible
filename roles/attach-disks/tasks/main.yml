@@ -11,7 +11,7 @@
   with_items: "{{ virtual_machines }}"
 
 - name: Attach disk
-  command: >
+  shell: >
     virsh attach-disk "{{ item.name }}" {{ spare_disk_location }}/{{ item.name }}.img vdb --cache none &&
     touch {{ spare_disk_location }}/.attached-{{ item.name }}
   args:
