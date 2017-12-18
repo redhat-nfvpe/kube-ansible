@@ -8,6 +8,9 @@
   shell: >
     ip link | grep -A1 {{ bridge_physical_nic }} | grep link | awk '{print $2}'
   register: mac_address
+  tags:
+    - skip_ansible_lint
+    # Skip ANSIBLE0012 since we always need to run this
 
 - name: Template physical device config
   template:
@@ -18,13 +21,9 @@
   template:
     src: bridge-device.conf.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ bridge_network_name }}"
-  register: bridge_device_template
+  notify: "Restart networking"
 
-- name: Restart networking
-  service:
-    name: network
-    state: restarted
-  when: bridge_device_template.changed
+- meta: flush_handlers
 
 - name: Override bridge name
   set_fact:

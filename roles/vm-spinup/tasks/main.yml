@@ -12,32 +12,27 @@
     mode: 0755
 
 - name: Get the virsh list
-  shell: >
+  command: >
     virsh list
   register: virsh_list
-
-# - name: Show virsh list
-#   debug: "msg={{ virsh_list.stdout }} - {{ virtual_machines }}"
+  tags:
+    - skip_ansible_lint
+    # Skip ANSIBLE0012 because we need the virsh list each time we run
 
 - name: Run spinup for each host that doesn't exist
-  shell: >
+  command: >
     /root/spinup.sh {{ item.name }} {{ item.system_ram_mb | default(system_default_ram_mb) }} {{ item.system_cpus | default(system_default_cpus) }}
   when: "item.name not in virsh_list.stdout"
   with_items: "{{ virtual_machines }}"
 
-# - name: Get IP Addresses for all VMs
-#   shell: >
-#     grep -B1 $(virsh dumpxml {{ item }} | awk -F\' '/mac address/ {print $2}') /var/lib/libvirt/dnsmasq/{{ bridge_name }}.status | head -n 1 | awk '{print $2}' | sed -e s/\"//g -e s/,//
-#   register: vm_ip_addresses
-#   with_items: "{{ virtual_machines }}"
-#   when: not bridge_networking
-
 - name: Get IP Addresses for all VMs
-  shell: >
+  command: >
     cat /tmp/{{ item.name }}.ip.txt
   register: vm_ip_addresses
   with_items: "{{ virtual_machines }}"
-  # when: bridge_networking
+  tags:
+    - skip_ansible_lint
+    # Skip ANSIBLE0012 because we want the IP addresses every time
 
 - name: Populate dictionary of IPs
   set_fact:

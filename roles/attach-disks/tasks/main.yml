@@ -4,23 +4,14 @@
 #    http://tinyurl.com/jytvxl6
 
 - name: Create images for spare disks
-  shell: >
+  command: >
     qemu-img create -f raw {{ spare_disk_location }}/{{ item.name }}.img {{ spare_disk_size_megs }}M
   args:
     creates: "{{ spare_disk_location }}/{{ item.name }}.img"
   with_items: "{{ virtual_machines }}"
 
-# --- I'll leave this for posterity, but, I went for a simpler approach that didn't need xml
-# - name: Template disk xml
-#   template:
-#     src: storage.xml.j2
-#     dest: "/tmp/storage-{{ item }}.xml"
-#   vars:
-#     source_path: "{{ spare_disk_location }}/{{ item }}.img"
-#   with_items: "{{ virtual_machines }}"
-
 - name: Attach disk
-  shell: >
+  command: >
     virsh attach-disk "{{ item.name }}" {{ spare_disk_location }}/{{ item.name }}.img vdb --cache none &&
     touch {{ spare_disk_location }}/.attached-{{ item.name }}
   args:
