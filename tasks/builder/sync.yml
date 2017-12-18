@@ -1,0 +1,9 @@
+---
+- name: Synchronize artifacts to kubernetes cluster
+  synchronize:
+    src: "{{ ansible_env.HOME }}/src/go/src/k8s.io/kubernetes/bazel-bin/build/{{ item }}"
+    dest: "/tmp/k8s_artifacts/"
+    mode: pull
+  delegate_to: "{{ k8s_hostname }}"
+  with_items: "{{ archive_list }}"
+

@@ -116,3 +116,15 @@ bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
 
 ipv6_enabled: false
+
+# builder archive list
+archive_list:
+  - rpms/kubeadm-x86_64.rpm
+  - rpms/kubectl-x86_64.rpm
+  - rpms/kubelet-x86_64.rpm
+  - rpms/kubernetes-cni-x86_64.rpm
+  - cloud-controller-manager.tar
+  - kube-apiserver.tar
+  - kube-controller-manager.tar
+  - kube-proxy.tar
+  - kube-scheduler.tar
