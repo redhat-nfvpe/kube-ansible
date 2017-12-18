@@ -1,0 +1,17 @@
+---
+# ----------------------
+# builder vars
+# ----------------------
+# Hardware checks.
+perform_hardware_checks: true
+recommend_ram_mb: 24576
+recommend_free_disk_gb: 36.1
+
+# builder setup
+use_planter: true
+skip_builder_setup: false
+skip_build: false
+
+# Kube repo & version
+kubernetes_repo_url: https://github.com/kubernetes/kubernetes.git
+kubernetes_version: master
