@@ -3,6 +3,6 @@
   tasks: []
 
   roles:
-    - { role: virthost-basics }
+    - { role: virthost-basics, when: "not skip_virthost_depedencies" }
     - { role: vm-spinup }
     - { role: attach-disks, when: "gluster_attach_disk == true" }

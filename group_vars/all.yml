@@ -107,6 +107,11 @@ brick_size: "1980"
 # ----------------------------
 # virt-host vars.
 # ----------------------------
+
+# Allows one to skip the steps to initially setup a virthost
+# convenient when iterating quickly.
+skip_virthost_depedencies: false
+
 # Enables a bridge to the outside LAN
 # (as opposed to using virbr0)
 bridge_networking: false
