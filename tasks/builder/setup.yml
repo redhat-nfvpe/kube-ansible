@@ -16,6 +16,8 @@
       name: install-docker
     become: true
     become_user: "root"
+    vars:
+      docker_repo_type: "ce"
 
   - import_role:
       name: auto-kube-dev/roles/setup-repos
