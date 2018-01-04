@@ -20,3 +20,4 @@ install:
 
 script:
     - ansible-lint virthost-setup.yml
+    - ansible-lint builder.yml
