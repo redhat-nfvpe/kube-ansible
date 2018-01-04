@@ -10,7 +10,7 @@
 - hosts: builder
   tasks:
     - name: Build Kubernetes (this will take a while)
-      shell: ./../planter/planter.sh make bazel-build
+      command: ./../planter/planter.sh make bazel-build
       args:
         chdir: "{{ ansible_env.HOME }}/src/go/src/k8s.io/kubernetes"
       when: skip_build is defined and not skip_build
