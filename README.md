@@ -1,14 +1,11 @@
-# Kucean
+# kube-ansible
 
-**Kucean** (p. koo-see-ehn) is a set of Ansible playbooks and roles that allows
-you to instantiate a vanilla Kubernetes cluster on CentOS virtual machines or
-baremetal.
+`kube-ansible` is a set of Ansible playbooks and roles that allows
+you to instantiate a vanilla Kubernetes cluster on (primarily) CentOS virtual 
+machines or baremetal.
 
-Additionally, kucean includes CNI pod networking (defaulting to Flannel, with
-an ability to deploy Weave and Multus).
-
-`kube-centos-ansible` is the project name, which can be compactly referred to
-as _kucean_ i.e. (_ku_)bernetes-(_ce_)ntos-(_an_)sible
+Additionally, kube-ansible includes CNI pod networking (defaulting to Flannel,
+with an ability to deploy Weave and Multus).
 
 ## Playbooks
 
@@ -27,11 +24,11 @@ as _kucean_ i.e. (_ku_)bernetes-(_ce_)ntos-(_an_)sible
 
 ## Overview
 
-Kucean provides the means to install and setup KVM as a virtual host platform
-on which virtual machines can be created, and used as the foundation of a
-Kubernetes cluster installation.
+kube-ansible provides the means to install and setup KVM as a virtual host
+platform on which virtual machines can be created, and used as the foundation
+of a Kubernetes cluster installation.
 
-![Kucean Topology Overview](docs/images/kucean_overview.png)
+![kube-ansible Topology Overview](docs/images/kube-ansible_overview.png)
 
 There are generally two steps to this deployment:
 
