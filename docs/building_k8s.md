@@ -1,6 +1,6 @@
 # Building Kubernetes Releases
 
-You can instantiate a virtual machine with kube-centos-ansible in order to
+You can instantiate a virtual machine with kube-ansible in order to
 build a Kubernetes release from the upstream Kubernetes git repository. To do
 this, you create a heavy (on resources) virtual machine, install the
 dependencies, and then run `make bazel-release` using
@@ -8,7 +8,7 @@ dependencies, and then run `make bazel-release` using
 
 ## Instantiating a Virtual Machine
 
-Assuming you're familiar with kube-centos-ansible, getting the virtual machine
+Assuming you're familiar with kube-ansible, getting the virtual machine
 up and running for a build is relatively straight forward. You add a new
 builder VM to your `group_vars/all.yml` file under the `virtual_machines` list.
 
