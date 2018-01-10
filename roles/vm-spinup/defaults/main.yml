@@ -1,5 +1,0 @@
----
-ssh_proxy_enabled: false
-ssh_proxy_user: root
-system_default_ram_mb: 2048
-system_default_cpus: 4

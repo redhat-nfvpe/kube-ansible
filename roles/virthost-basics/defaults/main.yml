@@ -1,3 +1,0 @@
----
-centos_genericcloud_url: "http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1611.qcow2"
-image_destination_name: CentOS-7-x86_64-GenericCloud.qcow2

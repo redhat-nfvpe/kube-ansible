@@ -8,3 +8,5 @@
 - src: https://github.com/redhat-nfvpe/auto-kube-dev
   name: auto-kube-dev
   version: master
+- name: redhat-nfvpe.vm-spinup
+  version: master
