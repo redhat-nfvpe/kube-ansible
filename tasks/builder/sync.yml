@@ -6,3 +6,5 @@
     mode: pull
   delegate_to: "{{ k8s_hostname }}"
   with_items: "{{ archive_list }}"
+  tags:
+    - sync_artifacts

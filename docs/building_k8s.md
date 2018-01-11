@@ -90,3 +90,13 @@ of your Kubernetes nodes).
 
 Artifacts are copied onto the Kubernetes nodes and placed in the
 `/opt/k8s/artifacts/` directory.
+
+> **TIP**
+>
+> If you need to resync artifacts over to the virtual machines (for example, if
+> you tore down your Kubernetes cluster, reinstantiated, but didn't destroy the
+> builder VM with the artifacts) you can avoid rebuilding the entire set of
+> artifacts and synchronize them back over using the `sync_artifacts` Ansible
+> tag.
+>
+> `ansible-playbook -i inventory/vms.local.generated --tags sync_artifacts builder.yml`
