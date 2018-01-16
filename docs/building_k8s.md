@@ -89,7 +89,8 @@ specify your own inventory file that contains the `master` and `nodes` groups
 of your Kubernetes nodes).
 
 Artifacts are copied onto the Kubernetes nodes and placed in the
-`/opt/k8s/artifacts/` directory.
+`/opt/k8s/artifacts/` directory (optionally configurable via
+`artifacts_sync_path`).
 
 > **TIP**
 >
@@ -100,3 +101,29 @@ Artifacts are copied onto the Kubernetes nodes and placed in the
 > tag.
 >
 > `ansible-playbook -i inventory/vms.local.generated --tags sync_artifacts builder.yml`
+
+## Instantiating a Kubnernetes Cluster from Built Artifacts
+
+Once you've completed the building of artifacts on the builder machine, you can
+start up a Kubernetes cluster from those artifacts. All you need to do is pass
+the `artifacts_install` variable to the `kube-install.yml` playbook, and the
+artifacts that were previously synchronized over to the virtual machines will
+be loaded and installed, then used by `kubeadm` during cluster spin up.
+
+> **NOTE**
+>
+> You can only instantiate a Kubernetes cluster from version 1.10 (currently
+> master) or later. Changes were made to Kubernetes to avoid the use of CGO
+> when building the artifacts, which allows them to be consumed. In Kubernetes
+> version 1.9 or earlier, these changes didn't exist, and would result in
+> `kubeadm` crashing whenever it tried to initialize the cluster.
+
+Instantiate the cluster using the artifacts with the following command:
+
+```
+ansible-playbook -i inventory/vms.local.generated -e "artifacts_install=true" kube-install.yml
+```
+
+**PRO TIP**: You can also change the repository location and branch that the
+builder uses, resulting in an ability to create a cluster with your own custom
+changes to Kubernetes.

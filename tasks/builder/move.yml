@@ -10,7 +10,7 @@
   become_user: root
   file:
     state: directory
-    path: /opt/k8s/artifacts
+    path: "{{ artifacts_sync_path }}"
     mode: 0755
 
 - name: Get list of files in tmp archive
@@ -23,7 +23,7 @@
   become_user: root
   copy:
     src: "{{ item.path }}"
-    dest: /opt/k8s/artifacts/
+    dest: "{{ artifacts_sync_path }}"
     owner: root
     group: root
     remote_src: yes
@@ -39,7 +39,7 @@
   become_user: root
   file:
     state: directory
-    path: /opt/k8s/artifacts
+    path: "{{ artifacts_sync_path }}"
     recurse: yes
     owner: root
     group: root
