@@ -24,7 +24,7 @@
     msg: Missing artifact {{ item.item }}
   with_items: "{{ artifacts_stat_list.results }}"
   when: not item.stat.exists
-  ignore_fail: True
+  ignore_errors: True
 
 - name: Synchronize artifacts to kubernetes cluster
   synchronize:

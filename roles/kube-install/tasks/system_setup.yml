@@ -1,0 +1,16 @@
+---
+- name: "Disable SELinux :("
+  selinux:
+    state: disabled
+
+- name: "Stop iptables :("
+  service:
+    name: "{{ __firewall_service }}"
+    state: stopped
+  ignore_errors: yes
+
+- name: "Disable iptables :("
+  service:
+    name: "{{ __firewall_service }}"
+    enabled: no
+  ignore_errors: yes

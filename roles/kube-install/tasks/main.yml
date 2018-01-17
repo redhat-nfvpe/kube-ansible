@@ -2,47 +2,13 @@
 # Setup variables
 - include: variables.yml
 
-- name: "Disable SELinux :("
-  selinux:
-    state: disabled
-
-- name: "Stop iptables :("
-  service:
-    name: "{{ __firewall_service }}"
-    state: stopped
-  ignore_errors: yes
-
-- name: "Disable iptables :("
-  service:
-    name: "{{ __firewall_service }}"
-    enabled: no
-  ignore_errors: yes
+- import_tasks: system_setup.yml
 
 - name: Template kube RPM repo
   template:
     src: kubernetes.repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
-
-# The kube_version variable can be from this list...
-# That is, the `yum search kubelet --showduplicates`
-# (as of 8/9/17)
-#
-# e.g. you would use "1.6.6-0" for kube 1.6.6
-#
-# kubelet-1.5.4-0.x86_64 : Container cluster management
-# kubelet-1.6.0-0.x86_64 : Container cluster management
-# kubelet-1.6.1-0.x86_64 : Container cluster management
-# kubelet-1.6.2-0.x86_64 : Container cluster management
-# kubelet-1.6.3-0.x86_64 : Container cluster management
-# kubelet-1.6.4-0.x86_64 : Container cluster management
-# kubelet-1.6.5-0.x86_64 : Container cluster management
-# kubelet-1.6.6-0.x86_64 : Container cluster management
-# kubelet-1.6.7-0.x86_64 : Container cluster management
-# kubelet-1.7.0-0.x86_64 : Container cluster management
-# kubelet-1.7.1-0.x86_64 : Container cluster management
-# kubelet-1.7.2-0.x86_64 : Container cluster management
-# kubelet-1.7.3-1.x86_64 : Container cluster management
-# kubelet-1.7.3-1.x86_64 : Container cluster management
+  when: not artifacts_install
 
 - name: Default kube version fact
   set_fact:
@@ -51,9 +17,26 @@
 - name: Set kube version fact to specific version when specified
   set_fact:
     kube_version_parameter: "-{{ kube_version }}"
-  when: kube_version != "latest"
+  when: kube_version != "latest" and not artifacts_install
 
-- name: Install required packages
+- name: Get Kubernetes version when doing an artifacts-based installation
+  block:
+    - name: get contents
+      command: tar xfO {{ artifacts_sync_path }}/kube-proxy.tar manifest.json
+      register: raw_manifest
+      tags:
+        - skip_ansible_lint  # needs to use tar to unpack and return file contents
+
+    - name: Set contents of raw manifest.json from kube-proxy container archive
+      set_fact:
+        manifest: "{{ raw_manifest.stdout|from_json }}"
+
+    - name: Get version of kube-proxy container archive from manifest variable
+      set_fact:
+        kube_version: "{{ manifest.0.RepoTags.0.split(':')[1] | replace('_', '+') }}"
+  when: artifacts_install
+
+- name: Install required packages for Kubernetes deployment
   package:
     name: "{{ item }}"
     state: present
@@ -62,6 +45,41 @@
     - kubelet{{ kube_version_parameter }}
     - kubeadm{{ kube_version_parameter }}
     - kubernetes-cni
+  when: not artifacts_install
+
+
+# TODO: only install when packages are not already installed
+- name: Install required packages from artifacts for Kubernetes deployment
+  block:
+    - name: Install RPMs for Kubernetes from artifacts
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ artifacts_sync_path }}/kubeadm-x86_64.rpm"
+        - "{{ artifacts_sync_path }}/kubectl-x86_64.rpm"
+        - "{{ artifacts_sync_path }}/kubelet-x86_64.rpm"
+        - "{{ artifacts_sync_path }}/kubernetes-cni-x86_64.rpm"
+
+    - name: Get list of container image archives
+      find:
+        paths: "{{ artifacts_sync_path }}"
+        patterns: "*.tar"
+      register: container_image_archives
+
+    - name: Load container images
+      command: |
+        docker load -i {{ item.path }}
+      with_items: "{{ container_image_archives.files }}"
+
+    - name: Retag the container images
+      shell: >
+        docker images --format "docker tag {{'{{'}}.Repository{{'}}'}}:{{'{{'}}.Tag{{'}}'}} {{'{{'}}.Repository{{'}}'}}-amd64:{{'{{'}}.Tag{{'}}'}}" | sh
+
+  when: artifacts_install
+
+# TODO: only load images when not already imported
+
 
 - name: Install CNI plugins 0.6.0 for ipv6
   shell: |

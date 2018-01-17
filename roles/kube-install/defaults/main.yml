@@ -1,3 +1,5 @@
 ---
 binary_install: false
+artifacts_install: false
+artifacts_sync_path: /opt/k8s/artifacts
 kubectl_home: /home/centos
