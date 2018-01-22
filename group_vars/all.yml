@@ -132,7 +132,7 @@ ipv6_enabled: false
 # directly on the builder server itself.
 
 # artifact paths
-artifact_sync_path: /opt/k8s/artifacts
+artifacts_sync_path: /opt/k8s/artifacts
 
 # builder archive list
 archive_list:
