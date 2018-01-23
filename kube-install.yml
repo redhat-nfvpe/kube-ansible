@@ -7,6 +7,7 @@
   become_user: root
   tasks: []
   roles:
+    - { role: bridge-setup, when: pod_network_type == 'bridge' }
     - { role: optional-packages }
     - { role: install-go, when: container_runtime == 'crio' }
     # You can add "crio_force: true" if you need to run the builds again.

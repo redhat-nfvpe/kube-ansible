@@ -1,0 +1,22 @@
+---
+
+- name: Install bridge-utils
+  yum:
+    name: bridge-utils
+    state: latest
+
+- name: Configure cni0 for control plane
+  template:
+    src: ifcfg-cni0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-cni0
+
+- name: Configure eth0 for control plane
+  template:
+    src: ifcfg-eth0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+  notify: "restart net"
+
+# Note:
+# "restart net" sends DHCP request through eth0 for cni0. 
+# Currently DHCP client will use eth0's MAC, hence IP 
+# address should not changed.

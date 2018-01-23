@@ -21,3 +21,8 @@
   template:
     src: flannel-rbac.yaml.j2
     dest: /etc/flannel-rbac.yaml
+
+- name: Template bridge.yaml
+  template:
+    src: bridge.yaml.j2
+    dest: /etc/bridge.yaml
