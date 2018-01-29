@@ -1,8 +1,6 @@
 ---
 # root work
 - block:
-  become: true
-  become_user: root
     - name: Add vpp repo
       yum_repository:
         name: fdio-release
@@ -13,3 +11,9 @@
       package:
         name: vpp
         state: present
+    - name: Install vpp-plugins
+      package:
+        name: vpp-plugins
+        state: present
+  become: true
+  become_user: root

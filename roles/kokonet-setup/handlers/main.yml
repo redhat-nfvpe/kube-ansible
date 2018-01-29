@@ -1,7 +1,13 @@
 ---
 
-- name: restart network
-  service:
-    name: network
-    state: restarted
-  listen: 'restart net'
+- name: shut down eth1
+  shell: ifdown eth1
+  listen: "restart eth1"
+
+- pause:
+    seconds: 2
+  listen: "restart eth1"
+
+- name: bring up eth1
+  shell: ifup eth1
+  listen: "restart eth1"
