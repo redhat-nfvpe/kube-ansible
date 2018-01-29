@@ -3,9 +3,9 @@
   become_user: root
   tasks:
     - name: Install docker-py 
-      yum:
+      package:
         name: python-docker-py
-        state: latest
+        state: present
   roles:
     - { role: install-docker, when: container_runtime == 'docker' }
 

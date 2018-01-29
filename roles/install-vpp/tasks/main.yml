@@ -10,6 +10,6 @@
         baseurl: https://nexus.fd.io/content/repositories/fd.io.centos7/
         gpgcheck: 0
     - name: Install vpp
-      yum:
+      package:
         name: vpp
         state: present
