@@ -12,14 +12,21 @@
   delay: 3
   ignore_errors: yes
 
-# ----------- flannel
-- name: Configure bridge cni plugin 
+# ----------- bridge
+- name: Configure bridge cni plugin
   shell: >
     kubectl create -f /etc/bridge.yaml
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
   when: pod_network_type == "bridge"
 
+# ----------- kokonet-bridge
+- name: Configure bridge cni plugin
+  shell: >
+    kubectl create -f /etc/kokonet-bridge.yaml
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "kokonet-bridge"
 
 # ----------- flannel
 - name: Apply the flannel RBAC

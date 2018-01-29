@@ -7,7 +7,9 @@
   become_user: root
   tasks: []
   roles:
-    - { role: bridge-setup, when: pod_network_type == 'bridge' }
+    - { role: bridge-setup,
+        when: pod_network_type == 'bridge' or pod_network_type == 'kokonet-bridge' }
+    - { role: kokonet-setup, when: pod_network_type == 'kokonet-bridge' }
     - { role: optional-packages }
     - { role: install-go, when: container_runtime == 'crio' }
     # You can add "crio_force: true" if you need to run the builds again.
@@ -16,6 +18,9 @@
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
+
+- include: kokonet-lab.yml
+  when: pod_network_type == 'kokonet-bridge'
 
 - hosts: master,nodes
   become: true

@@ -1,0 +1,7 @@
+---
+
+- name: restart network
+  service:
+    name: network
+    state: restarted
+  listen: 'restart net'

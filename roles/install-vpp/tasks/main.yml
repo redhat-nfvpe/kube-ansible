@@ -1,0 +1,15 @@
+---
+# root work
+- block:
+  become: true
+  become_user: root
+    - name: Add vpp repo
+      yum_repository:
+        name: fdio-release
+        description: fd.io release branch latest merge
+        baseurl: https://nexus.fd.io/content/repositories/fd.io.centos7/
+        gpgcheck: 0
+    - name: Install vpp
+      yum:
+        name: vpp
+        state: present

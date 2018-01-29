@@ -1,0 +1,29 @@
+{
+  "cniVersion": "0.3.1",
+  "name": "kokonet-cni",
+  "type": "kokonet-cni",
+  "interfaces" : ["in", "out"],
+  "vtep_ip": "10.1.1.10",
+  "vtep_parent_if": "eth1",
+{% if ansible_hostname == 'kube-master' %}
+  "vtep_src_ip": "10.1.1.1", 
+{% elif ansible_hostname == 'kube-node-1' %}
+  "vtep_src_ip": "10.1.1.11", 
+{% elif ansible_hostname == 'kube-node-2' %}
+  "vtep_src_ip": "10.1.1.12", 
+{% endif %}
+  "controller_uri": "http://{{ hostvars['kokonet-mgr']['ansible_host'] }}/",
+  "etcd_host":      "{{ hostvars['kokonet-mgr']['ansible_host'] }}",
+  "etcd_port": 2379,
+  "delegate": {
+    	"type": "bridge",
+	"bridge": "cni0",
+	"hairpinMode": true,
+	"ipam": {
+		"type": "dhcp"
+	},
+        "dns": {
+          "nameservers": [ "192.168.122.1" ]
+        }
+  }
+}
