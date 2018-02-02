@@ -1,0 +1,34 @@
+---
+
+- name: Configure eth1 for data plane
+  template:
+    src: ifcfg-eth1.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+  notify: "restart eth1"
+
+# kokonet/issues/7 will remove it!
+- name: Configure eth1 for data plane
+  template:
+    src: 10-kokonet.conf.j2
+    dest: /home/centos/10-kokonet.conf
+
+# kokonet/issues/7 will remove it!
+- name: cni 
+  become: true
+  become_user: root
+  block:
+    - name: make cni directory
+      file:
+        path: /etc/cni/net.d
+        owner: root
+        group: root
+        state: directory
+        mode: 0755
+        recurse: yes
+
+    - name: copy cni config
+      copy:
+        src: /home/centos/10-kokonet.conf
+        dest: /etc/cni/net.d/
+        remote_src: yes
+        mode: 0744
