@@ -18,6 +18,15 @@ data:
     {
       "name": "multus-cni-network",
       "type": "multus",
+      "delegates": [
+        {
+          "type": "flannel",
+          "masterplugin": true,
+          "delegate": {
+            "isDefaultGateway": true
+          }
+        }
+      ],
       "kubeconfig": "/etc/kubernetes/kubelet.conf"
     }
   net-conf.json: |
@@ -52,7 +61,7 @@ spec:
       serviceAccountName: flannel
       containers:
       - name: kube-flannel
-        image: quay.io/coreos/flannel:v0.7.0-amd64
+        image: quay.io/coreos/flannel:v0.7.1-amd64
         command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr" ]
         securityContext:
           privileged: true

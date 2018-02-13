@@ -75,7 +75,7 @@
 
 - name: Create clusterrolebindings for each machine
   shell: >
-    kubectl create clusterrolebinding multus-node-{{ hostvars[item]['inventory_hostname'] }}
+    kubectl create clusterrolebinding multus-node-{{ hostvars[item]['ansible_nodename'] }}
     --clusterrole=multus-crd-overpowered
     --user=system:node:{{ hostvars[item]['inventory_hostname'] }}
   with_items:
