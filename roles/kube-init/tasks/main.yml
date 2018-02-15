@@ -23,10 +23,22 @@
     arg_pod_network: "--config=/root/kubeadm_v6.cfg"
   when: ipv6_enabled
 
+- name: Use config file for control plane listen on all addresses
+  set_fact:
+    arg_pod_network: "--config=/root/kubeadm_control_plane_listen_all.cfg"
+  when: control_plane_listen_all
+
 - name: create kubeadm_v6.cfg
   copy:
     src: kubeadm_v6.cfg
     dest: /root/kubeadm_v6.cfg
+  when: ipv6_enabled
+
+- name: create kubeadm_control_plane_listen_all.cfg
+  copy:
+    src: kubeadm_control_plane_listen_all.cfg
+    dest: /root/kubeadm_control_plane_listen_all.cfg
+  when: control_plane_listen_all
 
 - name: Default cri-o flags to empty
   set_fact:
