@@ -75,6 +75,9 @@ kube_16_workaround: false
 # Kubectl proxy.
 kubectl_proxy_port: 8088
 
+# Allow the kubernetes control plane to listen on all interfaces
+#control_plane_listen_all: true
+
 # --------------------------- -
 # multus-cni vars          - -
 # ------------------------- -
