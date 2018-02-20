@@ -4,28 +4,28 @@
 #  [root@kube-master centos]# kubeadm --help | grep reset
 #    reset       Run this to revert any changes made to this host by 'kubeadm init' or 'kubeadm join'.
 
-- name: Default pod-network-cidr
+- name: Default primary kubeadm argument
   set_fact:
-    arg_pod_network: ""
+    arg_primary: ""
 
 - name: Set pod-network-cidr when flannel
   set_fact:
-    arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
+    arg_primary: "--pod-network-cidr {{ pod_network_cidr }}/16"
   when: pod_network_type != "weave" and not ipv6_enabled
 
 - name: Set apiserver-advertise-address when kokonet-bridge
   set_fact:
-    arg_pod_network: "--apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    arg_primary: "--apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
   when: pod_network_type == "kokonet-bridge"
 
 - name: Use config file for ipv6 for pod-network-cidr
   set_fact:
-    arg_pod_network: "--config=/root/kubeadm_v6.cfg"
+    arg_primary: "--config=/root/kubeadm_v6.cfg"
   when: ipv6_enabled
 
 - name: Use config file for control plane listen on all addresses
   set_fact:
-    arg_pod_network: "--config=/root/kubeadm_control_plane_listen_all.cfg"
+    arg_primary: "--config=/root/kubeadm.cfg"
   when: control_plane_listen_all
 
 - name: create kubeadm_v6.cfg
@@ -34,10 +34,10 @@
     dest: /root/kubeadm_v6.cfg
   when: ipv6_enabled
 
-- name: create kubeadm_control_plane_listen_all.cfg
-  copy:
-    src: kubeadm_control_plane_listen_all.cfg
-    dest: /root/kubeadm_control_plane_listen_all.cfg
+- name: create kubeadm config file
+  template:
+    src: kubeadm.cfg.j2
+    dest: /root/kubeadm.cfg
   when: control_plane_listen_all
 
 - name: Default cri-o flags to empty
@@ -63,7 +63,7 @@
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ arg_pod_network }} > /var/log/kubeadm.init.log
+    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ arg_primary }} > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 

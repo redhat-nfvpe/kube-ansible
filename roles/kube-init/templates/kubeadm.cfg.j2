@@ -1,6 +1,9 @@
+# Full parameters @ https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 controllerManagerExtraArgs:
   address: 0.0.0.0
 schedulerExtraArgs:
   address: 0.0.0.0
+networking:
+  podSubnet: {{ pod_network_cidr }}/16
