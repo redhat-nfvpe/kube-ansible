@@ -19,7 +19,7 @@ version. This version number comes from a `yum search kubelet
 ```
 ansible-playbook -i inventory/vms.local.generated \
     -e 'kube_version=1.8.3-0' \
-    kube-install.yml
+    playbooks/kube-install.yml
 ```
 
 ## Install specific binaries
@@ -51,7 +51,7 @@ an extra var when you run the playbook:
 ```
 $ ansible-playbook -i inventory/vms.local.generated \
     -e 'container_runtime=crio' \
-    kube-install.yml
+    playbooks/kube-install.yml
 ```
 
 Additionally, the compilation of CRI-O requires a beefier machine, memory-wise.
@@ -86,5 +86,5 @@ optional_packages:
 You may then include that when you kick off your playbook for example...
 
 ```
-ansible-playbook -i inventory/your.inventory -e "@./inventory/optional.yaml" kube-install.yaml
+ansible-playbook -i inventory/your.inventory -e "@./inventory/optional.yaml" playbooks/kube-install.yaml
 ```

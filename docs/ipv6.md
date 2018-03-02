@@ -88,7 +88,7 @@ Perform a run of the `virthost-setup.yml` playbook, using the previously
 mentioned extra variables for override, and an inventory which references the 
 
 ```
-ansible-playbook -i inventory/your.virthost.inventory -e "@./inventory/extravars.yml" virthost-setup.yml
+ansible-playbook -i inventory/your.virthost.inventory -e "@./inventory/extravars.yml" playbooks/virthost-setup.yml
 ```
 
 This will produce an inventory file in the local clone of this repo @
@@ -140,7 +140,7 @@ With the above in place, we can now perform a kube install, and use the locally
 generated inventory.
 
 ```
-ansible-playbook -i inventory/vms.local.generated -e "@./inventory/extravars.yml" kube-install.yml
+ansible-playbook -i inventory/vms.local.generated -e "@./inventory/extravars.yml" playbooks/kube-install.yml
 ```
 
 You now should SSH to the master, and if you please, check out the status of

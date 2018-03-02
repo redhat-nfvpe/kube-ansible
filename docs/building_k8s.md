@@ -100,7 +100,7 @@ Artifacts are copied onto the Kubernetes nodes and placed in the
 > artifacts and synchronize them back over using the `sync_artifacts` Ansible
 > tag.
 >
-> `ansible-playbook -i inventory/vms.local.generated --tags sync_artifacts builder.yml`
+> `ansible-playbook -i inventory/vms.local.generated --tags sync_artifacts playbooks/ka-builder/builder.yml`
 
 ## Instantiating a Kubnernetes Cluster from Built Artifacts
 
@@ -121,7 +121,7 @@ be loaded and installed, then used by `kubeadm` during cluster spin up.
 Instantiate the cluster using the artifacts with the following command:
 
 ```
-ansible-playbook -i inventory/vms.local.generated -e "artifacts_install=true" kube-install.yml
+ansible-playbook -i inventory/vms.local.generated -e "artifacts_install=true" playbooks/kube-install.yml
 ```
 
 **PRO TIP**: You can also change the repository location and branch that the
