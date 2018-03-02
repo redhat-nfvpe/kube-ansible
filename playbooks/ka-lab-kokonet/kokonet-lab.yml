@@ -2,7 +2,7 @@
   become: true
   become_user: root
   tasks:
-    - name: Install docker-py 
+    - name: Install docker-py
       package:
         name: python-docker-py
         state: present
@@ -24,7 +24,7 @@
       docker_container:
         name: nmgr
         image: s1061123/kokonet:kokonet-mgr
-        env: 
+        env:
           VPP_CONTROLLER_URL: "http://{{hostvars['kokonet-vpp']['ansible_eth0']['ipv4']['address']}}:5000"
           VPP_VTEP_IP: 10.1.1.1
           ETCD_CLIENT_HOST: "{{hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address']}}"
@@ -38,7 +38,7 @@
     - { role: install-vpp }
 
 - hosts: kokonet-vpp
-  tasks: 
+  tasks:
     - name: Run vpp container
       docker_container:
         name: vpp
@@ -51,7 +51,7 @@
 
 # kokonet/issue/6 will removes it.
 - hosts: master, node
-  tasks: 
+  tasks:
     - name: Run kokonet-agent container
       docker_container:
         name: agent
@@ -59,7 +59,7 @@
         privileged: true
         volumes:
           - /proc:/host/proc
-        env: 
+        env:
           ETCD_CLIENT_HOST: "{{hostvars['kokonet-mgr']['ansible_eth0']['ipv4']['address']}}"
           ETCD_CLIENT_PORT: 2379
           DATAPLANE_IP: "{{hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address']}}"

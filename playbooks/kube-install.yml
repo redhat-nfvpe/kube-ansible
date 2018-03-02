@@ -1,5 +1,6 @@
 ---
-- include: ipv6-lab.yml
+- import_playbook: ka-init/init.yml
+- import_playbook: ka-lab-ipv6/ipv6-lab.yml
   when: ipv6_enabled
 
 - hosts: master,nodes
@@ -19,7 +20,7 @@
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
-- include: kokonet-lab.yml
+- import_playbook: ka-lab-kokonet/kokonet-lab.yml
   when: pod_network_type == 'kokonet-bridge'
 
 - hosts: master,nodes

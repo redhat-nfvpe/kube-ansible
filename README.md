@@ -1,13 +1,20 @@
 # kube-ansible
 
 `kube-ansible` is a set of Ansible playbooks and roles that allows
-you to instantiate a vanilla Kubernetes cluster on (primarily) CentOS virtual 
+you to instantiate a vanilla Kubernetes cluster on (primarily) CentOS virtual
 machines or baremetal.
 
 Additionally, kube-ansible includes CNI pod networking (defaulting to Flannel,
 with an ability to deploy Weave and Multus).
 
+The purpose of kube-ansible is to provide a simpler lab environment that allows
+prototyping and proof of concepts. For staging and production deployments, we
+recommend that you utilize
+[OpenShift-Ansible](https://github.com/openshift/openshift-ansible)
+
 ## Playbooks
+
+Playbooks are located in the `playbooks/` directory.
 
 | Playbook                         | Inventory                             | Purpose                                                            |
 | -------------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
@@ -72,12 +79,13 @@ cp -r inventory/examples/virthost inventory/virthost/
 Modify `./inventory/virthost/virthost.inventory` to setup a virtual
 host (skip to step 3 if you already have an inventory).
 
-Want more VMs? Edit `inventory/virthost/group_vars/virthost.yml` and add
-an override list via `virtual_machines` (template in `group_vars/all.yml`). You
-can also define separate vCPU and vRAM for each of the virtual machines with
-`system_ram_mb` and `system_cpus`. The default values are setup via
-`system_default_ram_mb` and `system_default_cpus` which can also be overridden
-if you wish different default values. (Current defaults are 2048MB and 4 vCPU.)
+Want more VMs? Edit `inventory/virthost/group_vars/virthost.yml` and add an
+override list via `virtual_machines` (template in
+`roles/ka-init/group_vars/all.yml`). You can also define separate vCPU and vRAM
+for each of the virtual machines with `system_ram_mb` and `system_cpus`. The
+default values are setup via `system_default_ram_mb` and `system_default_cpus`
+which can also be overridden if you wish different default values. (Current
+defaults are 2048MB and 4 vCPU.)
 
 > **WARNING**
 >
@@ -89,12 +97,12 @@ if you wish different default values. (Current defaults are 2048MB and 4 vCPU.)
 
 **Running on virthost directly**
 ```
-ansible-playbook -i inventory/virthost/ virthost-setup.yml
+ansible-playbook -i inventory/virthost/ playbooks/virthost-setup.yml
 ```
 
 **Setting up virthost as a jump host**
 ```
-ansible-playbook -i inventory/virthost/ -e ssh_proxy_enabled=true virthost-setup.yml
+ansible-playbook -i inventory/virthost/ -e ssh_proxy_enabled=true playbooks/virthost-setup.yml
 ```
 
 > **NOTE**
@@ -105,8 +113,8 @@ ansible-playbook -i inventory/virthost/ -e ssh_proxy_enabled=true virthost-setup
 > just created.
 >
 > Primarily, this is for overriding the default variables located in the
-> `group_vars/all.yml` file, or overriding the default values associated with
-> the roles.
+> `roles/ka-init/group_vars/all.yml` file, or overriding the default values
+> associated with the roles.
 >
 > Some common variables you may wish to override include:
 >
@@ -143,7 +151,7 @@ inventory directory from `inventory/examples/vms/` and modify to your hearts
 content.
 
 ```
-ansible-playbook -i inventory/vms.local.generated kube-install.yml
+ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
 ```
 
 Once you've done that, you should be able to connect to your Kubernetes master
