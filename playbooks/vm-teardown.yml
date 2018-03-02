@@ -1,0 +1,7 @@
+---
+- import_playbook: ka-init/init.yml
+
+- hosts: virthost
+  tasks: []
+  roles:
+    - { role: redhat-nfvpe.vm-spinup, teardown: true }
