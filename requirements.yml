@@ -9,4 +9,4 @@
   name: auto-kube-dev
   version: master
 - name: redhat-nfvpe.vm-spinup
-  version: master
+  version: develop
