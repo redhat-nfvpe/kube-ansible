@@ -1,0 +1,14 @@
+---
+- hosts: nodes
+  become: true
+  become_user: root
+  tasks:
+    - name: Install mount.glusterfs
+      yum:
+        name: glusterfs-fuse
+        state: present
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: glusterfs-kube-config }

@@ -1,4 +1,6 @@
 ---
+- import_playbook: ka-init/init.yml
+
 - hosts: nodes,master
   become: true
   become_user: root
