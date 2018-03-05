@@ -1,0 +1,152 @@
+---
+# What container runtime do we use?
+# valid values:
+# - docker
+# - crio
+container_runtime: docker
+
+# Which version of crio?
+# (doesn't matter if docker is container runtime)
+crio_version: v1.0.0-rc1
+
+# Pod net work types
+# A value of "none" will create no networking and will not join nodes to cluster.
+# Valid values:
+# - flannel
+# - weave
+# - none
+# - multus
+# - bridge
+# - kokonet-bridge
+pod_network_type: "flannel"
+pod_network_cidr: "10.244.0.0"
+
+# General config
+
+# At 1.7.2 you need this cause of a bug in kubeadm join.
+# Turn it off later, or, try it if a join fails.
+skip_preflight_checks: true
+
+# Stable. (was busted at 1.6 release, may work now, untested for a couple months)
+kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+
+# Unstable
+# kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64-unstable
+
+# Kube Version
+# Accepts "latest" or the version part of an RPM (typically based on the kubelet RPM).
+# For example if you were to look at `yum search kubelet --showduplicates`
+# You'd see things like "kubelet-1.7.5-0.x86_64"
+# You'd use "1.7.5-0" here, such as:
+# kube_version: 1.7.5-0
+# The default is... "latest"
+kube_version: "latest"
+
+# Binary install
+# Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
+# binary_install: true
+# binary_install_force_redownload: false
+# binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
+# binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
+# binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
+
+images_directory: /home/images
+system_default_ram_mb: 2048
+system_default_cpus: 4
+virtual_machines:
+  - name: kube-master
+    node_type: master
+  - name: kube-node-1
+    node_type: nodes
+  - name: kube-node-2
+    node_type: nodes
+  - name: kube-node-3
+    node_type: nodes
+#  - name: builder
+#    node_type: builder
+#    system_ram_mb: 24576
+#  - name: my-support-node
+#    node_type: other
+#    system_ram_mb: 8192
+#    system_cpus: 8
+
+# Implement a work-around for this:
+# https://github.com/kubernetes/kubernetes/issues/43815
+kube_16_workaround: false
+
+# Kubectl proxy.
+kubectl_proxy_port: 8088
+
+# Allow the kubernetes control plane to listen on all interfaces
+#control_plane_listen_all: true
+
+# --------------------------- -
+# multus-cni vars          - -
+# ------------------------- -
+multus_use_crd: true
+multus_ipam_subnet: "192.168.1.0/24"
+multus_ipam_rangeStart: "192.168.1.200"
+multus_ipam_rangeEnd: "192.168.1.216"
+multus_ipam_gateway: "192.168.1.1"
+
+# ----------------------------
+# glusterfs vars
+# ----------------------------
+
+# Hey what's that treeish?
+# It's the last known point Doug knows is good.
+# e.g. https://github.com/gluster/gluster-kubernetes/commit/e7799c152bf456dd7692bcb7c86bcef422c7b6c8
+gluster_kubernetes_version: "e7799c152bf456dd7692bcb7c86bcef422c7b6c8"
+gluster_attach_disk: true
+# New heketi image version gave Doug some trouble @ https://github.com/gluster/gluster-kubernetes/issues/363
+heketi_image_name: heketi/heketi:5
+
+# Disk sizes (for virtual machines)
+spare_disk_size_megs: 10240
+spare_disk_location: "/var/lib/libvirt/images"
+spare_disk_dev: vdb
+# Default size is megs, "2G" would be 2 gigs.
+# This is likely deprecated, Doug (9/25/17)
+brick_size: "1980"
+
+# ----------------------------
+# virt-host vars.
+# ----------------------------
+
+# Allows one to skip the steps to initially setup a virthost
+# convenient when iterating quickly.
+skip_virthost_depedencies: false
+
+# Enables a bridge to the outside LAN
+# (as opposed to using virbr0)
+bridge_networking: false
+bridge_name: virbr0
+bridge_physical_nic: "enp1s0f1"
+bridge_network_name: "br0"
+bridge_network_cidr: 192.168.1.0/24
+
+ipv6_enabled: false
+
+
+# ----------------------------
+# builder vars
+# ----------------------------
+
+# NOTE: these builder vars are here and not in the group_vars/builder.yml file
+# because these values are used across different types of nodes, and not just
+# directly on the builder server itself.
+
+# artifact paths
+artifacts_sync_path: /opt/k8s/artifacts
+
+# builder archive list
+archive_list:
+  - rpms/kubeadm-x86_64.rpm
+  - rpms/kubectl-x86_64.rpm
+  - rpms/kubelet-x86_64.rpm
+  - rpms/kubernetes-cni-x86_64.rpm
+  - cloud-controller-manager.tar
+  - kube-apiserver.tar
+  - kube-controller-manager.tar
+  - kube-proxy.tar
+  - kube-scheduler.tar
