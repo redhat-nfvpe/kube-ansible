@@ -1,0 +1,4 @@
+---
+- import_playbook: ../ka-init/init.yml
+
+- import_playbook: private/uninstall.yml

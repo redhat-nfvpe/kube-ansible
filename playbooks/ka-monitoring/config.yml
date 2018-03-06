@@ -1,0 +1,6 @@
+---
+- name: Initialize the run
+  import_playbook: ../ka-init/init.yml
+
+# Adds monitoring to the system by using Prometheus Operator
+- import_playbook: private/config.yml
