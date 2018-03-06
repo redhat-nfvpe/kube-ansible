@@ -1,0 +1,9 @@
+---
+- include_tasks: clone.yml
+  when: monitoring_install | default(False) | bool
+
+- include_tasks: install.yml
+  when: monitoring_install | default(False) | bool
+
+- include_tasks: uninstall.yml
+  when: monitoring_uninstall | default(False) | bool
