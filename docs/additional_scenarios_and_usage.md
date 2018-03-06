@@ -88,3 +88,24 @@ You may then include that when you kick off your playbook for example...
 ```
 ansible-playbook -i inventory/your.inventory -e "@./inventory/optional.yaml" playbooks/kube-install.yaml
 ```
+
+## Installing Prometheus Operator
+
+You can install [Prometheus
+Operator](https://github.com/coreos/prometheus-operator) as part of your
+cluster deployment, providing a monitoring service to help with scale testing.
+
+To enable Prometheus Operator, add the following variables to your inventory or
+variables file (or pass to `ansible-playbook` with `-e`):
+
+```
+monitoring_install: true
+control_plane_listen_all: true
+```
+
+Once you've setup the variables, you can post-install Prometheus-Operator with
+the following `ansible-playbook` command:
+
+```
+ansible-playbook -i inventory/vms.local.generated -e "@./inventory/my_vars.yml" playbooks/ka-monitoring/config.yml
+```
