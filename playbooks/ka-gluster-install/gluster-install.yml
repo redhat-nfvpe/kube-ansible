@@ -1,4 +1,7 @@
 ---
+- name: Initialize the run
+  import_playbook: ../ka-init/init.yml
+
 - hosts: nodes
   become: true
   become_user: root
