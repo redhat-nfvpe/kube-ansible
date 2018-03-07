@@ -29,13 +29,14 @@
 
 - name: Get list of namespaces
   shell: >
-    kubectl get namespaces
+    kubectl get namespaces -o go-template='{% raw %}{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}{% endraw %}'
   register: namespaces_list
+  changed_when: False
 
 - name: Create gluster namespace if necessary
   shell: >
     kubectl create -f /home/centos/glusterfs-namespace.yaml
-  when: "'gluster' not in namespaces_list.stdout"
+  when: "'gluster' not in namespaces_list.stdout_lines"
 
 - name: Clone gluster-kubernetes
   git:
@@ -116,13 +117,15 @@
 
 - name: List the storage classes
   shell: >
-    kubectl get storageclass
+    kubectl get storageclasses -o=go-template='{% raw %}{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}{% endraw %}'
   register: storageclass_list
+  changed_when: False
 
 - name: Create the storage class
   shell: >
     kubectl create -f /home/centos/glusterfs-storageclass.yaml
-  when: "'gluster' not in storageclass_list.stdout"
+  when: (gluster_storageclasses | json_query('[*].metadata.name')) | difference(storageclass_list.stdout_lines) | count > 0
+  ignore_errors: true
 
 # Get heketi URL.
 # [centos@kube-master ~]$ kubectl get svc --namespace=gluster | grep 8080 | awk '{print $2}'
