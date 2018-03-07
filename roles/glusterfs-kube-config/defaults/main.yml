@@ -1,2 +1,58 @@
 ---
 gk_deploy_wait_seconds: 900
+gluster_volumes:
+  - metadata:
+      name: "gluster-volume-1"
+    spec:
+      capacity:
+        storage: "600Mi"
+      reclaim_policy: "Delete"
+      storage_class_name: "storage"
+      glusterfs:
+        endpoints: "glusterfs-cluster"
+        path: "glustervol1"
+        read_only: false
+  - metadata:
+      name: "gluster-volume-2"
+    spec:
+      capacity:
+        storage: "300Mi"
+      reclaim_policy: "Delete"
+      storage_class_name: "storage"
+      glusterfs:
+        endpoints: "glusterfs-cluster"
+        path: "glustervol2"
+        read_only: false
+  - metadata:
+      name: "gluster-volume-3"
+    spec:
+      capacity:
+        storage: "300Mi"
+      reclaim_policy: "Delete"
+      storage_class_name: "storage"
+      glusterfs:
+        endpoints: "glusterfs-cluster"
+        path: "glustervol3"
+        read_only: false
+  - metadata:
+      name: "gluster-volume-4"
+    spec:
+      capacity:
+        storage: "100Mi"
+      reclaim_policy: "Delete"
+      storage_class_name: "storage"
+      glusterfs:
+        endpoints: "glusterfs-cluster"
+        path: "glustervol4"
+        read_only: false
+  - metadata:
+      name: "gluster-volume-5"
+    spec:
+      capacity:
+        storage: "100Mi"
+      reclaim_policy: "Delete"
+      storage_class_name: "storage"
+      glusterfs:
+        endpoints: "glusterfs-cluster"
+        path: "glustervol5"
+        read_only: false
