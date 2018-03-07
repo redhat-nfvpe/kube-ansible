@@ -56,3 +56,11 @@ gluster_volumes:
         endpoints: "glusterfs-cluster"
         path: "glustervol5"
         read_only: false
+
+gluster_storageclasses:
+  - metadata:
+      name: gluster
+    parameters:
+      resturl: "{{ heketi_ip }}:8080"
+      restuser: "this_is_unused"
+      restuserkey: "boy_thats_pretty_insecure"
