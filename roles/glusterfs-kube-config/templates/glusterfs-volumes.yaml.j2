@@ -1,80 +1,18 @@
+{% for volume in gluster_volumes %}
 apiVersion: "v1"
 kind: "PersistentVolume"
 metadata:
-  name: "gluster-volume-1"
+  name: "{{ volume.metadata.name }}"
 spec:
   capacity:
-    storage: "600Mi"
-  persistentVolumeReclaimPolicy: "Delete"
-  storageClassName: "storage"
+    storage: "{{ volume.spec.capacity.storage }}"
+  persistentVolumeReclaimPolicy: "{{ volume.spec.reclaim_policy }}"
+  storageClassName: "{{ volume.spec.storage_class_name }}"
   accessModes:
     - "ReadWriteOnce"
   glusterfs:
-    endpoints: "glusterfs-cluster"
-    path: "glustervol1"
-    readOnly: false
+    endpoints: "{{ volume.spec.glusterfs.endpoints }}"
+    path: "{{ volume.spec.glusterfs.path }}"
+    readOnly: {{ volume.spec.glusterfs.read_only }}
 ---
-apiVersion: "v1"
-kind: "PersistentVolume"
-metadata:
-  name: "gluster-volume-2"
-spec:
-  capacity:
-    storage: "300Mi"
-  persistentVolumeReclaimPolicy: "Delete"
-  storageClassName: "storage"
-  accessModes:
-    - "ReadWriteOnce"
-  glusterfs:
-    endpoints: "glusterfs-cluster"
-    path: "glustervol2"
-    readOnly: false
----
-apiVersion: "v1"
-kind: "PersistentVolume"
-metadata:
-  name: "gluster-volume-3"
-spec:
-  capacity:
-    storage: "300Mi"
-  persistentVolumeReclaimPolicy: "Delete"
-  storageClassName: "storage"
-  accessModes:
-    - "ReadWriteOnce"
-  glusterfs:
-    endpoints: "glusterfs-cluster"
-    path: "glustervol3"
-    readOnly: false
----
-apiVersion: "v1"
-kind: "PersistentVolume"
-metadata:
-  name: "gluster-volume-4"
-spec:
-  capacity:
-    storage: "100Mi"
-  persistentVolumeReclaimPolicy: "Delete"
-  storageClassName: "storage"
-  accessModes:
-    - "ReadWriteOnce"
-  glusterfs:
-    endpoints: "glusterfs-cluster"
-    path: "glustervol4"
-    readOnly: false
----
-apiVersion: "v1"
-kind: "PersistentVolume"
-metadata:
-  name: "gluster-volume-5"
-spec:
-  capacity:
-    storage: "100Mi"
-  persistentVolumeReclaimPolicy: "Delete"
-  storageClassName: "storage"
-  accessModes:
-    - "ReadWriteOnce"
-  glusterfs:
-    endpoints: "glusterfs-cluster"
-    path: "glustervol5"
-    readOnly: false
----
+{% endfor %}
