@@ -3,5 +3,5 @@
   tasks:
     - name: Run prometheus-operator uninstall role
       include_role:
-        name: prometheus-operator
+        name: redhat-nfvpe.prometheus-operator
         tasks_from: uninstall.yml
