@@ -9,3 +9,4 @@ roles/install-go
 roles/install-docker
 roles/auto-kube-dev
 roles/redhat-nfvpe.vm-spinup
+roles/redhat-nfvpe.prometheus-operator

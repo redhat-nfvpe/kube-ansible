@@ -11,3 +11,6 @@
 - src: https://github.com/redhat-nfvpe/ansible-role-vm-spinup
   name: redhat-nfvpe.vm-spinup
   version: develop
+- src: https://github.com/redhat-nfvpe/ansible-role-prometheus-operator
+  name: redhat-nfvpe.prometheus-operator
+  version: master

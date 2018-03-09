@@ -1,7 +1,0 @@
----
-# install PromOps
-- name: Install Prometheus-Operator
-  shell: |
-    hack/cluster-monitoring/self-hosted-deploy
-  args:
-    chdir: "{{ ansible_env.HOME }}/prometheus-operator/{{ kube_prometheus_path }}"

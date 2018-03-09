@@ -1,3 +1,0 @@
----
-promops_repo_url: "https://github.com/redhat-nfvpe/prometheus-operator"
-kube_prometheus_path: "contrib/kube-prometheus"
