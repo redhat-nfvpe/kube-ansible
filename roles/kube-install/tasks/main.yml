@@ -139,7 +139,7 @@
   lineinfile:
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: 'systemd$'
-    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=systemd --authentication-token-webhook=true'
+    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=systemd --authentication-token-webhook=true --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice'
   notify: "restart kubelet"
 
 - name: Change cluster dns ip in kubeadm.conf for ipv6
