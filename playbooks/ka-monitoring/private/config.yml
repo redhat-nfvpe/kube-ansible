@@ -3,7 +3,7 @@
   hosts: master
   tasks:
     - import_role:
-        name: prometheus-operator
+        name: redhat-nfvpe.prometheus-operator
         tasks_from: clone.yml
       when:
         - monitoring_install | default(False) | bool
@@ -12,7 +12,7 @@
   hosts: master
   tasks:
     - import_role:
-        name: prometheus-operator
+        name: redhat-nfvpe.prometheus-operator
         tasks_from: install.yml
       when:
         - monitoring_install | default(False) | bool
