@@ -1,9 +1,29 @@
 ---
 
-- name: Install bridge-utils
+- name: Install bridge-utils and firewalld
   yum:
-    name: bridge-utils
+    name: bridge-utils,firewalld
     state: latest
+
+- name: enable iptables
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+
+- name: Accept bridge forwarding and accept packets
+  shell: >
+    firewall-cmd --permanent --direct --passthrough ipv4 -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT;
+    firewall-cmd --direct --passthrough ipv4 -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT;
+    firewall-cmd --permanent --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited;
+    firewall-cmd --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited
+
+- name: Enable IPv4 Forwarding
+  sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: 1
+    sysctl_set: yes
+    state: present
 
 - name: Configure cni0 for control plane
   template:
@@ -17,6 +37,6 @@
   notify: "restart net"
 
 # Note:
-# "restart net" sends DHCP request through eth0 for cni0. 
-# Currently DHCP client will use eth0's MAC, hence IP 
+# "restart net" sends DHCP request through eth0 for cni0.
+# Currently DHCP client will use eth0's MAC, hence IP
 # address should not changed.
