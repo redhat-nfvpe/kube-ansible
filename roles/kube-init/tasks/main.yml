@@ -13,11 +13,6 @@
     arg_primary: "--pod-network-cidr {{ pod_network_cidr }}/16"
   when: pod_network_type != "weave" and not ipv6_enabled
 
-- name: Set apiserver-advertise-address when kokonet-bridge
-  set_fact:
-    arg_primary: "--apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-  when: pod_network_type == "kokonet-bridge"
-
 - name: Use config file for ipv6 for pod-network-cidr
   set_fact:
     arg_primary: "--config=/root/kubeadm_v6.cfg"
