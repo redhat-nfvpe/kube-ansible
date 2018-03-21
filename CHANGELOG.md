@@ -1,3 +1,16 @@
+# Release 0.2.1
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/300e9bdc2909291d22c7ed2e7f196dd5162d5930) -- Allows builder.yml to pass ansible-lint 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/3757fe7b17baeebf6ba9b638c99ac3490bba948d) -- [vm-spinup][delete] remove roles 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/b56432dbfff55ea6da5b30e2a7908ba53e067ac2) -- [vm-spinup] terse changes to allow use of new role 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/10b73f0661cfbf96233637d940a335fb073f0d09) -- [enhance] Provide method to only sync artifacts 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/2def04e121c2a86efbe06bf64664f20b6b9d890b) -- [enhance] Only sync artifacts from list if they exist 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/05c802cfd81676f3e1e78e933250787d35c6632c) -- [enhance] Allow instantiation of k8s clusters from built artifacts 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/84edc80775d0f4b8266bc81c6c7917d64ad7620c) -- [hotfix] Artifact build fixes detected in testing 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/e4511ca31b9b204c72552adcfcb143376e9a7333) -- Bridge network support in kube-ansible 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/c90397ef51d93ca9d22e256e7f2c49e50d50351f) -- Add kokonet-bridge support 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/b417f2af7e6d5cf1eaef65f8a00c243ae95277b7) -- Incorporate Leif's comments in PR #169. 
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/3966723affcca04d4c1a255e5ed4d5b0afd59f7f) -- Incorporate Feng's comments. 
+
 # Release v0.2.0
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/25feeffc78ff312892709e0e70643e5a196c70b8) -- Use Docker CE repo for builder VM
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/2d59aa57b7bbe534652e840d83a2a75315c62066) -- Update project name to kube-ansible
