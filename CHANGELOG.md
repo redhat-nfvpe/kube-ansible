@@ -1,3 +1,15 @@
+# Release v0.5.0
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/7c71ca1f59b4f0670f1dc8cb9dfb527476e230de) -- [refactor] Point redhat-nfvpe.vm-spinup at develop
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/55a5a3dddde441bb8cbcd1f3ea47eee708a202ff) -- [hotfix] Resolve issues introduced in 37da9afa49548852b63135278f125e09d8795cdf
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/f261c4e859be31deea138d5c88894a2ad41aac1b) -- Refactor playbook location to match openshift-ansible
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/5370f922e2adb2de1e3bb7b675d1ad8505eb93c9) -- [hotfix] Fix missing all.yml in ka-init
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/6bb1c3102a3804b37b3081f211f2ac3072fb5fd9) -- [monitoring] Add Prometheus-Operator role and playbooks
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/b8302877338c886fb247d38ef45f4f1f460e40f5) -- [hotfix] Point PromOps at redhat-nfvpe fork
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/f2df919c0988525c3d7dfe9709bdfd8ae8bdc7fd) -- [enhance] Make GlusterFS volume template contents dynamic
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/3e0b7294d72586bb7bae368cba2e334f2abf9179) -- [enhance] Allow multiple StorageClass creation
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/69eedeae848a93de49d2312cc202e3910bf4c40e) -- [enhance] Template and deploy PromOps via Ansible
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/e026982eaf65829faca40c38d9975e81d38a6cf1) -- [release] Point roles back at master components
+
 # Release v0.3.0
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/05d23e2b70863f718df0e43e5958ce58aeca48a3) -- Allow k8s ctrlplane listen all interfaces
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/8ec7f8424453a493c8b314237952d05407dbb8f3) -- Add more available value candidate in 'pod_network_type'
