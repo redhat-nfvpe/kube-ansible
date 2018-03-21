@@ -1,13 +1,4 @@
 ---
-- name: Get Prometheus Operator
-  hosts: master
-  tasks:
-    - import_role:
-        name: redhat-nfvpe.prometheus-operator
-        tasks_from: clone.yml
-      when:
-        - monitoring_install | default(False) | bool
-
 - name: Install Prometheus Operator
   hosts: master
   tasks:
