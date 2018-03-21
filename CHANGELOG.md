@@ -1,3 +1,14 @@
+# Release v0.3.0
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/05d23e2b70863f718df0e43e5958ce58aeca48a3) -- Allow k8s ctrlplane listen all interfaces
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/8ec7f8424453a493c8b314237952d05407dbb8f3) -- Add more available value candidate in 'pod_network_type'
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/6a007057d8d095a1f66ebd792224ecf3a7c52713) -- [kubelet] Enable authorization token webhook
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/e9f79a51f6f71e722a78fc693921ab876ff68451) -- [bugfix] Addresses #180 by templating kubeadm config file, and including the pod network cidr within
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/e0d2d230356a4119be076a0a946ebaad01cec50b) -- [bugfix] Adds kubelet & runtime cgroup params to fix issue reported in #195
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/a59fe2455b800735ab4ef08bd56987897ee276ee) -- [flannel][bugfix] Fixes flannel for use against Docker 1.13 (works with 1.12 as well), reported in #200
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/fe95355af5b2fc12843861b6e80cb90281ba594a) -- [hotfix] Fixes for flannel configurations for Multus & Multus+CRD
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/d382900828440f1ed1db9dc5f9ac286c2cc3543a) -- [changelog] Update CHANGELOG for 0.2.1 release
+* [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/ab033082049276ef19c1915127f85bcbcc94e837) -- [release_mgmt] Update changelog script to script trailing spaces
+
 # Release 0.2.1
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/300e9bdc2909291d22c7ed2e7f196dd5162d5930) -- Allows builder.yml to pass ansible-lint
 * [view commit](http://github.com/redhat-nfvpe/kube-ansible/commit/3757fe7b17baeebf6ba9b638c99ac3490bba948d) -- [vm-spinup][delete] remove roles
