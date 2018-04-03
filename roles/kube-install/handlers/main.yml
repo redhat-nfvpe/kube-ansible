@@ -1,0 +1,7 @@
+---
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
+  listen: 'restart kubelet'

@@ -5,6 +5,10 @@
   get_url:
     url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
     dest: /usr/bin/jq
+
+- name: set jq binary permission
+  file:
+    path: /usr/bin/jq
     mode: 0755
 
 - name: Template kubectl proxy systemd unit
@@ -19,7 +23,7 @@
     state: restarted
     daemon_reload: yes
   when: template_kubectlproxy_unit.changed
-  
+
 - name: Always ensure proxy is started
   systemd:
     name: kubectl-proxy

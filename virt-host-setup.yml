@@ -1,7 +1,0 @@
----
-- hosts: kubehost
-  tasks: []
-  roles:
-    - { role: virthost-basics }
-    - { role: vm-spinup }
-    - { role: attach-disks, when: "gluster_attach_disk == true" }

@@ -1,12 +1,40 @@
 ---
 
+# ----------- If the restart has happened to recently
+#             We need to wait for kubectl to return with a success.
+
+- name: Wait until kubectl get pods is ready
+  shell: >
+    kubectl get pods --all-namespaces
+  register: get_pods_result
+  until: get_pods_result.rc == 0
+  retries: 60
+  delay: 3
+  ignore_errors: yes
+
+# ----------- bridge
+- name: Configure bridge cni plugin
+  shell: >
+    kubectl create -f /etc/bridge.yaml
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "bridge"
+
+# ----------- kokonet-bridge
+- name: Configure bridge cni plugin
+  shell: >
+    kubectl create -f /etc/kokonet-bridge.yaml
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "kokonet-bridge"
+
 # ----------- flannel
 - name: Apply the flannel RBAC
   shell: >
     kubectl create -f /etc/flannel-rbac.yaml
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "flannel"
+  when: pod_network_type == "flannel" or pod_network_type == "multus"
 
 - name: Apply the flannel podnetwork
   shell: >
@@ -30,7 +58,15 @@
     kubectl apply -f /etc/multus.yaml > /tmp/podnetwork-apply.log
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "multus"
+  when: pod_network_type == "multus" and not multus_use_crd
+
+- name: Apply the multus podnetwork (CRD style)
+  shell: >
+    kubectl apply -f /etc/multus-crd.yaml > /tmp/podnetwork-apply.log
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "multus" and multus_use_crd
+
 
 # ----------- all network types
 - name: Mark podnetwork applied

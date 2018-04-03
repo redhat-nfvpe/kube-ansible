@@ -1,0 +1,22 @@
+---
+
+- name: Check that kubectl is available
+  stat:
+    path: /bin/kubectl
+  register: kubectl_stat
+
+- name: Setup kubectl bash completion
+  block:
+    - name: Install bash-completion
+      become: true
+      become_user: root
+      package:
+        name: bash-completion
+        state: present
+
+    - name: Add kubectl bash completion to .bash_profile
+      lineinfile:
+        dest: "{{ ansible_env.HOME }}/.bash_profile"
+        line: "source <(kubectl completion bash)"
+        insertafter: "export PATH"
+  when: kubectl_bash_completion and kubectl_stat.stat.exists

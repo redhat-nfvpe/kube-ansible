@@ -1,0 +1,33 @@
+# vim: set tabstop=2 shiftwidth=2 expandtab:
+---
+
+- hosts: builder
+  tasks:
+    # this will setup the build node in preparation for compiling
+    - import_tasks: tasks/builder/setup.yml
+      when: skip_builder_setup is defined and not skip_builder_setup
+
+- hosts: builder
+  tasks:
+    - name: Build Kubernetes (this will take a while)
+      command: ./../planter/planter.sh make bazel-build
+      args:
+        chdir: "{{ ansible_env.HOME }}/src/go/src/k8s.io/kubernetes"
+      when: skip_build is defined and not skip_build
+
+    # this will synchronize the artifacts over to the k8s nodes
+    - include_tasks: tasks/builder/sync.yml
+      with_inventory_hostnames:
+        - master
+        - nodes
+      loop_control:
+        loop_var: k8s_hostname
+      tags:
+        - sync_artifacts
+
+# move files around on the remote nodes
+- hosts: master,nodes
+  tasks:
+    - include_tasks: tasks/builder/move.yml
+      tags:
+        - sync_artifacts

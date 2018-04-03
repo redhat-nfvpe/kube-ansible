@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kokonet-bridge
+  namespace: kube-system
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kube-kokonet-bridge-ds
+  namespace: kube-system
+  labels:
+    tier: node
+    app: kokonet-bridge
+spec:
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: kokonet-bridge
+    spec:
+      hostNetwork: true
+      # nodeSelector:
+      #  beta.kubernetes.io/arch: amd64
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      serviceAccountName: kokonet-bridge
+      containers:
+      - name: cni-dhcp-daemon
+        image: docker.io/s1061123/cni-dhcp-daemon:v0.6.0mod3
+        volumeMounts:
+        - name: run
+          mountPath: /run
+        - name: proc
+          mountPath: /host/proc
+        securityContext:
+          privileged: true
+      volumes:
+        - name: run
+          hostPath:
+            path: /run
+        - name: proc
+          hostPath:
+            path: /proc

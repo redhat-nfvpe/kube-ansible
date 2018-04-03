@@ -1,0 +1,21 @@
+apiVersion: "kubernetes.com/v1"
+kind: Network
+metadata:
+  name: macvlan-conf
+plugin: macvlan
+args: '[
+        {
+            "master": "eth0",
+            "mode": "bridge",
+            "ipam": {
+                "type": "host-local",
+                "subnet": "{{ multus_ipam_subnet }}",
+                "rangeStart": "{{ multus_ipam_rangeStart }}",
+                "rangeEnd": "{{ multus_ipam_rangeEnd }}",
+                "routes": [
+                    { "dst": "0.0.0.0/0" }
+                ],
+                "gateway": "{{ multus_ipam_gateway }}"
+            }
+        }
+]'

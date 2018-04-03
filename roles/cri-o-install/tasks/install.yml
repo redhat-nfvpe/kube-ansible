@@ -5,9 +5,6 @@
   set_fact:
     extended_path: "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/centos/.local/bin:/home/centos/bin/:/usr/local/go/bin"
 
-- name: link golang
-  file: src=/usr/local/go/bin/go dest=/usr/bin/go state=link
-
 - name: Install required packages for cri-o
   package:
     name: "{{ item }}"
@@ -19,7 +16,6 @@
     - gcc
     - tar
     - libseccomp-devel
-    - golang
     - go-md2man
     - glib2-devel
     - glibc-static
@@ -42,7 +38,6 @@
     path: "{{ item }}"
     state: directory
   with_items:
-       - /usr/local/go
        - /etc/systemd/system/kubelet.service.d/
        - /var/lib/etcd
        - /etc/cni/net.d
@@ -51,50 +46,38 @@
 - name: clone runc
   git:
     repo: https://github.com/opencontainers/runc
-    dest: /root/src/github.com/opencontainers/runc
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/opencontainers/runc"
     version: master
 
 - name: clone CRI-O
   git:
     repo: https://github.com/kubernetes-incubator/cri-o
-    dest: /root/src/github.com/kubernetes-incubator/cri-o
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/kubernetes-incubator/cri-o"
     version: "{{ crio_version }}"
 
 - name: clone CNI
   git:
     repo: https://github.com/containernetworking/plugins
-    dest: /root/src/github.com/containernetworking/plugins
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/containernetworking/plugins"
     version: master
 
 - name: build runc
   shell: |
-          cd /root/src/github.com/opencontainers/runc && \
-          export GOPATH=/root && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/opencontainers/runc && \
           make BUILDTAGS="seccomp selinux" && \
           make install
   environment:
     PATH: "{{ extended_path }}"
 
 - name: link runc
-  file: src=/usr/local/sbin/runc dest=/usr/bin/runc state=link
-
-- name: Check go version
-  shell: >
-    source /root/.bashrc && \
-    go version
-  register: go_version_check
-  environment:
-    PATH: "{{ extended_path }}"
-
-- name: Debug go version
-  debug:
-    msg: "{{ go_version_check.stdout }} <-- go version"
+  file:
+    src: /usr/local/sbin/runc
+    dest: /usr/bin/runc
+    state: link
 
 - name: build cri-o
   shell: |
-          source /root/.bashrc && \
-          go version && \
-          cd /root/src/github.com/kubernetes-incubator/cri-o && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/kubernetes-incubator/cri-o && \
           make install.tools && \
           make && \
           make install && \
@@ -105,7 +88,7 @@
 
 - name: build CNI stuff
   shell: |
-          cd /root/src/github.com/containernetworking/plugins && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/containernetworking/plugins && \
           ./build.sh && \
           mkdir -p /opt/cni/bin && \
           cp bin/* /opt/cni/bin/
@@ -145,6 +128,7 @@
   command: "modprobe br_netfilter"
   ignore_errors: true
 
+# TODO: see if we can switch to the 'sysctl' module here
 - name: tune sysctl
   lineinfile:
     line: "net/bridge/bridge-nf-call-iptables = 1"
@@ -165,14 +149,3 @@
 
 - name: flush iptables
   command: "iptables -F"
-
-# - name: Permanently disable selinux
-#   lineinfile:
-#     dest: /etc/selinux/config
-#     line: 'SELINUX=permissive'
-#     regexp: '^SELINUX='
-#   when: (ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
-
-# - name: disable selinux
-#   command: "setenforce 0"
-#   when: (ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')

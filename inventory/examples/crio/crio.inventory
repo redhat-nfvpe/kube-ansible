@@ -1,15 +1,15 @@
 kube-master ansible_host=master.example.local
 kube-node-1 ansible_host=node.example.local
-kubehost ansible_host=virt-host.example.local ansible_ssh_user=root
+vmhost ansible_host=virt-host.example.local ansible_ssh_user=root
 
-[kubehost]
-kubehost
+[virthost]
+vmhost
 
-[kubehost:vars]
+[virthost:vars]
 # Using Fedora
 centos_genericcloud_url=https://download.fedoraproject.org/pub/fedora/linux/releases/26/CloudImages/x86_64/images/Fedora-Cloud-Base-26-1.5.x86_64.qcow2
 image_destination_name=Fedora-Cloud-Base-26-1.5.x86_64.qcow2
-increase_root_size_gigs=10
+set_root_disk_gb=18
 
 [master]
 kube-master
@@ -17,14 +17,20 @@ kube-master
 [nodes]
 kube-node-1
 
-[all_vms]
-kube-master
-kube-node-1
-
-[all_vms:vars]
+[master:vars]
 # Using Fedora
 ansible_ssh_user=fedora
-ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms
+ansible_ssh_private_key_file=/home/itsme/.ssh/id_testvms
+kubectl_home=/home/fedora
+kubectl_user=fedora
+kubectl_group=fedora
+# Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
+# container_runtime=crio
+
+[nodes:vars]
+# Using Fedora
+ansible_ssh_user=fedora
+ansible_ssh_private_key_file=/home/itsme/.ssh/id_testvms
 kubectl_home=/home/fedora
 kubectl_user=fedora
 kubectl_group=fedora

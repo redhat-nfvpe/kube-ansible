@@ -11,7 +11,22 @@
 - name: Set pod-network-cidr when flannel
   set_fact:
     arg_pod_network: "--pod-network-cidr {{ pod_network_cidr }}/16"
-  when: pod_network_type != "weave"
+  when: pod_network_type != "weave" and not ipv6_enabled
+
+- name: Set apiserver-advertise-address when kokonet-bridge
+  set_fact:
+    arg_pod_network: "--apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  when: pod_network_type == "kokonet-bridge"
+
+- name: Use config file for ipv6 for pod-network-cidr
+  set_fact:
+    arg_pod_network: "--config=/root/kubeadm_v6.cfg"
+  when: ipv6_enabled
+
+- name: create kubeadm_v6.cfg
+  copy:
+    src: kubeadm_v6.cfg
+    dest: /root/kubeadm_v6.cfg
 
 - name: Default cri-o flags to empty
   set_fact:
@@ -22,12 +37,21 @@
     arg_crio: "--skip-preflight-checks"
   when: container_runtime == "crio"
 
+- name: Default k8s version to empty
+  set_fact:
+    k8s_version: ""
+
+- name: Set custom Kubernetes version when installing via artifacts
+  set_fact:
+    k8s_version: "--kubernetes-version {{ kube_version }}"
+  when: artifacts_install
+
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ arg_crio }} {{ arg_pod_network }} > /var/log/kubeadm.init.log
+    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ arg_pod_network }} > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 

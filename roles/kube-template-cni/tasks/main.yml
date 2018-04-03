@@ -4,6 +4,13 @@
   template:
     src: multus.yaml.j2
     dest: /etc/multus.yaml
+  when: not multus_use_crd
+
+- name: Template CRD flavored multus.yaml
+  template:
+    src: multus-crd.yaml.j2
+    dest: /etc/multus-crd.yaml
+  when: multus_use_crd
 
 - name: Template flannel.yaml
   template:
@@ -14,3 +21,14 @@
   template:
     src: flannel-rbac.yaml.j2
     dest: /etc/flannel-rbac.yaml
+
+- name: Template bridge.yaml
+  template:
+    src: bridge.yaml.j2
+    dest: /etc/bridge.yaml
+
+- name: Template kokonet-bridge.yaml
+  template:
+    src: kokonet-bridge.yaml.j2
+    dest: /etc/kokonet-bridge.yaml
+  when: pod_network_type == 'kokonet-bridge'

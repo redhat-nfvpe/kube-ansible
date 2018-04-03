@@ -1,18 +1,28 @@
 ---
-- hosts: all_vms
+- include: ipv6-lab.yml
+  when: ipv6_enabled
+
+- hosts: master,nodes
   become: true
   become_user: root
   tasks: []
   roles:
-    # - { role: docker-install }
+    - { role: bridge-setup,
+        when: pod_network_type == 'bridge' or pod_network_type == 'kokonet-bridge' }
+    - { role: kokonet-setup, when: pod_network_type == 'kokonet-bridge' }
+    - { role: optional-packages }
+    - { role: install-go, when: container_runtime == 'crio' }
     # You can add "crio_force: true" if you need to run the builds again.
-    - { role: go-install, when: container_runtime == 'crio' }
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
     - { role: buildah-install, when: container_runtime == 'crio' }
+    - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
 
-- hosts: all_vms
+- include: kokonet-lab.yml
+  when: pod_network_type == 'kokonet-bridge'
+
+- hosts: master,nodes
   become: true
   become_user: root
   tasks:
@@ -35,7 +45,13 @@
   tasks: []
   roles:
     - { role: kube-cni }
+    - { role: kube-niceties }
 
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd"}
 
 - hosts: nodes
   become: true

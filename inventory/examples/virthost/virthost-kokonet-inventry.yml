@@ -1,0 +1,21 @@
+all:
+  hosts:
+    virthost:
+      ansible_host: 192.168.1.42
+      ansible_ssh_user: root
+      bridge_networking: false
+      virtual_machines:
+        - name: kube-master
+          node_type: master
+        - name: kube-node-1
+          node_type: nodes
+        - name: kube-node-2
+          node_type: nodes
+        - name: kokonet-mgr
+          node_type: kokonet-mgr
+        - name: kokonet-vpp
+          node_type: kokonet-vpp
+          system_ram_mb: 8192
+          system_cpus: 4
+          # need to have 8G/4CPU for vpp.
+      network_type: kokonet

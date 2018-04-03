@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: multus
+  name: flannel
   namespace: kube-system
 ---
 kind: ConfigMap
@@ -67,9 +67,12 @@ spec:
         app: multus
     spec:
       hostNetwork: true
-      nodeSelector:
-        beta.kubernetes.io/arch: amd64
-      serviceAccountName: multus
+      # nodeSelector:
+      #  beta.kubernetes.io/arch: amd64
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      serviceAccountName: flannel
       containers:
       - name: kube-flannel
         image: quay.io/coreos/flannel:v0.7.0-amd64

@@ -7,3 +7,10 @@ inventory/*
 # ignore group_vars files except for the all.yml (allow for override)
 group_vars/
 !group_vars/all.yml
+!group_vars/builder.yml
+
+# ignore externally installed roles
+roles/install-go
+roles/install-docker
+roles/auto-kube-dev
+roles/redhat-nfvpe.vm-spinup
