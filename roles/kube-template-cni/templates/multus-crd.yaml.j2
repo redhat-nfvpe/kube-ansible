@@ -18,6 +18,16 @@ data:
     {
       "name": "multus-cni-network",
       "type": "multus",
+      "delegates": [
+        {
+          "type": "flannel",
+          "masterplugin": true,
+          "delegate": {
+            "isDefaultGateway": true
+          }
+        }
+      ],{% if multus_use_default_network %}
+      "always_use_default": true,{% endif %}
       "kubeconfig": "/etc/kubernetes/kubelet.conf"
     }
   net-conf.json: |

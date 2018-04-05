@@ -83,6 +83,10 @@ kubectl_proxy_port: 8088
 # --------------------------- -
 # multus-cni vars          - -
 # ------------------------- -
+# Usually use "master" for multus version, but, otherwise...
+multus_version: master
+multus_use_default_network: false
+multus_git_url: "https://github.com/Intel-Corp/multus-cni.git"
 multus_use_crd: true
 multus_ipam_subnet: "192.168.1.0/24"
 multus_ipam_rangeStart: "192.168.1.200"
