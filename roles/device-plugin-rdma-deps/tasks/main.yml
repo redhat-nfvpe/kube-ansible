@@ -1,0 +1,23 @@
+---
+# I'm unsure if this is necessary because of running in a pod?
+# However it's pretty host dependent, so, keeping for now.
+# May test to remove later.
+- name: Install deps for RDMA plugin
+  package:
+    name: "{{ item }}"
+  with_items:
+    - libibverbs-devel
+    - libibverbs
+    - git
+
+- name: Clone RDMA plugin
+  git:
+    force: true
+    repo: 'https://github.com/hustcat/k8s-rdma-device-plugin.git'
+    dest: /usr/src/go/src/github.com/hustcat/k8s-rdma-device-plugin
+
+- name: Set permissions of RDMA dir
+  file:
+    path: /usr/src/go/src/github.com/hustcat/k8s-rdma-device-plugin
+    state: directory
+    mode: 0755

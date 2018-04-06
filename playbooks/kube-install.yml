@@ -42,11 +42,20 @@
 # ---- placeholder: kube-cni
 # without become.
 
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: device-plugin-rdma-deps, when: enable_device_plugin_rdma }
+
+
 - hosts: master
   tasks: []
   roles:
     - { role: kube-cni }
     - { role: kube-niceties }
+    - { role: device-plugin-rdma, when: enable_device_plugin_rdma }
 
 
 - hosts: master

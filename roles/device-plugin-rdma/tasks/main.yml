@@ -1,0 +1,24 @@
+---
+
+# This might not be necessary, we'll run it as a daemonset.
+
+# - name: Kick off RDMA build
+#   shell: >
+#     ./build
+#   args:
+#     chdir: /usr/src/go/src/github.com/hustcat/k8s-rdma-device-plugin
+#   environment:
+#     GOPATH: /usr/src/go
+
+- name: Spin up rdma plugin daemonset
+  shell: >
+    kubectl apply -f /usr/src/go/src/github.com/hustcat/k8s-rdma-device-plugin/rdma-device-plugin.yml
+
+- name: Template sample pod
+  template:
+    src: rdma-pod.yml.j2
+    dest: "{{ ansible_env.HOME}}/rdma-pod.yml"
+
+- name: Create the sample pod
+  shell: >
+    kubectl apply -f {{ ansible_env.HOME}}/rdma-pod.yml

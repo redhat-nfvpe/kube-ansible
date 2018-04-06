@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rdma-pod
+spec:
+  containers:
+    - name: rdma-container
+      image: mellanox/mofed421_docker:noop
+      securityContext:
+        capabilities:
+          add: ["ALL"]
+      resources:
+        limits:
+          tencent.com/rdma: 1 # requesting 1 RDMA device
