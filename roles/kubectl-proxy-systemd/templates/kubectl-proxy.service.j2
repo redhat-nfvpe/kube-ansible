@@ -2,9 +2,10 @@
 Description=kubectl-proxy
 
 [Service]
-User=centos
-Group=centos
-ExecStart=/bin/bash -c "source /home/centos/.bashrc && /usr/bin/kubectl proxy --port={{ kubectl_proxy_port }}"
+User={{ kubectl_user }}
+Group={{ kubectl_group }}
+ExecStart=/bin/bash -c "source {{ kubectl_home }}/.bashrc && /usr/bin/kubectl proxy --port={{ kubectl_proxy_port }}"
 
 [Install]
 WantedBy=multi-user.target
+
