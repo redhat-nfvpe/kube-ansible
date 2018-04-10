@@ -128,6 +128,11 @@ bridge_network_cidr: 192.168.1.0/24
 ipv6_enabled: false
 
 # ----------------------------
+# device plugins
+# ----------------------------
+enable_device_plugins: false
+
+# ----------------------------
 # builder vars
 # ----------------------------
 
