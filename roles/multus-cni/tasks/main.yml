@@ -8,9 +8,10 @@
 
 - name: Clone multus-cni
   git:
-    repo: https://github.com/Intel-Corp/multus-cni.git
+    repo: "{{ multus_git_url }}"
     dest: /usr/src/multus-cni
-    version: master
+    version: "{{ multus_version }}"
+    force: true
   register: multus_clone
 
 - name: Compile multus-cni
@@ -18,7 +19,7 @@
     ./build
   args:
     chdir: /usr/src/multus-cni
-  when: multus_clone.changed
+  when: multus_clone.changed or force_multus_rebuild is defined
 
 - name: Clone sriov-cni
   git:
