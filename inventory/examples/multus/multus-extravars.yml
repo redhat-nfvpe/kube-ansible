@@ -1,10 +1,8 @@
 ---
-crd_namespace: "cni.cncf.io"
+crd_namespace: "kubernetes.cni.cncf.io"
 multus_use_default_network: true
-# multus_version: "dev/add_ns"
-multus_version: "dev/default_network"
-# multus_version: "develop"
-multus_git_url: "https://github.com/redhat-nfvpe/multus-cni.git"
+multus_version: "dev/network-plumbing-working-group-crd-change"
+multus_git_url: "https://github.com/Intel-Corp/multus-cni.git"
 bridge_networking: true
 bridge_name: br0
 bridge_physical_nic: "enp1s0f1"
