@@ -6,6 +6,20 @@
   with_items:
     - git
 
+- name: Clone cni-plugins
+  git:
+    repo: https://github.com/containernetworking/plugins
+    dest: /usr/src/cni-plugins
+    version: master
+  register: cni_clone
+
+- name: Compile cni-plugins
+  shell: >
+    ./build.sh
+  args:
+    chdir: /usr/src/cni-plugins
+  when: cni_clone.changed
+
 - name: Clone multus-cni
   git:
     repo: "{{ multus_git_url }}"
@@ -39,5 +53,6 @@
   shell: >
     cp {{ item }} /opt/cni/bin/
   with_items:
+    - "/usr/src/cni-plugins/bin/*"
     - "/usr/src/sriov-cni/bin/*"
     - "/usr/src/multus-cni/bin/*"
