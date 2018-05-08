@@ -13,6 +13,10 @@ NETMASK=255.255.255.0
 ONBOOT=yes
 IPADDR=10.1.1.12
 NETMASK=255.255.255.0
+{% elif ansible_hostname == 'kube-node-3' %}
+ONBOOT=yes
+IPADDR=10.1.1.13
+NETMASK=255.255.255.0
 {% else %}
 ONBOOT=no
 {% endif %}
