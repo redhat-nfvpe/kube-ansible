@@ -50,10 +50,10 @@
     - { role: kube-niceties }
 
 
-#- hosts: master
-#  tasks: []
-#  roles:
-#    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd"}
+- hosts: master
+  tasks: []
+  roles:
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo"}
 
 - hosts: nodes
   become: true
