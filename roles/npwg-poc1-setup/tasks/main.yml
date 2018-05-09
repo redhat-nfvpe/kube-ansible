@@ -5,3 +5,10 @@
     src: ifcfg-eth1.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-eth1
   notify: "restart eth1"
+
+- name: Configure eth1.1 for data plane
+  template:
+    src: ifcfg-eth1.1.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth1.1
+  notify: "restart eth1.1"
+  when: "'master' in group_names"
