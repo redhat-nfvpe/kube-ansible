@@ -1,4 +1,12 @@
 ---
+- name: create /etc/cni/multus/net.d
+  file:
+    path: /etc/cni/multus/net.d
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Configure eth1 for data plane
   template:

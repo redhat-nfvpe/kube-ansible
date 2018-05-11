@@ -21,8 +21,11 @@ data:
       "delegates": [
         {
           "type": "flannel",
-          "masterplugin": true,
+          "name": "flannel.1",
+          "subnetFile": "/run/flannel/subnet.env",
+          "dataDir": "/var/lib/cni/flannel",
           "delegate": {
+            "bridge": "kbr0",
             "isDefaultGateway": true
           }
         }
