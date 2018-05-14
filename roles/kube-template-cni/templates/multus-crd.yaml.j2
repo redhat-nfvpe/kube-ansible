@@ -19,6 +19,7 @@ data:
       "name": "multus-cni-network",
       "type": "multus",
       "delegates": [
+      {% if multus_npwg_demo %}
         {
           "type": "flannel",
           "name": "flannel.1",
@@ -29,6 +30,14 @@ data:
             "isDefaultGateway": true
           }
         }
+      {% else %}
+        {
+          "type": "flannel",
+          "delegate": {
+            "isDefaultGateway": true
+          }
+        }
+      {% endif %}
       ],{% if multus_use_default_network %}
       "always_use_default": true,{% endif %}
       "kubeconfig": "/etc/kubernetes/kubelet.conf"
