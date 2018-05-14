@@ -19,16 +19,23 @@ data:
       "name": "multus-cni-network",
       "type": "multus",
       "delegates": [
+      {% if multus_npwg_demo %}
         {
           "type": "flannel",
           "name": "flannel.1",
-          "subnetFile": "/run/flannel/subnet.env",
-          "dataDir": "/var/lib/cni/flannel",
           "delegate": {
             "bridge": "kbr0",
             "isDefaultGateway": true
           }
         }
+      {% else %}
+        {
+          "type": "flannel",
+          "delegate": {
+            "isDefaultGateway": true
+          }
+        }
+      {% endif %}
       ],{% if multus_use_default_network %}
       "always_use_default": true,{% endif %}
       "kubeconfig": "/etc/kubernetes/kubelet.conf"
