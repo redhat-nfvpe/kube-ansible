@@ -5,9 +5,9 @@
     name: bridge-utils,firewalld
     state: latest
 
-- name: enable iptables
+- name: enable firewalld
   systemd:
-    name: iptables
+    name: firewalld
     state: started
     enabled: yes
 
