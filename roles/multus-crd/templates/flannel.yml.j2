@@ -4,9 +4,10 @@ metadata:
   name: flannel-conf
 plugin: flannel
 args: '[
-        {
-                "delegate": {
-                        "isDefaultGateway": true
-                }
-        }
+  {
+    "name": "flannel.1",
+    "delegate": {
+      "isDefaultGateway": true
+    }
+  }
 ]'
