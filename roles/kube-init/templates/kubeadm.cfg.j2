@@ -1,9 +1,34 @@
 # Full parameters @ https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
+{% if control_plane_listen_all %}
 controllerManagerExtraArgs:
   address: 0.0.0.0
 schedulerExtraArgs:
   address: 0.0.0.0
+{% endif %}
+{% if enable_device_plugins %}
+apiServerExtraArgs:
+  feature-gates: DevicePlugins=true
+{% endif %}
+{% if ipv6_enabled %}
+api:
+  advertiseAddress: fd00::100
+kubeProxy:
+  bindAddress: "::"
+etcd:
+  image: diverdane/etcd-amd64:3.0.17
+networking:
+  serviceSubnet: fd00:1234::/110
+unifiedControlPlaneImage: diverdane/hyperkube-amd64:v1.9.0-alpha.1.ipv6.1
+tokenTTL: 0s
+nodeName: kube-master
+{% endif %}
 networking:
   podSubnet: {{ pod_network_cidr }}/16
+kubeletConfiguration:
+  baseConfig:
+    cgroupDriver: systemd
+    # kubeletCgroups: /systemd/system.slice
+    # unsure if this fits for: runtime-cgroups
+    # systemCgroups: /systemd/system.slice

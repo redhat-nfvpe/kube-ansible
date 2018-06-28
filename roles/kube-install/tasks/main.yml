@@ -129,48 +129,6 @@
   include: kube-16-workaround.yml
   when: kube_16_workaround
 
-- name: Remove default kubeadm.conf ExecStart
-  lineinfile:
-    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: 'KUBELET_EXTRA_ARGS$'
-    state: absent
-
-- name: Default the device plugin parameter to blank
-  set_fact:
-    param_feature_gate: ""
-
-- name: Set the device plugin parameters
-  set_fact:
-    param_feature_gate: "--feature-gates=DevicePlugins=true"
-  when: enable_device_plugins
-
-- name: Add custom kubeadm.conf ExecStart
-  lineinfile:
-    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: 'systemd$'
-    line: >-
-      ExecStart=/usr/bin/kubelet
-      $KUBELET_KUBECONFIG_ARGS
-      $KUBELET_SYSTEM_PODS_ARGS
-      $KUBELET_NETWORK_ARGS
-      $KUBELET_DNS_ARGS
-      $KUBELET_AUTHZ_ARGS
-      $KUBELET_EXTRA_ARGS
-      --cgroup-driver=systemd
-      --authentication-token-webhook=true
-      --runtime-cgroups=/systemd/system.slice
-      --kubelet-cgroups=/systemd/system.slice
-      {{ param_feature_gate }}
-  notify: "restart kubelet"
-
-- name: Change cluster dns ip in kubeadm.conf for ipv6
-  lineinfile:
-    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: 'cluster-dns'
-    line: 'Environment="KUBELET_DNS_ARGS=--cluster-dns=fd00:1234::10 --cluster-domain=cluster.local"'
-  notify: "restart kubelet"
-  when: ipv6_enabled
-
 - name: make sure kubelet is started and enabled
   service:
     name: "kubelet"

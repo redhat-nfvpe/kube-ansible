@@ -4,36 +4,10 @@
 #  [root@kube-master centos]# kubeadm --help | grep reset
 #    reset       Run this to revert any changes made to this host by 'kubeadm init' or 'kubeadm join'.
 
-- name: Default primary kubeadm argument
-  set_fact:
-    arg_primary: ""
-
-- name: Set pod-network-cidr when flannel
-  set_fact:
-    arg_primary: "--pod-network-cidr {{ pod_network_cidr }}/16"
-  when: pod_network_type != "weave" and not ipv6_enabled
-
-- name: Use config file for ipv6 for pod-network-cidr
-  set_fact:
-    arg_primary: "--config=/root/kubeadm_v6.cfg"
-  when: ipv6_enabled
-
-- name: Use config file for control plane listen on all addresses
-  set_fact:
-    arg_primary: "--config=/root/kubeadm.cfg"
-  when: control_plane_listen_all
-
-- name: create kubeadm_v6.cfg
-  copy:
-    src: kubeadm_v6.cfg
-    dest: /root/kubeadm_v6.cfg
-  when: ipv6_enabled
-
 - name: create kubeadm config file
   template:
     src: kubeadm.cfg.j2
     dest: /root/kubeadm.cfg
-  when: control_plane_listen_all
 
 - name: Default cri-o flags to empty
   set_fact:
@@ -58,7 +32,7 @@
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ arg_primary }} > /var/log/kubeadm.init.log
+    kubeadm init {{ k8s_version }} {{ arg_crio }} --config=/root/kubeadm.cfg > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 
