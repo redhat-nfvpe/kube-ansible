@@ -3,6 +3,14 @@
   selinux:
     state: disabled
 
+- name: "reboot machine"
+  shell: "sleep 2 && reboot"
+  async: 1
+  poll: 0
+
+- name: "Wait for VM up"
+  local_action: wait_for host={{ inventory_hostname }} port=22 delay=30
+
 - name: "Stop iptables :("
   service:
     name: "{{ __firewall_service }}"
