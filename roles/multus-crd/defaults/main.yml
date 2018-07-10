@@ -1,2 +1,3 @@
 ---
 crd_namespace: "kubernetes.com"
+multus_legacy: false

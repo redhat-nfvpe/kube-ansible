@@ -5,19 +5,32 @@
     path: "{{ ansible_env.HOME }}/multus-resources"
     state: directory
 
+- name: Default legacy prefix for Multus
+  set_fact:
+    multus_legacy_prefix: ""
+
+- name: Set legacy prefix when using legacy version of Multus
+  set_fact: 
+    multus_legacy_prefix: "legacy."
+  when: "multus_legacy"
+
+- name: Set Multus template items
+  set_fact:
+    multus_template_items:
+      - src: crd.yml.j2
+        dest: "multus-crd.yml"
+      - src: "{{ multus_legacy_prefix }}flannel.yml.j2"
+        dest: "flannel.yml"
+      - src: "{{ multus_legacy_prefix }}macvlan.yml.j2"
+        dest: "macvlan.yml"
+      - src: clusterrole.yml.j2
+        dest: "clusterrole.yml"
+
 - name: Template multus resources
   template:
     src: "{{ item.src }}"
     dest: "{{ ansible_env.HOME }}/multus-resources/{{ item.dest }}"
-  with_items:
-    - src: crd.yml.j2
-      dest: "multus-crd.yml"
-    - src: flannel.yml.j2
-      dest: "flannel.yml"
-    - src: macvlan.yml.j2
-      dest: "macvlan.yml"
-    - src: clusterrole.yml.j2
-      dest: "clusterrole.yml"
+  with_items: "{{ multus_template_items }}"
 
 - name: Check to see if CRD is present
   shell: >

@@ -1,10 +1,9 @@
-apiVersion: "kubernetes.cni.cncf.io/v1"
+apiVersion: "{{ crd_namespace }}/v1"
 kind: Network
 metadata:
   name: flannel-conf
 plugin: flannel
-spec: 
-  config: '[
+args: '[
   {
     "name": "flannel.1",
     "delegate": {
