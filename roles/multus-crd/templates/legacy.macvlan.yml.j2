@@ -1,14 +1,13 @@
-apiVersion: "kubernetes.cni.cncf.io/v1"
+apiVersion: "{{ crd_namespace }}/v1"
 kind: Network
 metadata:
   name: macvlan-conf
-spec: 
-  config: '{
-            "cniVersion": "0.3.0",
-            "type": "macvlan",
+plugin: macvlan
+args: '[
+        {
             "master": "eth0",
-            "name": "macvlan.1",
             "mode": "bridge",
+            "name": "macvlan.1",
             "ipam": {
                 "type": "host-local",
                 "subnet": "{{ multus_ipam_subnet }}",
@@ -19,4 +18,5 @@ spec:
                 ],
                 "gateway": "{{ multus_ipam_gateway }}"
             }
-        }'
+        }
+]'

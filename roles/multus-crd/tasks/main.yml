@@ -5,6 +5,15 @@
     path: "{{ ansible_env.HOME }}/multus-resources"
     state: directory
 
+- name: Default legacy prefix for Multus
+  set_fact:
+    multus_legacy_prefix: ""
+
+- name: Set legacy prefix when using legacy version of Multus
+  set_fact: 
+    multus_legacy_prefix: "legacy."
+  when: "multus_legacy"
+
 - name: Template multus resources
   template:
     src: "{{ item.src }}"
@@ -12,9 +21,9 @@
   with_items:
     - src: crd.yml.j2
       dest: "multus-crd.yml"
-    - src: flannel.yml.j2
+    - src: "{{ multus_legacy_prefix }}flannel.yml.j2"
       dest: "flannel.yml"
-    - src: macvlan.yml.j2
+    - src: "{{ multus_legacy_prefix }}macvlan.yml.j2"
       dest: "macvlan.yml"
     - src: clusterrole.yml.j2
       dest: "clusterrole.yml"
