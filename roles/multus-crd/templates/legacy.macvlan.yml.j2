@@ -5,7 +5,7 @@ metadata:
 plugin: macvlan
 args: '[
         {
-            "master": "eth0",
+            "master": "{{ multus_macvlan_master }}",
             "mode": "bridge",
             "name": "macvlan.1",
             "ipam": {

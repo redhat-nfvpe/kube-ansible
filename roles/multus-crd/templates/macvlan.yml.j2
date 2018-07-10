@@ -6,7 +6,7 @@ spec:
   config: '{
             "cniVersion": "0.3.0",
             "type": "macvlan",
-            "master": "eth0",
+            "master": "{{ multus_macvlan_master }}",
             "name": "macvlan.1",
             "mode": "bridge",
             "ipam": {
