@@ -68,6 +68,21 @@
   when: pod_network_type == "multus" and multus_use_crd
 
 
+# ----------- calico
+- name: Apply the calico RBAC
+  shell: >
+    kubectl apply -f /etc/calico-rbac.yaml
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "calico"
+
+- name: Apply the calico podnetwork
+  shell: >
+    kubectl apply -f /etc/calico.yaml > /tmp/podnetwork-apply.log
+  args:
+    creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
+  when: pod_network_type == "calico"
+
 # ----------- all network types
 - name: Mark podnetwork applied
   file:
