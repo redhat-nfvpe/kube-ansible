@@ -8,16 +8,18 @@
 - name: Default legacy prefix for Multus
   set_fact:
     multus_legacy_prefix: ""
+    multus_verify_crd: "network-attachment-definitions.k8s.cni.cncf.io"
 
 - name: Set legacy prefix when using legacy version of Multus
   set_fact: 
     multus_legacy_prefix: "legacy."
+    multus_verify_crd: "network"
   when: "multus_legacy"
 
 - name: Set Multus template items
   set_fact:
     multus_template_items:
-      - src: crd.yml.j2
+      - src: "{{ multus_legacy_prefix }}crd.yml.j2"
         dest: "multus-crd.yml"
       - src: "{{ multus_legacy_prefix }}flannel.yml.j2"
         dest: "flannel.yml"
@@ -48,7 +50,7 @@
 
 - name: Check to see which network CRD definitions are present
   shell: >
-    kubectl get network
+    kubectl get {{ multus_verify_crd }}
   register: check_network_crds
 
 - name: Create flannel network CRD

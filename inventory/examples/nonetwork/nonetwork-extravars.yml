@@ -6,27 +6,17 @@
 # the Network Plumbing Working Group's
 # de-facto CRD specification.
 # --------------------------------------------
-crd_namespace: "k8s.cni.cncf.io"
-multus_use_default_network: true
-multus_version: "dev/network-plumbing-working-group-crd-change"
-multus_git_url: "https://github.com/Intel-Corp/multus-cni.git"
 bridge_networking: true
 bridge_name: br0
 bridge_physical_nic: "enp1s0f1"
 bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
-pod_network_type: "multus"
+pod_network_type: "none"
 virtual_machines:
-  - name: kube-multus-master
+  - name: kube-nonet-master
     node_type: master
-  - name: kube-multus-node-1
+  - name: kube-nonet-node-1
     node_type: nodes
 optional_packages:
   - tcpdump
   - bind-utils
-multus_use_crd: true
-multus_ipam_subnet: "192.168.1.0/24"
-multus_ipam_rangeStart: "192.168.1.200"
-multus_ipam_rangeEnd: "192.168.1.216"
-multus_ipam_gateway: "192.168.1.1"
-multus_macvlan_master: "eth0"
