@@ -1,0 +1,110 @@
+---
+
+- import_playbook: ka-init/init.yml
+
+- hosts: virthost
+  become: true
+  become_user: root
+  tasks:
+    - set_fact:
+        path_bootstrap_image_source: "/home/images/bootstrapkubemaster/bootstrapkubemaster.qcow2"
+        path_bootstrap_image_dest: "/home/images/bootstrapped.qcow2"
+        spare_disk_attach: false
+        virtual_machines:
+          - name: bootstrapkubemaster
+            node_type: master
+        bootstrap_common_args: ""
+        ssh_proxy_enabled: false
+        ssh_proxy_user: root
+
+- import_playbook: virthost-setup.yml
+
+- hosts: virthost
+  tasks:
+
+    - name: Get created VM's IP to use in dynamic inventory
+      set_fact:
+        bootstrap_use_ip: "{{ vm_ips_dict.bootstrapkubemaster }}"
+
+    - name: "Add proxy command if set"
+      set_fact:
+        bootstrap_common_args: >
+          -o ProxyCommand="ssh{% if ssh_proxy_port is defined %} -p {{ ssh_proxy_port }}{% endif %} -W %h:%p {{ ssh_proxy_user }}@{{ ssh_proxy_host }}"
+      when: "ssh_proxy_enabled"
+
+    - name: Add a host to the inventory so we can install kube deps on it.
+      add_host:
+        hostname: "bootstrapkubemaster"
+        ansible_ssh_host: "{{ bootstrap_use_ip }}"
+        groups: master
+        ansible_ssh_private_key_file: "{{ vm_ssh_key_path }}"
+        ansible_ssh_common_args: "{{ bootstrap_common_args }}"
+        ansible_user: "centos"
+
+- hosts: all
+  tasks:
+    - name: Express that we'd like to not init the cluster, initialize other variables.
+      set_fact:
+        skip_init: true
+        pre_pull_images:
+          - "centos:centos7"
+          - "nfvpe/multus"
+          - "dougbtv/centos-network"
+
+- import_playbook: kube-install.yml
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks:
+
+    - name: Pre-pull necessary docker images
+      shell: >
+        docker pull {{ item }}
+      with_items: "{{ pre_pull_images }}"
+
+    - name: Re-install cloud-init goodies
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - cloud-init
+        - cloud-utils
+        - cloud-utils-growpart
+
+    - name: Delete the cloud-init dir and re-create dir
+      file: 
+        path: /var/lib/cloud
+        state: "{{ item }}"
+      with_items:
+        - absent
+        - directory
+
+    - name: Remove hostname
+      shell: >
+        hostnamectl set-hostname ""
+
+    - name: "Power off machine"
+      shell: "sleep 2 && poweroff"
+      async: 1
+      poll: 0
+
+- hosts: virthost
+  tasks:
+
+    - name: Ensure virt-sysprep is installed
+      yum:
+        name: "libguestfs-tools-c"
+        state: present
+
+    - name: Copy bootstrapped image
+      shell: >
+        cp -f {{ path_bootstrap_image_source }} {{ path_bootstrap_image_dest }}
+
+    # http://manpages.ubuntu.com/manpages/xenial/man1/virt-sysprep.1.html
+    - name: Run virt-sysprep to strip persistent stuff from image
+      shell: >
+        virt-sysprep -a {{ path_bootstrap_image_dest }}
+
+    - debug:
+        msg: "Bootstrapped image qcow2 copied to: {{ path_bootstrap_image_dest }}"

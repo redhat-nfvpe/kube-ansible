@@ -21,7 +21,7 @@ Playbooks are located in the `playbooks/` directory.
 | `virt-host-setup.yml`            | `./inventory/virthost/`               | Provision a virtual machine host                                   |
 | `kube-install.yml`               | `./inventory/vms.local.generated`     | Install and configure a k8s cluster                                |
 | `kube-teardown.yml`              | `./inventory/vms.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
-| `vm-teardown.yml`                | `./inventory/virthost/`               | Destroys VMs on the virtual machine host                           |
+| `vm-teardown.yml`                | `./inventory/virthost/`               | Destroys & removes VMs on the virtual machine host                           |
 | `multus-cni.yml`                 | `./inventory/vms.local.generated`     | Compiles [multus-cni](https://github.com/Intel-Corp/multus-cni)    |
 | `gluster-install.yml`            | `./inventory/vms.local.generated`     | Install a GlusterFS cluster across VMs (requires vm-attach-disk)   |
 | `fedora-python-bootstrapper.yml` | `./inventory/vms.local.generated`     | Bootstrapping Python dependencies on cloud images                  |
@@ -194,6 +194,24 @@ kube-node-3   Ready     <none>    9m        v1.8.3
 ```
 
 Everything should be marked as ready. If so, you're good to go!
+
+## Creating a bootstrapped image
+
+Should you need to spin up multiple clusters or otherwise spin up a bunch of VMs for a cluster, it may behoove you to "bootstrap" your VM images so that you don't have to download the dependencies many times. You can create a sort of golden image to use by using the `./playbooks/create-bootstrapped-image.yml` playbook.
+
+You can run it for example like so:
+
+```
+$ ansible-playbook -i inventory/virthost.inventory \
+  -e "@./inventory/examples/image-bootstrap/extravars.yml" \
+  playbooks/create-bootstrapped-image.yml
+```
+
+This will result in an image being created @ `/home/images/bootstrapped.qcow2` (by default, this can be altered otherwise). You can then specify this image to use when creating a cluster.
+
+For example...
+
+
 
 # About
 
