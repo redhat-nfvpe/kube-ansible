@@ -7,7 +7,7 @@ container_runtime: docker
 
 # Which version of crio?
 # (doesn't matter if docker is container runtime)
-crio_version: v1.0.0-rc1
+crio_version: v1.11.1
 
 # Pod net work types
 # A value of "none" will create no networking and will not join nodes to cluster.

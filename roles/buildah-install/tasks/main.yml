@@ -30,6 +30,7 @@
 
 - name: Build Buildah, it's a dollah twenty five pah.
   shell: >
+    export GOPATH={{ ansible_env.HOME}}/{{ gopath }} && \
     make && make install
   args:
     chdir: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/projectatomic/buildah"

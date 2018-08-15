@@ -1,10 +1,15 @@
 ---
 # - debug: "msg={{ kubeadm_join_command }}"
 
+- name: Set skip_preflight_checks args if need be.
+  set_fact:
+    arg_crio: "--ignore-preflight-errors=all"
+  when: skip_preflight_checks
+
 - name: Set cri-o args if need be.
   set_fact:
-    arg_crio: "--skip-preflight-checks"
-  when: container_runtime == "crio" or skip_preflight_checks
+    arg_crio: "--ignore-preflight-errors=all --cri-socket=\\/var\\/run\\/crio\\/crio.sock"
+  when: container_runtime == "crio"
 
 - name: Change the given command
   shell: >

@@ -36,3 +36,7 @@ kubectl_user=fedora
 kubectl_group=fedora
 # Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
 # container_runtime=crio
+
+# Need to set crio_versions for installed kubernetes version, see following URL for details.
+# https://github.com/kubernetes-incubator/cri-o#compatibility-matrix-cri-o---kubernetes-clusters
+# crio_versions=v1.11.1

@@ -46,26 +46,26 @@
 - name: clone runc
   git:
     repo: https://github.com/opencontainers/runc
-    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/opencontainers/runc"
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/opencontainers/runc"
     version: master
 
 - name: clone CRI-O
   git:
     repo: https://github.com/kubernetes-incubator/cri-o
-    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/kubernetes-incubator/cri-o"
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-incubator/cri-o"
     version: "{{ crio_version }}"
 
 - name: clone CNI
   git:
     repo: https://github.com/containernetworking/plugins
-    dest: "{{ ansible_env.HOME }}/{{ gopath }}/github.com/containernetworking/plugins"
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins"
     version: master
 
 - name: build runc
   shell: |
-          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/opencontainers/runc && \
-          make BUILDTAGS="seccomp selinux" && \
-          make install
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/opencontainers/runc && \
+          export GOPATH={{ ansible_env.HOME}}/{{ gopath }} && \
+          make BUILDTAGS="seccomp selinux" && make install
   environment:
     PATH: "{{ extended_path }}"
 
@@ -77,7 +77,7 @@
 
 - name: build cri-o
   shell: |
-          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/kubernetes-incubator/cri-o && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-incubator/cri-o && \
           make install.tools && \
           make && \
           make install && \
@@ -88,7 +88,7 @@
 
 - name: build CNI stuff
   shell: |
-          cd {{ ansible_env.HOME }}/{{ gopath }}/github.com/containernetworking/plugins && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins && \
           ./build.sh && \
           mkdir -p /opt/cni/bin && \
           cp bin/* /opt/cni/bin/
@@ -104,7 +104,7 @@
 
 - name: run with overlay2
   replace:
-    regexp: 'storage_driver = ""'
+    regexp: '^#storage_driver = "overlay"'
     replace: 'storage_driver = "overlay2"'
     name: /etc/crio/crio.conf
     backup: yes
@@ -112,10 +112,20 @@
 - name: add overlay2 storage opts on RHEL/CentOS
   lineinfile:
     dest: /etc/crio/crio.conf
-    line: '"overlay2.override_kernel_check=1"'
-    insertafter: 'storage_option = \['
-    regexp: 'overlay2\.override_kernel_check=1'
+    line: "{{ item }}"
+    insertbefore: '^#storage_option = \['
     state: present
+  with_items:
+    - 'storage_option = ['
+    - '"overlay2.override_kernel_check=true",'
+    - ']'
+
+- name: change runtime (runc) path
+  replace:
+    regexp: '^runtime =.*$'
+    replace: 'runtime = "/usr/local/sbin/runc"'
+    name: /etc/crio/crio.conf
+    backup: yes
 
 - name: enable and start CRI-O
   systemd:
@@ -145,7 +155,7 @@
 - name: systemd dropin for kubeadm
   shell: |
           sh -c 'echo "[Service]
-          Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio.sock --container-runtime-endpoint /var/run/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+          Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
 
 - name: flush iptables
   command: "iptables -F"

@@ -15,7 +15,7 @@
 
 - name: Set cri-o flags
   set_fact:
-    arg_crio: "--skip-preflight-checks"
+    arg_crio: "--ignore-preflight-errors=all"
   when: container_runtime == "crio"
 
 - name: Default k8s version to empty

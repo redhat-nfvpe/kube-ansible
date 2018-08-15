@@ -30,6 +30,9 @@
   tasks:
     - name: Set bridge-nf-call-iptables to 1
       shell: >
+        if [ ! -f /proc/sys/net/bridge/bridge-nf-call-iptables ]; then \
+          modprobe br_netfilter; \
+        fi && \
         echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
 
 - hosts: master

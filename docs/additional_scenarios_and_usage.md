@@ -50,6 +50,7 @@ an extra var when you run the playbook:
 
 ```
 $ ansible-playbook -i inventory/vms.local.generated \
+    -e 'ansible_python_interpreter=/usr/bin/python3' \
     -e 'container_runtime=crio' \
     playbooks/kube-install.yml
 ```
