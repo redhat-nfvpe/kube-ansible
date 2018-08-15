@@ -1,0 +1,34 @@
+{
+  "cniVersion": "0.3.1",
+        "type": "userspace",
+        "name": "memif-network",
+        "if0name": "net0",
+        "host": {
+                "engine": "vpp",
+                "iftype": "memif",
+                "netType": "bridge",
+                "memif": {
+                        "role": "master",
+                        "mode": "ethernet"
+                },
+                "bridge": {
+                        "bridgeId": 4
+                }
+        },
+        "container": {
+                "engine": "vpp",
+                "iftype": "memif",
+                "netType": "interface",
+                "memif": {
+                        "role": "slave",
+                        "mode": "ethernet"
+                }
+        },
+        "ipam": {
+                "type": "host-local",
+                "subnet": "192.168.210.0/24",
+                "routes": [
+                        { "dst": "0.0.0.0/0" }
+                ]
+        }
+}

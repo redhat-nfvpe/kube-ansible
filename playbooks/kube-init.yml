@@ -1,0 +1,44 @@
+---
+- import_playbook: ka-init/init.yml
+- import_playbook: ka-lab-ipv6/ipv6-lab.yml
+  when: ipv6_enabled
+
+- hosts: master
+  become: true
+  become_user: root
+  # pre_tasks:
+  #   - debug:
+  #       msg: "Skip init? {{ skip_init }}"
+  roles:
+    - { role: kube-init }
+    - { role: kube-template-cni }
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: kube-cni }
+    - { role: kube-niceties }
+
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo and not skip_init"}
+
+- hosts: nodes
+  become: true
+  become_user: root
+  pre_tasks:
+    - name: Get kubeadm_join_command from master
+      set_fact:
+        kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
+  tasks: []
+  roles:
+    - { role: kube-join-cluster }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: kubectl-proxy-systemd }

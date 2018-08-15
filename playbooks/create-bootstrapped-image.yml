@@ -50,6 +50,7 @@
           - "centos:centos7"
           - "nfvpe/multus"
           - "dougbtv/centos-network"
+          - "bmcfall/vpp-centos-userspace-cni:0.2.0"
 
 - import_playbook: kube-install.yml
 
