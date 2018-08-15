@@ -32,3 +32,6 @@ kubeletConfiguration:
     # kubeletCgroups: /systemd/system.slice
     # unsure if this fits for: runtime-cgroups
     # systemCgroups: /systemd/system.slice
+{% if container_runtime == "crio" %}
+criSocket: /var/run/crio/crio.sock
+{% endif %}
