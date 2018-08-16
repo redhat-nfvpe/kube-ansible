@@ -93,3 +93,6 @@
 # vppctl show interface
 # vppctl show mode
 # vppctl show memif
+# create two of 'em and do:
+# vppctl ping 192.168.210.2   
+

@@ -138,6 +138,12 @@ ipv6_enabled: false
 enable_device_plugins: false
 
 # ----------------------------
+# userspace CNI
+# ----------------------------
+enable_userspace_cni: false
+
+
+# ----------------------------
 # builder vars
 # ----------------------------
 

@@ -6,5 +6,5 @@
   become_user: root
   tasks: []
   roles:
-    # - { role: install-go }
+    - { role: install-go }
     - { role: userspace-cni }

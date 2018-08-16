@@ -18,3 +18,4 @@ virtual_machines:
   - name: kube-node-2
     node_type: nodes
     system_ram_mb: 4096
+enable_userspace_cni: true
