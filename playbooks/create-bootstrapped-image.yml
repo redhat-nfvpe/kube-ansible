@@ -51,6 +51,7 @@
           - "nfvpe/multus"
           - "dougbtv/centos-network"
           - "bmcfall/vpp-centos-userspace-cni:0.2.0"
+          - "quay.io/coreos/flannel:v0.10.0-amd64"
 
 - import_playbook: kube-install.yml
 
@@ -58,6 +59,15 @@
   become: true
   become_user: root
   tasks:
+
+    - name: Clone Multus locally
+      git:
+        repo: https://github.com/intel/multus-cni.git
+        dest: /home/centos/multus-cni
+
+    - name: Pull kubeadm images
+      shell: >
+        kubeadm config images pull
 
     - name: Pre-pull necessary docker images
       shell: >
