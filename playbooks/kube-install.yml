@@ -54,7 +54,7 @@
   tasks: []
   roles:
     - { role: kube-cni, when: "not skip_init" }
-    - { role: kube-niceties, when: "not skip_init" }
+    - { role: kube-niceties }
 
 
 - hosts: master

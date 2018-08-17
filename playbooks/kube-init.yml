@@ -17,8 +17,6 @@
   tasks: []
   roles:
     - { role: kube-cni }
-    - { role: kube-niceties }
-
 
 - hosts: master
   tasks: []
