@@ -60,6 +60,16 @@
   become_user: root
   tasks:
 
+    - name: Download tmate binary 
+      unarchive:
+        src: https://github.com/tmate-io/tmate/releases/download/2.2.1/tmate-2.2.1-static-linux-amd64.tar.gz
+        dest: /tmp/
+        remote_src: yes        
+
+    - name: Move tmate binary 
+      shell: >
+        mv /tmp/tmate-2.2.1-static-linux-amd64/tmate /usr/local/bin/tmate
+
     - name: Clone Multus locally
       git:
         repo: https://github.com/intel/multus-cni.git
