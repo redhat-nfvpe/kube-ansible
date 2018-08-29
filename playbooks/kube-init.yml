@@ -3,6 +3,14 @@
 - import_playbook: ka-lab-ipv6/ipv6-lab.yml
   when: ipv6_enabled
 
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks:
+    - name: Set bridge-nf-call-iptables to 1 (yes, this is redundant, earlier steps may not have been sticky)
+      shell: >
+        echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+
 - hosts: master
   become: true
   become_user: root

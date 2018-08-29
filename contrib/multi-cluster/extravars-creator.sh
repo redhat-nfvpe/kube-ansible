@@ -27,11 +27,11 @@ hugepages_enabled: true
 image_destination_name: bootstrapped.qcow2
 spare_disk_attach: false
 pod_network_type: "none"
-bridge_networking: true
-bridge_name: br0
-bridge_physical_nic: "enp1s0f1"
-bridge_network_name: "br0"
-bridge_network_cidr: 192.168.1.0/24
+# bridge_networking: true
+# bridge_name: br0
+# bridge_physical_nic: "enp1s0f1"
+# bridge_network_name: "br0"
+# bridge_network_cidr: 192.168.1.0/24
 virtual_machines:
   - name: kube-master-$masternumber
     node_type: master

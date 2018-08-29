@@ -5,7 +5,7 @@
 for (( c=1; c<=$1; c++ ))
 do
   filename="./inventory/multi-cluster/cluster-$c.yml"
-  cmd="ansible-playbook -i inventory/virthost.inventory -e \"@$filename\" playbooks/virthost-setup.yml"
+  cmd="ansible-playbook -i inventory/virthost.inventory -e 'ssh_proxy_enabled=true' -e \"@$filename\" playbooks/virthost-setup.yml"
   echo Running: $cmd
   eval $cmd
   mv inventory/vms.local.generated ./inventory/multi-cluster/cluster-$c.inventory
