@@ -48,6 +48,7 @@
         skip_init: true
         pre_pull_images:
           - "centos:centos7"
+          - "centos:tools"
           - "nfvpe/multus:deviceid"
           - "dougbtv/centos-network"
           - "bmcfall/vpp-centos-userspace-cni:0.2.0"
@@ -70,6 +71,12 @@
     - name: Move tmate binary 
       shell: >
         mv /tmp/tmate-2.2.1-static-linux-amd64/tmate /usr/local/bin/tmate
+
+    - name: Clone virt-network-device-plugin locally
+      git:
+        repo: https://github.com/zshi-redhat/virt-network-device-plugin.git
+        dest: "/home/centos/virt-network-device-plugin"
+        force: yes
 
     - name: Clone Multus locally
       git:

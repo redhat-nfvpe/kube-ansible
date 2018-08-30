@@ -1,0 +1,61 @@
+---
+
+- name: Ensure git is installed
+  yum:
+    name: git
+    state: present
+
+- name: Clone repo
+  git:
+    repo: https://github.com/zshi-redhat/virt-network-device-plugin.git
+    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
+    force: true
+
+- name: Build it
+  shell: >
+    ./build.sh
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
+
+# - name: Copy bin... to where?
+#   shell: >
+#     cp ./bin/virtdp /where/to?
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
+#     creates: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin/bin/virtdp"
+
+- name: Build docker image
+  shell: >
+    ./build_docker.sh
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin/deployments"
+
+
+# - name: Build Userspace CNI plugin
+#   shell: >
+#     export GOPATH={{ ansible_env.HOME }}/src/go; make
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
+#     creates: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin/userspace/userspace"
+
+# - name: Copy Userspace CNI plugin to CNI bin dir
+#   shell: >
+#     cp userspace/userspace /opt/cni/bin/userspace
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
+#     creates: "/opt/cni/bin/userspace"
+
+# - name: Clone CNI repo
+#   git:
+#     repo: https://github.com/containernetworking/cni.git
+#     dest: "{{ ansible_env.HOME }}/src/go/src/github.com/containernetworking/cni"
+
+# - name: Make an alternate cni net.d dir
+#   file:
+#     path: /etc/alternate.net.d/
+#     state: directory
+
+# - name: Template userspace CNI config
+#   template:
+#     src: 90-userspace.conf.j2
+#     dest: /etc/alternate.net.d/90-userspace.conf 
