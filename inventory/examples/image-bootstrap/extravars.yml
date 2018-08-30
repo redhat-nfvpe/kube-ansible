@@ -7,3 +7,8 @@
 # bridge_network_cidr: 192.168.1.0/24
 enable_userspace_cni: true
 ssh_proxy_enabled: true
+binary_install: true
+binary_kubectl_url: https://bintray.com/dougbtv/dougbtv-custom-kube/download_file?file_path=kubectl
+binary_kubeadm_url: https://bintray.com/dougbtv/dougbtv-custom-kube/download_file?file_path=kubeadm
+binary_kubelet_url: https://bintray.com/dougbtv/dougbtv-custom-kube/download_file?file_path=kubelet
+binary_install_force_redownload: false

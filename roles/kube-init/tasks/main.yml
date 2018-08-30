@@ -27,12 +27,21 @@
     k8s_version: "--kubernetes-version {{ kube_version }}"
   when: artifacts_install
 
+- name: Default preflight ignore argument
+  set_fact:
+    arg_ignore: ""
+
+- name: Set preflight ignore argument when enabled
+  set_fact:
+    arg_ignore: --ignore-preflight-errors=KubernetesVersion,KubeletVersion
+  when: ignore_preflight_version
+
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ k8s_version }} {{ arg_crio }} --config=/root/kubeadm.cfg > /var/log/kubeadm.init.log
+    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ arg_ignore }} --config=/root/kubeadm.cfg > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 

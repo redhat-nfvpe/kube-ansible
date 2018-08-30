@@ -23,9 +23,8 @@ pod_network_cidr: "10.244.0.0"
 
 # General config
 
-# At 1.7.2 you need this cause of a bug in kubeadm join.
-# Turn it off later, or, try it if a join fails.
-skip_preflight_checks: true
+# Sometimes, you gotta skip 'em, but, by default we try not to.
+skip_preflight_checks: false
 
 # Stable. (was busted at 1.6 release, may work now, untested for a couple months)
 kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
