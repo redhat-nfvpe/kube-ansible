@@ -48,10 +48,11 @@
         skip_init: true
         pre_pull_images:
           - "centos:centos7"
-          - "nfvpe/multus"
+          - "nfvpe/multus:deviceid"
           - "dougbtv/centos-network"
           - "bmcfall/vpp-centos-userspace-cni:0.2.0"
           - "quay.io/coreos/flannel:v0.10.0-amd64"
+          - "nfvpe/kube-api-server-amd64:deviceid"
 
 - import_playbook: kube-install.yml
 
@@ -74,6 +75,11 @@
       git:
         repo: https://github.com/intel/multus-cni.git
         dest: /home/centos/multus-cni
+        force: yes
+
+    - name: Modify Multus to use :deviceid tagged image (for SR-IOV tutorial)
+      shell: >
+        sed -i -e 's|nfvpe/multus:latest|nfvpe/multus:deviceid|' /home/centos/multus-cni/images/multus-daemonset.yml
 
     - name: Pull kubeadm images
       shell: >
@@ -83,6 +89,12 @@
       shell: >
         docker pull {{ item }}
       with_items: "{{ pre_pull_images }}"
+
+    - name: Jimmy in the custom api server image
+      shell: >
+        docker tag k8s.gcr.io/kube-apiserver-amd64:v1.11.2 k8s.gcr.io/kube-apiserver-amd64:orig.v1.11.2;
+        docker rmi k8s.gcr.io/kube-apiserver-amd64:v1.11.2;
+        docker tag docker.io/nfvpe/kube-api-server-amd64:deviceid k8s.gcr.io/kube-apiserver-amd64:v1.11.2
 
     - name: Re-install cloud-init goodies
       yum:

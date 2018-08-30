@@ -11,6 +11,10 @@ schedulerExtraArgs:
 apiServerExtraArgs:
   feature-gates: DevicePlugins=true
 {% endif %}
+{% if enable_compute_device %}
+apiServerExtraArgs:
+  feature-gates: ComputeDevice=true
+{% endif %}
 {% if ipv6_enabled %}
 api:
   advertiseAddress: fd00::100

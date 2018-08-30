@@ -135,6 +135,7 @@ ipv6_enabled: false
 # device plugins
 # ----------------------------
 enable_device_plugins: false
+enable_compute_device: false
 
 # ----------------------------
 # userspace CNI

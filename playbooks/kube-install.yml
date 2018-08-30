@@ -48,7 +48,7 @@
   #       msg: "Skip init? {{ skip_init }}"
   roles:
     - { role: kube-init, when: "not skip_init" }
-    - { role: kube-template-cni }
+    - { role: kube-template-cni, when: "not skip_init" }
 
 - hosts: master
   tasks: []
