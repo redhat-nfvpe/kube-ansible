@@ -28,6 +28,7 @@
     - { role: multus-cni, when: pod_network_type == "multus" }
     - { role: install-go, when: enable_userspace_cni }
     - { role: userspace-cni, when: enable_userspace_cni }
+    - { role: ehost-device-cni, when: enable_ehost_device_cni }
 
 - import_playbook: ka-lab-kokonet/kokonet-lab.yml
   when: pod_network_type == 'kokonet-bridge'

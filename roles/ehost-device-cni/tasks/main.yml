@@ -1,49 +1,5 @@
 ---
 
-# - name: "Add hugepages to sysctl.conf"
-#   lineinfile:
-#     path: /etc/sysctl.conf
-#     regexp: 'nr_hugepages'
-#     line: vm.nr_hugepages = 1024
-#   register: set_hugepage_sysctl
-
-# # You can verify with `cat /proc/meminfo | grep Huge`
-
-# - name: Reload sysctl
-#   shell: >
-#     sysctl -p
-#   when: set_hugepage_sysctl.changed
-
-# # VPP installation
-# # sudo yum install centos-release-fdio
-# # sudo yum install vpp*
-
-# - name: Install jq binary
-#   get_url:
-#     url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-#     dest: /usr/bin/jq
-
-# - name: set jq binary permission
-#   file:
-#     path: /usr/bin/jq
-#     mode: 0755
-
-# - name: Install VPP repo
-#   yum:
-#     name: "centos-release-fdio"
-#     state: latest
-
-# - name: Install VPP
-#   yum:
-#     name: "vpp*"
-#     state: latest
-
-# - name: Start & Enable VPP
-#   service:
-#     name: "vpp"
-#     state: started
-#     enabled: yes
-
 - name: Ensure git is installed
   yum:
     name: git
@@ -53,47 +9,17 @@
   git:
     repo: https://github.com/zshi-redhat/ehost-device-cni.git
     dest: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
-    version: 2dbb4620c0e99b75d0adaf1e5f143a331258e103
     force: true
 
-- name: Strip out containernetworking plugins dir
-  file:
-    path: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni/vendor/github.com/containernetworking/plugins/"
-    state: absent
+- name: Build it
+  shell: >
+    ./build.sh
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
 
-- name: Clone in containernetworking plugins
-  git:
-    repo: https://github.com/containernetworking/plugins.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni/vendor/github.com/containernetworking/plugins/"
-    force: true
-
-
-
-# - name: Build Userspace CNI plugin
-#   shell: >
-#     export GOPATH={{ ansible_env.HOME }}/src/go; make
-#   args:
-#     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
-#     creates: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin/userspace/userspace"
-
-# - name: Copy Userspace CNI plugin to CNI bin dir
-#   shell: >
-#     cp userspace/userspace /opt/cni/bin/userspace
-#   args:
-#     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
-#     creates: "/opt/cni/bin/userspace"
-
-# - name: Clone CNI repo
-#   git:
-#     repo: https://github.com/containernetworking/cni.git
-#     dest: "{{ ansible_env.HOME }}/src/go/src/github.com/containernetworking/cni"
-
-# - name: Make an alternate cni net.d dir
-#   file:
-#     path: /etc/alternate.net.d/
-#     state: directory
-
-# - name: Template userspace CNI config
-#   template:
-#     src: 90-userspace.conf.j2
-#     dest: /etc/alternate.net.d/90-userspace.conf 
+- name: Copy Userspace CNI plugin to CNI bin dir
+  shell: >
+    cp bin/ehost-device /opt/cni/bin/ehost-device
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
+    creates: "/opt/cni/bin/ehost-device"
