@@ -48,3 +48,16 @@
   tasks: []
   roles:
     - { role: kubectl-proxy-systemd }
+    - { role: modified-kube-config, when: customize_kube_config }
+
+- hosts: master
+  tasks:
+    - name: Get API server pod name
+      shell: >
+        kubectl get pods --all-namespaces | grep -i apiserver | awk '{print $2}'
+      register: apiserver_name
+      when: customize_kube_config
+    - name: Remove API server pod to restart it
+      shell: >
+        kubectl delete pod {{ apiserver_name.stdout }} --namespace=kube-system
+      when: customize_kube_config

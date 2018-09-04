@@ -28,6 +28,7 @@ image_destination_name: bootstrapped.qcow2
 spare_disk_attach: false
 pod_network_type: "none"
 enable_compute_device: true
+customize_kube_config: true
 # ignore_preflight_version: true
 # bridge_networking: true
 # bridge_name: br0

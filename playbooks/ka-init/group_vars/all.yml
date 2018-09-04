@@ -79,6 +79,8 @@ kubectl_proxy_port: 8088
 # Allow the kubernetes control plane to listen on all interfaces
 #control_plane_listen_all: true
 
+customize_kube_config: false
+
 # --------------------------- -
 # multus-cni vars          - -
 # ------------------------- -
@@ -136,6 +138,7 @@ ipv6_enabled: false
 # ----------------------------
 enable_device_plugins: false
 enable_compute_device: false
+attach_additional_virtio_device: false
 
 # ----------------------------
 # userspace CNI
