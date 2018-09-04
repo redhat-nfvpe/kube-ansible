@@ -48,7 +48,7 @@
         skip_init: true
         pre_pull_images:
           - "centos:centos7"
-          - "centos:tools"
+          # - "centos:tools"
           - "nfvpe/multus:deviceid"
           - "dougbtv/centos-network"
           - "bmcfall/vpp-centos-userspace-cni:0.2.0"

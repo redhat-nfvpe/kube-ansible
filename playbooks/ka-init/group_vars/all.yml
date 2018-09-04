@@ -142,6 +142,7 @@ enable_compute_device: false
 # ----------------------------
 enable_userspace_cni: false
 enable_ehost_device_cni: false
+enable_virt_network_device_plugin: false
 
 # ----------------------------
 # builder vars
