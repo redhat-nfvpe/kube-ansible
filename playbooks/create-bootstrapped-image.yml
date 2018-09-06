@@ -79,7 +79,7 @@
 
     - name: Gen an ssh key
       shell: >
-        ssh-keygen -b 2048 -t rsa -f /home/centos/.ssh/id_rsa -q -N ""
+        
 
     - name: Clone virt-network-device-plugin locally
       git:

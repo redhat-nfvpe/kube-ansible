@@ -136,9 +136,22 @@ You can then tear down those VMs if you please:
 
 ## Giving access via SSH to people
 
+Firstly, you must set the `CLUSTERS` environment variable for this to work.
+
 ```
-[ stub! this is a to do list item. ]
+export CLUSTERS=3
+./contrib/multi-cluster/tmate.pl
 ```
+
+This will create 2 tmate sessions for each master machine. (One for a backup in case the user types 'exit', which will ruin that session)
+
+The output will give you a JSON structure, you're looking for the line that looks like:
+
+```
+     "link": "https://markdownshare.com/view/ea8571af-8c97-469a-935b-470f33476214",
+```
+
+This will be a link to the posted markdown showing the tmate SSH urls.
 
 ## Multi-cluster a la carte -- step-by-step if you please.
 
