@@ -39,12 +39,15 @@ virtual_machines:
   - name: kube-master-$masternumber
     node_type: master
     system_ram_mb: 4096
+    system_cpus: 1
   - name: kube-node-$firstnodenumber
     node_type: nodes
     system_ram_mb: 4096
+    system_cpus: 1
   - name: kube-node-$secondnodenumber
     node_type: nodes
     system_ram_mb: 4096
+    system_cpus: 1
 enable_userspace_cni: true
 EOF
 done
