@@ -21,6 +21,14 @@ In overview, what we're going to do is:
 * Create a "bootstrap image" (a golden image from which VMs are created)
 * Run the multi-cluster spin-up scripts.
 
+## Downloading Ansible Galaxy roles
+
+If this is your first time cloning this repository, go ahead and initialize the requirements for Ansible Galaxy with:
+
+```
+ansible-galaxy install -r requirements.yml
+```
+
 ## Creating an inventory for your virthost
 
 We call the box we run the virtual machines on "the virthost" generally. Let's create an inventory for it.
@@ -136,7 +144,7 @@ You can then tear down those VMs if you please:
 
 ## Giving access via SSH to people
 
-Firstly, you must set the `CLUSTERS` environment variable for this to work.
+Firstly, you must set the `CLUSTERS` environment variable for this to work. Requires a Perl install on the machine you're running it from.
 
 ```
 export CLUSTERS=3
