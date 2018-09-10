@@ -79,7 +79,17 @@ Now you can remove those VMs (and I recommend you do) with:
 ansible-playbook -i inventory/virthost.inventory playbooks/vm-teardown.yml
 ```
 
+## OPTION: Download the bootstrap image
+
+Go ahead and place this image on your virtualization host, that is, SSH to the virt host
+
+```
+curl http://speedmodeling.org/kube/bootstrapped.qcow2 -o /home/images/bootstrapped.qcow2
+```
+
 ## Creating the bootstrap image.
+
+You can skip this if you downloaded an existing one.
 
 You can run it for example like so:
 
@@ -88,6 +98,7 @@ $ ansible-playbook -i inventory/virthost.inventory \
   -e "@./inventory/examples/image-bootstrap/extravars.yml" \
   playbooks/create-bootstrapped-image.yml
 ```
+
 
 ## Run the multi-cluster spin up all at once...
 
