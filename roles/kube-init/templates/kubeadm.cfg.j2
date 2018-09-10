@@ -1,6 +1,9 @@
 # Full parameters @ https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
+{% if kubeadm_version != "" %}
+kubernetesVersion: {{ kubeadm_version }}
+{% endif %}
 {% if control_plane_listen_all %}
 controllerManagerExtraArgs:
   address: 0.0.0.0

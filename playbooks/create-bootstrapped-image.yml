@@ -99,7 +99,7 @@
 
     - name: Pull kubeadm images
       shell: >
-        kubeadm config images pull
+        kubeadm config images pull --kubernetes-version={{ kubeadm_version }}
 
     - name: Pre-pull necessary docker images
       shell: >

@@ -3,15 +3,18 @@
 
 - hosts: virthost
   tasks: []
-  post_tasks:
-    - name: Get master
-      set_fact:
-        use_master: "{{ item.name }}"
-      when: "item.node_type == 'master'"
-      with_items: "{{ virtual_machines }}"
-    - name: Add additional interface to master
-      shell: >
-        virsh attach-interface --domain {{ use_master }} --type bridge --model virtio --source virbr0 --config --live
-      when: attach_additional_virtio_device
+  # post_tasks:
+  #   - name: Get master
+  #     set_fact:
+  #       use_master: "{{ item.name }}"
+  #     when: "item.node_type == 'master'"
+  #     with_items: "{{ virtual_machines }}"
+  #   - debug:
+  #       msg: >
+  #         virsh attach-interface --domain {{ use_master }} --type bridge --model virtio --source virbr0 --config --live
+  #   - name: Add additional interface to master
+  #     shell: >
+  #       virsh attach-interface --domain {{ use_master }} --type bridge --model virtio --source virbr0 --config --live
+  #     when: attach_additional_virtio_device
   roles:
     - { role: redhat-nfvpe.vm-spinup }
