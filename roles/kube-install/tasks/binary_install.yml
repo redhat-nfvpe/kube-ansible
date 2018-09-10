@@ -20,9 +20,28 @@
     item.url_is_set and
     (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
 
+- name: Default the proxy environment
+  set_fact:
+    use_proxy: ""
+
+- name: Set proxy environment
+  set_fact:
+    use_proxy: "export http_proxy={{ http_proxy }} && "
+  when: http_proxy != ""
+
+- name: Default the proxy environment
+  set_fact:
+    use_https_proxy: ""
+
+- name: Set proxy environment
+  set_fact:
+    use_https_proxy: "export https_proxy={{ https_proxy }} && "
+  when: https_proxy != ""
+
+
 - name: Download kubelet/kubectl/kubeadm
   shell: >
-    curl -L {{ item.use_url }} -o {{ item.to_path }}
+    {{use_proxy}}{{use_https_proxy}}curl -L {{ item.use_url }} -o {{ item.to_path }}
   # get_url:
   #   url: "{{ item.use_url }}"
   #   dest: "{{ item.to_path }}"

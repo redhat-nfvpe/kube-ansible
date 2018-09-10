@@ -22,6 +22,8 @@ pod_network_type: "flannel"
 pod_network_cidr: "10.244.0.0"
 
 # General config
+https_proxy: ""
+http_proxy: ""
 
 # Sometimes, you gotta skip 'em, but, by default we try not to.
 skip_preflight_checks: false
