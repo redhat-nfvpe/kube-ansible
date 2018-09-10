@@ -21,11 +21,13 @@
     (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
 
 - name: Download kubelet/kubectl/kubeadm
-  get_url:
-    url: "{{ item.use_url }}"
-    dest: "{{ item.to_path }}"
-    mode: 0755
-    force: "{{ binary_install_force_redownload }}"
+  shell: >
+    curl -L {{ item.use_url }} -o {{ item.to_path }}
+  # get_url:
+  #   url: "{{ item.use_url }}"
+  #   dest: "{{ item.to_path }}"
+  #   mode: 0755
+  #   force: "{{ binary_install_force_redownload }}"
   when: binary_kubelet_url is defined
   with_items:
     - use_url: "{{ binary_kubelet_url }}"
