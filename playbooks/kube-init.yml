@@ -49,6 +49,7 @@
   roles:
     - { role: kubectl-proxy-systemd }
     - { role: modified-kube-config, when: customize_kube_config }
+    - { role: tmate }
 
 - hosts: master
   tasks:
