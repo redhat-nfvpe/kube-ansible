@@ -10,6 +10,7 @@
     - name: Set bridge-nf-call-iptables to 1 (yes, this is redundant, earlier steps may not have been sticky)
       shell: >
         echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+      ignore_errors: true
 
 - hosts: master
   become: true
