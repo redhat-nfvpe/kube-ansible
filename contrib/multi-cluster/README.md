@@ -172,6 +172,14 @@ The output will give you a JSON structure, you're looking for the line that look
 
 This will be a link to the posted markdown showing the tmate SSH urls.
 
+## Adding additional interfaces
+
+In case you have to do it manually...
+
+```
+virsh list --all | grep master | awk '{print $2}' | xargs -L1 -i echo virsh attach-interface --domain {} --type bridge --model virtio --source virbr0 --config --live
+```
+
 ## Multi-cluster a la carte -- step-by-step if you please.
 
 Run it with the number of clusters you're going to create.
