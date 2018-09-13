@@ -28,15 +28,65 @@
     path: /usr/bin/jq
     mode: 0755
 
+# Moving from CentOS NFV SIG repo to Nexus repo.
+
+# cat /etc/yum.repos.d/fdio-release.repo 
+# [fdio-release]
+# name=fd.io release branch latest merge
+# baseurl=https://nexus.fd.io/content/repositories/fd.io.centos7/
+# enabled=1
+# gpgcheck=0
+
+# sudo yum install vpp-18.07-release.x86_64 \
+# vpp-lib-18.07-release.x86_64 \
+# vpp-plugins-18.07-release.x86_64 \
+# vpp-devel-18.07-release.x86_64 \
+# vpp-api-python-18.07-release.x86_64 \
+# vpp-api-lua-18.07-release.x86_64 \
+# vpp-api-java-18.07-release.x86_64 \
+# vpp-selinux-policy-18.07-release.x86_64
+
+# Dockerhub has been update with (both tags point to same image):
+#    bmcfall/vpp-centos-userspace-cni:0.3.0
+#    bmcfall/vpp-centos-userspace-cni:latest
+
+
+# FYI: On my server, I am almost out of hugepages, so you are at your limit. If you need more VMs, may need to reduce the number of hugepages given to each VM (like from 4K to 2K).
+# $ cat /proc/meminfo | grep -i huge
+# AnonHugePages:     79872 kB
+# HugePages_Total:   32768
+# HugePages_Free:     3991
+# :
+
+# Billy
+
+- name: Add multiple repositories into the same file (1/2)
+  yum_repository:
+    name: fdio-release
+    description: "fd.io repo"
+    baseurl: https://nexus.fd.io/content/repositories/fd.io.centos7/
+    gpgcheck: no
+
 - name: Install VPP repo
   yum:
     name: "centos-release-fdio"
     state: latest
 
+# How do I install the proper VPP version?
 - name: Install VPP
   yum:
-    name: "vpp*"
-    state: latest
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - vpp-18.07-release
+    - vpp-lib-18.07-release
+    - vpp-plugins-18.07-release
+    - vpp-devel-18.07-release
+    - vpp-api-python-18.07-release
+    - vpp-api-lua-18.07-release
+    - vpp-api-java-18.07-release
+    - vpp-selinux-policy-18.07-release
+
 
 - name: Start & Enable VPP
   service:
@@ -49,24 +99,26 @@
     name: git
     state: present
 
+# CHANGE THIS URL and paths.
+# ...and in the docs.
 - name: Clone Userspace CNI Plugin repo
   git:
-    repo: https://github.com/Billy99/user-space-net-plugin.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
+    repo: https://github.com/intel/userspace-cni-network-plugin.git
+    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
     force: true
 
 - name: Build Userspace CNI plugin
   shell: >
     export GOPATH={{ ansible_env.HOME }}/src/go; make
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
-    creates: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin/userspace/userspace"
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin/userspace/userspace"
 
 - name: Copy Userspace CNI plugin to CNI bin dir
   shell: >
     cp userspace/userspace /opt/cni/bin/userspace
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/Billy99/user-space-net-plugin"
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
     creates: "/opt/cni/bin/userspace"
 
 - name: Clone CNI repo

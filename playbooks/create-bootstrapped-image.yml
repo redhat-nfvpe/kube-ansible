@@ -51,8 +51,10 @@
           # - "centos:tools"
           - "nfvpe/multus:deviceid"
           - "dougbtv/centos-network"
-          - "bmcfall/vpp-centos-userspace-cni:0.2.0"
+          # Update this image for userspace.
+          - "bmcfall/vpp-centos-userspace-cni:0.4.0"
           - "quay.io/coreos/flannel:v0.10.0-amd64"
+          - "nfvpe/virtdp:latest"
           - "nfvpe/kube-api-server-amd64:deviceid"
 
 - import_playbook: kube-install.yml

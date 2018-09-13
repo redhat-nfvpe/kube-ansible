@@ -177,7 +177,7 @@ This will be a link to the posted markdown showing the tmate SSH urls.
 In case you have to do it manually...
 
 ```
-virsh list --all | grep master | awk '{print $2}' | xargs -L1 -i virsh attach-interface --domain {} --type bridge --model virtio --source virbr0 --config --live
+virsh list --all | grep node | awk '{print $2}' | xargs -L1 -i virsh attach-interface --domain {} --type bridge --model virtio --source virbr0 --config --live
 ```
 
 ## Multi-cluster a la carte -- step-by-step if you please.

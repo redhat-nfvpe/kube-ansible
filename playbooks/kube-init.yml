@@ -58,6 +58,11 @@
       shell: >
         kubectl get pods --all-namespaces | grep -i apiserver | awk '{print $2}'
       register: apiserver_name
+      until: apiserver_name.stdout | search ("apiserver")
+      retries: 60
+      delay: 3
+      ignore_errors: yes
+
       when: customize_kube_config
     - name: Remove API server pod to restart it
       shell: >

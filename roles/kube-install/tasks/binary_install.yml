@@ -56,6 +56,17 @@
     - use_url: "{{ binary_kubectl_url }}"
       to_path: "/usr/bin/kubectl"
 
+- name: Set binary path perms
+  file:
+    path: "{{ item.path }}"
+    mode: 0755
+  with_items:
+    - path: /usr/bin/kubelet
+    - path: /usr/bin/kubectl
+    - path: /usr/bin/kubeadm
+  when: >
+    binary_kubelet_url is defined
+
 - name: Mark download complete
   file:
     path: "{{ kubectl_home }}/.kube-binary-download-complete"
