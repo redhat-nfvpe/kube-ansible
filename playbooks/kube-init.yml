@@ -43,13 +43,20 @@
   roles:
     - { role: kube-join-cluster }
 
-- hosts: master
+- hosts: master,nodes
   become: true
   become_user: root
   tasks: []
   roles:
     # - { role: kubectl-proxy-systemd }
     - { role: modified-kube-config, when: customize_kube_config }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    # - { role: kubectl-proxy-systemd }
     - { role: tmate }
 
 - hosts: master
