@@ -1,0 +1,15 @@
+---
+- import_playbook: ka-init/init.yml
+
+- hosts: master,nodes
+  roles:
+    - role: optional-packages
+      vars:
+        optional_packages:
+        - "@Development tools"
+        - libcap-ng
+        - openssl
+        - numactl-devel
+        - git
+    - { role: ansible-ovs-dpdk, ovs_version: 'v2.10.0', dpdk_version: 'v17.11' }
+    - { role: userspace-ovs-cni }

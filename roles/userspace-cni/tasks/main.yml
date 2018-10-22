@@ -104,27 +104,27 @@
 - name: Clone Userspace CNI Plugin repo
   git:
     repo: https://github.com/intel/userspace-cni-network-plugin.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    dest: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
     force: true
 
 - name: Build Userspace CNI plugin
   shell: >
-    export GOPATH={{ ansible_env.HOME }}/src/go; make
+    source /etc/profile.d/golang.sh; make
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
-    creates: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin/userspace/userspace"
+    chdir: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin/userspace/userspace"
 
 - name: Copy Userspace CNI plugin to CNI bin dir
   shell: >
     cp userspace/userspace /opt/cni/bin/userspace
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    chdir: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
     creates: "/opt/cni/bin/userspace"
 
 - name: Clone CNI repo
   git:
     repo: https://github.com/containernetworking/cni.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/containernetworking/cni"
+    dest: "{{ ansible_env.HOME }}/go/src/github.com/containernetworking/cni"
 
 - name: Make an alternate cni net.d dir
   file:

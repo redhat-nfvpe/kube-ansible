@@ -77,18 +77,18 @@
 
 - name: Copy admin.conf to kubectl user's home
   shell: >
-    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/.kube/admin.conf
+    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/.kube/config
   args:
-    creates: "{{ kubectl_home }}/admin.conf"
+    creates: "{{ kubectl_home }}/config"
 
 - name: Set admin.conf ownership
   file:
-    path: "{{ kubectl_home }}/.kube/admin.conf"
+    path: "{{ kubectl_home }}/.kube/config"
     owner: "{{ kubectl_user }}"
     group: "{{ kubectl_group }}"
 
-- name: Add KUBECONFIG env for admin.conf to .bashrc
+- name: Add KUBECONFIG env for config to .bashrc
   lineinfile:
     dest: "{{ kubectl_home }}/.bashrc"
     regexp: "KUBECONFIG"
-    line: "export KUBECONFIG={{ kubectl_home }}/.kube/admin.conf"
+    line: "export KUBECONFIG={{ kubectl_home }}/.kube/config"

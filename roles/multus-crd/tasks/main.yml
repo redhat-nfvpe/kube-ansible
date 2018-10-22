@@ -25,6 +25,15 @@
         dest: "macvlan.yml"
       - src: clusterrole.yml.j2
         dest: "clusterrole.yml"
+      - src: userspace-ovs.yml
+        dest: userspace-ovs.yml
+        when: enable_userspace_ovs_cni
+      - src: virt-crd.yaml
+        dest: virt-crd.yaml
+        when: enable_virt_network_device_plugin
+      - src: virt-ds.yaml
+        dest: virt-ds.yaml
+        when: enable_virt_network_device_plugin
 
 - name: Template multus resources
   template:
@@ -39,16 +48,22 @@
 
 - name: Create network namespace
   set_fact:
-    use_network_namespace: "network.{{ crd_namespace }}"
+    use_network_namespace: "network-attachment-definitions.{{ crd_namespace }}"
 
 - name: Create base CRD
   shell: >
     kubectl create -f {{ ansible_env.HOME }}/multus-resources/multus-crd.yml
   when: "use_network_namespace not in check_crd.stdout"
 
+#- name: Check to see which network CRD definitions are present
+#  k8s_raw:
+#    kind: NetworkAttachmentDefinition
+#    namespace: kube-system
+#  register: check_network_crds
+
 - name: Check to see which network CRD definitions are present
   shell: >
-    kubectl get network
+    kubectl get network-attachment-definitions
   register: check_network_crds
 
 - name: Create flannel network CRD
@@ -61,9 +76,24 @@
     kubectl create -f {{ ansible_env.HOME }}/multus-resources/macvlan.yml
   when: "'macvlan-conf' not in check_network_crds.stdout"
 
+- name: Create userspace ovs network CRD
+  shell: >
+    kubectl create -f {{ ansible_env.HOME }}/multus-resources/userspace-ovs.yml
+  when: "'userspace-ovs' not in check_network_crds.stdout and enable_userspace_ovs_cni"
+
+- name: Create virt-net network CRD
+  shell: >
+    kubectl create -f {{ ansible_env.HOME }}/multus-resources/virt-crd.yaml
+  when: "'virt-net' not in check_network_crds.stdout and enable_virt_network_device_plugin"
+
+#- name: Create virt-net daemonset
+#  shell: >
+#    kubectl create -f {{ ansible_env.HOME }}/multus-resources/virt-ds.yaml
+#  when: enable_virt_network_device_plugin
+
 - name: Check to see which CRDs are present, for validation
   shell: >
-    kubectl get network
+    kubectl get net-attach-def
   register: verify_network_crd
 
 - name: Verify which network CRD definitions are present

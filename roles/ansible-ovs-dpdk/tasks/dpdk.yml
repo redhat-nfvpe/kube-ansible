@@ -1,0 +1,15 @@
+---
+- name: Checkout patched DPDK 
+  git: >
+    repo={{ dpdk_repo }}
+    dest={{ dpdk_dir }}
+    version={{ dpdk_version | default("master") }}
+    update=no
+    force=yes
+  register: dpdk_changed
+- name: Check if DPDK build exists
+  stat: path={{ dpdk_build }}
+  register: dpdk_build_status
+- name: Build DPDK
+  command: make install T=x86_64-native-linuxapp-gcc chdir={{ dpdk_dir }}
+  when: (dpdk_build_status.stat.isdir is not defined) or (dpdk_rebuild is defined) or dpdk_changed.changed

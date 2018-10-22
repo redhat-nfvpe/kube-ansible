@@ -1,0 +1,9 @@
+---
+dpdk_dir: /usr/src/dpdk
+dpdk_build: '{{ dpdk_dir }}/x86_64-native-linuxapp-gcc'
+dpdk_repo: https://github.com/DPDK/dpdk
+
+ovs_dir: /usr/src/ovs
+ovs_repo: https://github.com/openvswitch/ovs.git
+
+nr_hugepages: 4

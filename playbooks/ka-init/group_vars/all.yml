@@ -18,12 +18,25 @@ crio_version: v1.0.0-rc1
 # - multus
 # - bridge
 # - kokonet-bridge
-pod_network_type: "flannel"
+pod_network_type: "multus"
 pod_network_cidr: "10.244.0.0"
 
 # General config
-https_proxy: ""
-http_proxy: ""
+# require empty dict by default
+proxy_env: {}
+
+## if proxies are needed set them in proxy_env dictionary
+# HTTP proxy full URL
+# !!!! NOTE ansible does not support https:// for https_proxy, only http://
+# Configure socks proxy if required for git:// protocol
+# If in proxy env, uncomment no_proxy as its used to make exceptions and specify,
+# which domains or IP addresses should be reached directly
+
+proxy_env:
+#  http_proxy: http://proxy.example.com:8080
+#  https_proxy: http://proxy.example.com:8080
+#  socks_proxy: http://proxy.example.com:1080
+#  no_proxy: "localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/12,192.168.122.0/24,.intel.com"
 
 # Sometimes, you gotta skip 'em, but, by default we try not to.
 skip_preflight_checks: false
@@ -41,29 +54,29 @@ kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 # You'd use "1.7.5-0" here, such as:
 # kube_version: 1.7.5-0
 # The default is... "latest"
-kube_version: "latest"
-kubeadm_version: ""
+kube_version: "1.11.3"
+kubeadm_version: "1.11.3"
 
 # Binary install
 # Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
-# binary_install: true
+# binary_install: false
 # binary_install_force_redownload: false
 # binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
 # binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
 # binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
 
 images_directory: /home/images
-system_default_ram_mb: 2048
+system_default_ram_mb: 8192
 system_default_cpus: 4
 virtual_machines:
   - name: kube-master
     node_type: master
   - name: kube-node-1
     node_type: nodes
-  - name: kube-node-2
-    node_type: nodes
-  - name: kube-node-3
-    node_type: nodes
+#  - name: kube-node-2
+#    node_type: nodes
+#  - name: kube-node-3
+#    node_type: nodes
 #  - name: builder
 #    node_type: builder
 #    system_ram_mb: 24576
@@ -139,7 +152,7 @@ ipv6_enabled: false
 # ----------------------------
 # device plugins
 # ----------------------------
-enable_device_plugins: false
+enable_device_plugins: true
 enable_compute_device: false
 attach_additional_virtio_device: false
 
@@ -147,8 +160,9 @@ attach_additional_virtio_device: false
 # userspace CNI
 # ----------------------------
 enable_userspace_cni: false
-enable_ehost_device_cni: false
-enable_virt_network_device_plugin: false
+enable_userspace_ovs_cni: true
+enable_ehost_device_cni: true
+enable_virt_network_device_plugin: true
 
 # ----------------------------
 # builder vars

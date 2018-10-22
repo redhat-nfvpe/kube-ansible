@@ -1,0 +1,4 @@
+---
+- include: hugepages.yml
+- include: dpdk.yml
+- include: ovs.yml
