@@ -1,0 +1,34 @@
+---
+# pod network type
+pod_network_type: "multus"
+
+# verified kube version
+kube_version: "1.11.3"
+kubeadm_version: "1.11.3"
+
+# more memory for 1GB hugepages
+system_default_ram_mb: 8192
+virtual_machines:
+  - name: kube-master
+    node_type: master
+  - name: kube-node-1
+    node_type: nodes
+
+# ----------------------------
+# device plugins
+# ----------------------------
+enable_device_plugins: true
+attach_additional_virtio_device: true
+
+# ----------------------------
+# userspace CNI
+# ----------------------------
+enable_userspace_ovs_cni: true
+enable_ehost_device_cni: true
+enable_virt_network_device_plugin: true
+
+# vm interface won't change
+multus_macvlan_master: 'eth0'
+
+# optional packages
+optional_packages: "@Development tools"

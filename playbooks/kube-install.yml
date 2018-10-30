@@ -23,7 +23,7 @@
         when: pod_network_type == 'bridge' or pod_network_type == 'kokonet-bridge' }
     - { role: kokonet-setup, when: pod_network_type == 'kokonet-bridge' }
     - { role: npwg-poc1-setup, when: pod_network_type == 'multus' and multus_npwg_demo }
-    - { role: optional-packages, optional_packages: "@Development tools" }
+    - { role: optional-packages }
     # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
     - { role: buildah-install, when: container_runtime == 'crio' }

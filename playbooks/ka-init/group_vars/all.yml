@@ -18,7 +18,7 @@ crio_version: v1.0.0-rc1
 # - multus
 # - bridge
 # - kokonet-bridge
-pod_network_type: "multus"
+pod_network_type: "flannel"
 pod_network_cidr: "10.244.0.0"
 
 # General config
@@ -54,8 +54,8 @@ kube_baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 # You'd use "1.7.5-0" here, such as:
 # kube_version: 1.7.5-0
 # The default is... "latest"
-kube_version: "1.11.3"
-kubeadm_version: "1.11.3"
+kube_version: "latest"
+kubeadm_version: ""
 
 # Binary install
 # Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
@@ -66,17 +66,17 @@ kubeadm_version: "1.11.3"
 # binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
 
 images_directory: /home/images
-system_default_ram_mb: 8192
+system_default_ram_mb: 2048
 system_default_cpus: 4
 virtual_machines:
   - name: kube-master
     node_type: master
   - name: kube-node-1
     node_type: nodes
-#  - name: kube-node-2
-#    node_type: nodes
-#  - name: kube-node-3
-#    node_type: nodes
+  - name: kube-node-2
+    node_type: nodes
+  - name: kube-node-3
+    node_type: nodes
 #  - name: builder
 #    node_type: builder
 #    system_ram_mb: 24576
@@ -152,7 +152,7 @@ ipv6_enabled: false
 # ----------------------------
 # device plugins
 # ----------------------------
-enable_device_plugins: true
+enable_device_plugins: false
 enable_compute_device: false
 attach_additional_virtio_device: false
 
@@ -160,9 +160,9 @@ attach_additional_virtio_device: false
 # userspace CNI
 # ----------------------------
 enable_userspace_cni: false
-enable_userspace_ovs_cni: true
-enable_ehost_device_cni: true
-enable_virt_network_device_plugin: true
+enable_userspace_ovs_cni: false
+enable_ehost_device_cni: false
+enable_virt_network_device_plugin: false
 
 # ----------------------------
 # builder vars
