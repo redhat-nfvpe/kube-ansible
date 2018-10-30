@@ -69,7 +69,7 @@
 - hosts: master
   tasks: []
   roles:
-    - { role: multus-crd, multus_macvlan_master: 'eth0', when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo and not skip_init"}
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo and not skip_init"}
 
 - hosts: nodes
   become: true
