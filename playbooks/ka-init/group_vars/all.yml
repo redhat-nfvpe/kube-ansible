@@ -32,7 +32,7 @@ proxy_env: {}
 # If in proxy env, uncomment no_proxy as its used to make exceptions and specify,
 # which domains or IP addresses should be reached directly
 
-proxy_env:
+#proxy_env:
 #  http_proxy: http://proxy.example.com:8080
 #  https_proxy: http://proxy.example.com:8080
 #  socks_proxy: http://proxy.example.com:1080
