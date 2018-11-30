@@ -1,15 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        label 'kube-ansible'
+    }
 
     stages {
-        stage('Build') {
+        stage('Setup') {
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                sh 'pwd'
+                sh 'ansible-galaxy install -r requirements.yml'
             }
         }
         stage('Deploy') {
