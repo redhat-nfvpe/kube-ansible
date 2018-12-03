@@ -2,7 +2,7 @@
 - src: https://github.com/gantsign/ansible-role-golang
   name: install-go
   version: master
-- src: https://github.com/pmossakx/ansible-role-docker
+- src: https://github.com/redhat-nfvpe/ansible-role-install-docker
   name: install-docker
   version: master
 - src: https://github.com/redhat-nfvpe/auto-kube-dev
