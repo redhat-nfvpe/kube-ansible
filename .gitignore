@@ -3,6 +3,7 @@
 # ignore inventory except for the example inventory (allow for override)
 inventory/*
 !inventory/examples/
+!inventory/ci/
 
 # ignore externally installed roles
 roles/install-go

@@ -1,0 +1,104 @@
+all:
+  hosts:
+    manager:
+      ansible_host: localhost
+      ansible_private_key_file: /home/jenkins/.ssh/id_rsa
+      ansible_user: jenkins
+  children:
+    engine:
+      hosts:
+        manager:
+      vars:
+        wait_for_ip: yes
+        vm_infra_wait_for_ip_retries: 20
+        vm_infra_wait_for_ip_delay: 10
+
+        engine_url: https://engine.management.61will.space/ovirt-engine/api
+
+        ka_master:
+          cluster: Default
+          domain: management.61will.space
+          template: centos7_template
+          storage_domain: hosted_storage
+          memory: 16GiB
+          cores: 2
+          state: "{{ vm_state }}"
+          ssh_key: "{{ vm_ssh_key }}"
+          nics:
+            - name: ovirtext
+              network: ovirtext
+              profile: ovirtext
+
+        ka_compute:
+          cluster: Default
+          domain: management.61will.space
+          template: centos7_template
+          storage_domain: hosted_storage
+          memory: 12GiB
+          cores: 1
+          state: "{{ vm_state }}"
+          ssh_key: "{{ vm_ssh_key }}"
+          nics:
+            - name: ovirtext
+              network: ovirtext
+              profile: ovirtext
+
+        vms:
+          - name: ka-master
+            tag: ka_master
+            profile: "{{ ka_master }}"
+            cloud_init_nics:
+              - name_name: eth0
+                nic_ip_address: 192.168.1.100
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.1.1
+                nic_on_boot: true
+              - nic_name: eth1
+                nic_ip_address: 192.168.3.100
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.3.1
+                nic_on_boot: true
+            cloud_init:
+              host_name: ka-master
+              dns_search: management.61will.space home.61will.space
+          - name: ka-compute-1
+            tag: ka_compute
+            profile: "{{ ka_compute }}"
+            cloud_init_nics:
+              - name_name: eth0
+                nic_ip_address: 192.168.1.101
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.1.1
+                nic_on_boot: true
+              - nic_name: eth1
+                nic_ip_address: 192.168.3.101
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.3.1
+                nic_on_boot: true
+            cloud_init:
+              host_name: ka-compute-1
+              dns_search: management.61will.space home.61will.space
+          - name: ka-compute-2
+            tag: ka_compute
+            profile: "{{ ka_compute }}"
+            cloud_init_nics:
+              - name_name: eth0
+                nic_ip_address: 192.168.1.102
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.1.1
+                nic_on_boot: true
+              - nic_name: eth1
+                nic_ip_address: 192.168.3.102
+                nic_boot_protocol: static
+                nic_netmask: 255.255.255.0
+                nic_gateway: 192.168.3.1
+                nic_on_boot: true
+            cloud_init:
+              host_name: ka-compute-2
+              dns_search: management.61will.space home.61will.space
+# vim: set tabstop=2 shiftwidth=2 smartindent expandtab :
