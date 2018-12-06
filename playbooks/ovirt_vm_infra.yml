@@ -1,0 +1,16 @@
+---
+- name: oVirt infra
+  hosts: engine
+  gather_facts: false
+
+  tasks:
+    - set_fact:
+        vm_ssh_key: "{{ lookup('env', 'VM_SSH_KEY') }}"
+        engine_user: "{{ lookup('env', 'ENGINE_CREDS_USR') }}"
+        engine_password: "{{ lookup('env', 'ENGINE_CREDS_PSW') }}"
+
+    - debug:
+        var: vm_ssh_key
+
+    - include_role:
+        name: oVirt.vm-infra
