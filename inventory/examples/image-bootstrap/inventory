@@ -1,0 +1,16 @@
+kube-nonet-master ansible_host=192.168.1.150
+virthost ansible_host=192.168.1.111 ansible_ssh_user=root
+
+[master]
+kube-nonet-master
+
+[virthost]
+virthost
+
+[virthost:vars]
+ansible_user=root
+
+[master:vars]
+ansible_user=centos
+ansible_ssh_private_key_file=/home/doug/.ssh/virthost/id_vm_rsa
+

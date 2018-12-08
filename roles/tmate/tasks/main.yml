@@ -1,0 +1,9 @@
+---
+
+- name: Copy up tmate shell script
+  copy:
+    src: tmate.sh
+    dest: /home/centos/.tmate.sh
+    mode: 0755
+    owner: centos
+    group: centos

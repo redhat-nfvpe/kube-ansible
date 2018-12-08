@@ -1,0 +1,150 @@
+---
+
+- name: "Add hugepages to sysctl.conf"
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: 'nr_hugepages'
+    line: vm.nr_hugepages = 1024
+  register: set_hugepage_sysctl
+
+# You can verify with `cat /proc/meminfo | grep Huge`
+
+- name: Reload sysctl
+  shell: >
+    sysctl -p
+  when: set_hugepage_sysctl.changed
+
+# VPP installation
+# sudo yum install centos-release-fdio
+# sudo yum install vpp*
+
+- name: Install jq binary
+  get_url:
+    url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+    dest: /usr/bin/jq
+
+- name: set jq binary permission
+  file:
+    path: /usr/bin/jq
+    mode: 0755
+
+# Moving from CentOS NFV SIG repo to Nexus repo.
+
+# cat /etc/yum.repos.d/fdio-release.repo 
+# [fdio-release]
+# name=fd.io release branch latest merge
+# baseurl=https://nexus.fd.io/content/repositories/fd.io.centos7/
+# enabled=1
+# gpgcheck=0
+
+# sudo yum install vpp-18.07-release.x86_64 \
+# vpp-lib-18.07-release.x86_64 \
+# vpp-plugins-18.07-release.x86_64 \
+# vpp-devel-18.07-release.x86_64 \
+# vpp-api-python-18.07-release.x86_64 \
+# vpp-api-lua-18.07-release.x86_64 \
+# vpp-api-java-18.07-release.x86_64 \
+# vpp-selinux-policy-18.07-release.x86_64
+
+# Dockerhub has been update with (both tags point to same image):
+#    bmcfall/vpp-centos-userspace-cni:0.3.0
+#    bmcfall/vpp-centos-userspace-cni:latest
+
+
+# FYI: On my server, I am almost out of hugepages, so you are at your limit. If you need more VMs, may need to reduce the number of hugepages given to each VM (like from 4K to 2K).
+# $ cat /proc/meminfo | grep -i huge
+# AnonHugePages:     79872 kB
+# HugePages_Total:   32768
+# HugePages_Free:     3991
+# :
+
+# Billy
+
+- name: Add multiple repositories into the same file (1/2)
+  yum_repository:
+    name: fdio-release
+    description: "fd.io repo"
+    baseurl: https://nexus.fd.io/content/repositories/fd.io.centos7/
+    gpgcheck: no
+
+- name: Install VPP repo
+  yum:
+    name: "centos-release-fdio"
+    state: latest
+
+# How do I install the proper VPP version?
+- name: Install VPP
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - vpp-18.07-release
+    - vpp-lib-18.07-release
+    - vpp-plugins-18.07-release
+    - vpp-devel-18.07-release
+    - vpp-api-python-18.07-release
+    - vpp-api-lua-18.07-release
+    - vpp-api-java-18.07-release
+    - vpp-selinux-policy-18.07-release
+
+
+- name: Start & Enable VPP
+  service:
+    name: "vpp"
+    state: started
+    enabled: yes
+
+- name: Ensure git is installed
+  yum:
+    name: git
+    state: present
+
+# CHANGE THIS URL and paths.
+# ...and in the docs.
+- name: Clone Userspace CNI Plugin repo
+  git:
+    repo: https://github.com/intel/userspace-cni-network-plugin.git
+    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    force: true
+
+- name: Build Userspace CNI plugin
+  shell: >
+    export GOPATH={{ ansible_env.HOME }}/src/go; make
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin/userspace/userspace"
+
+- name: Copy Userspace CNI plugin to CNI bin dir
+  shell: >
+    cp userspace/userspace /opt/cni/bin/userspace
+  args:
+    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "/opt/cni/bin/userspace"
+
+- name: Clone CNI repo
+  git:
+    repo: https://github.com/containernetworking/cni.git
+    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/containernetworking/cni"
+
+- name: Make an alternate cni net.d dir
+  file:
+    path: /etc/alternate.net.d/
+    state: directory
+
+- name: Template userspace CNI config
+  template:
+    src: 90-userspace.conf.j2
+    dest: /etc/alternate.net.d/90-userspace.conf 
+
+# manually... to run the demo.
+# $ docker pull bmcfall/vpp-centos-userspace-cni:0.2.0
+# $ cp userspace/userspace /opt/cni/bin/
+# $ sed -i -e 's|vpp-centos-userspace-cni|bmcfall/vpp-centos-userspace-cni:0.2.0|' scripts/vpp-docker-run.sh 
+# $ export CNI_PATH=/opt/cni/bin; export NETCONFPATH=/etc/alternate.net.d/; export GOPATH=/root/src/go/; ./scripts/vpp-docker-run.sh -it --privileged docker.io/bmcfall/vpp-centos-userspace-cni:0.2.0
+# ------ in container
+# vppctl show interface
+# vppctl show mode
+# vppctl show memif
+# create two of 'em and do:
+# vppctl ping 192.168.210.2   
+

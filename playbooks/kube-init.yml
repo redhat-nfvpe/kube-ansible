@@ -1,0 +1,77 @@
+---
+- import_playbook: ka-init/init.yml
+- import_playbook: ka-lab-ipv6/ipv6-lab.yml
+  when: ipv6_enabled
+
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks:
+    - name: Set bridge-nf-call-iptables to 1 (yes, this is redundant, earlier steps may not have been sticky)
+      shell: >
+        echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+      ignore_errors: true
+
+- hosts: master
+  become: true
+  become_user: root
+  # pre_tasks:
+  #   - debug:
+  #       msg: "Skip init? {{ skip_init }}"
+  roles:
+    - { role: kube-init }
+    # - { role: kube-template-cni }
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: kube-cni }
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo and not skip_init"}
+
+- hosts: nodes
+  become: true
+  become_user: root
+  pre_tasks:
+    - name: Get kubeadm_join_command from master
+      set_fact:
+        kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
+  tasks: []
+  roles:
+    - { role: kube-join-cluster }
+
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    # - { role: kubectl-proxy-systemd }
+    - { role: modified-kube-config, when: customize_kube_config }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    # - { role: kubectl-proxy-systemd }
+    - { role: tmate }
+
+- hosts: master
+  tasks:
+    - name: Get API server pod name
+      shell: >
+        kubectl get pods --all-namespaces | grep -i apiserver | awk '{print $2}'
+      register: apiserver_name
+      until: apiserver_name.stdout | search ("apiserver")
+      retries: 60
+      delay: 3
+      ignore_errors: yes
+
+      when: customize_kube_config
+    - name: Remove API server pod to restart it
+      shell: >
+        kubectl delete pod {{ apiserver_name.stdout }} --namespace=kube-system
+      when: customize_kube_config

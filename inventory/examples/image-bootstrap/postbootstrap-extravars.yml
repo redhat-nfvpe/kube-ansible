@@ -1,0 +1,21 @@
+---
+# --------------------------------------------
+hugepages_enabled: true
+image_destination_name: bootstrapped.qcow2
+pod_network_type: "none"
+bridge_networking: true
+bridge_name: br0
+bridge_physical_nic: "enp1s0f1"
+bridge_network_name: "br0"
+bridge_network_cidr: 192.168.1.0/24
+virtual_machines:
+  - name: kube-master
+    node_type: master
+    system_ram_mb: 4096
+  - name: kube-node-1
+    node_type: nodes
+    system_ram_mb: 4096
+  - name: kube-node-2
+    node_type: nodes
+    system_ram_mb: 4096
+enable_userspace_cni: true

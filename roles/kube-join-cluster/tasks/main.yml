@@ -17,10 +17,16 @@
   register: modified_command
   when: container_runtime == "crio"  or skip_preflight_checks
 
+- name: Change the join command when ignoring preflight version
+  shell: >
+    echo {{ kubeadm_join_command }} | sed -e 's/join/join --ignore-preflight-errors=KubernetesVersion,KubeletVersion /'
+  register: modified_command
+  when: ignore_preflight_version
+
 - name: Change the kubeadm_join_command fact when crio
   set_fact:
     kubeadm_join_command: "{{ modified_command.stdout }}"
-  when: container_runtime == "crio"  or skip_preflight_checks
+  when: container_runtime == "crio"  or skip_preflight_checks or ignore_preflight_version
 
 - name: Join each node to the master with the join command
   shell: >

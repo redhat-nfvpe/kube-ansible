@@ -1,0 +1,21 @@
+---
+
+- name: Remove NodeRestriction from api server
+  lineinfile:
+    path: /etc/kubernetes/manifests/kube-apiserver.yaml
+    regexp: NodeRestriction
+    state: absent
+
+- name: Add ComputeDevice featureGates to kubelet config
+  blockinfile:
+    path: /var/lib/kubelet/config.yaml
+    block: |
+        featureGates:
+          ComputeDevice: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    insertbefore: cgroupDriver
+
+- name: Restart the kubelet
+  service:
+    name: kubelet
+    state: restarted
