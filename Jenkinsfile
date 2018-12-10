@@ -12,6 +12,7 @@ pipeline {
         stage('Environment setup and prerequisites') {
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                sh 'yum install ansible python2-ovirt-engine-sdk.noarch -y'
                 sh 'ansible-galaxy install -r requirements.yml'
             }
         }
