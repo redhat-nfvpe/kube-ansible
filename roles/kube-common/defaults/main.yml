@@ -46,9 +46,6 @@ kube_version: "latest"
 # Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
 # binary_install: true
 # binary_install_force_redownload: false
-# binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
-# binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
-# binary_kubelet_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubelet
 
 images_directory: /home/images
 system_default_ram_mb: 2048
@@ -124,9 +121,6 @@ bridge_name: virbr0
 bridge_physical_nic: "enp1s0f1"
 bridge_network_name: "br0"
 bridge_network_cidr: 192.168.1.0/24
-
-ipv6_enabled: false
-
 
 # ----------------------------
 # builder vars
