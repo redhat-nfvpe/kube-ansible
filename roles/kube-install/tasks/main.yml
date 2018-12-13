@@ -93,34 +93,6 @@
     fi
   when: ipv6_enabled
 
-- name: Download and install kokonet-cni binary
-  block:
-    - name: Get the latest version
-      shell: >
-        curl -ILs -o /dev/null -w %{url_effective} https://bintray.com/s1061123/generic/kokonet/_latestVersion  | sed -e 's/^.*kokonet\/snapshot-\(.*\)/\1/'
-      register: kokonet_cni_latest_ver
-
-    - name: Download the latest binary
-      get_url:
-        url: https://dl.bintray.com/s1061123/generic/kokonet-cni_linux_amd64-{{kokonet_cni_latest_ver.stdout}}.tar.gz
-        dest: /home/centos/koknet-cni_linux_amd64.tgz
-
-    - name: Extract kokonet-cni plugin
-      unarchive:
-        src: /home/centos/koknet-cni_linux_amd64.tgz
-        dest: /home/centos
-        remote_src: yes
-
-    - name: Put kokonet-cni plugin
-      become: true
-      become_user: root
-      copy:
-        src: /home/centos/kokonet-cni_linux_amd64/kokonet-cni
-        dest: /opt/cni/bin
-        remote_src: yes
-        mode: 0755
-  when: pod_network_type == 'kokonet-bridge'
-
 - name: Optionally include playbook for binary install
   include: binary_install.yml
   when: binary_install

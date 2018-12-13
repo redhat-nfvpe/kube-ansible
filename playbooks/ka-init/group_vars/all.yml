@@ -17,7 +17,6 @@ crio_version: v1.11.1
 # - none
 # - multus
 # - bridge
-# - kokonet-bridge
 pod_network_type: "flannel"
 pod_network_cidr: "10.244.0.0"
 
