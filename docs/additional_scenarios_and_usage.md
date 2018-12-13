@@ -4,12 +4,6 @@ In addition to setting up a basic vanilla Kubernetes environment, Kucean
 supports some additional overrides and technology changes, including deployment
 of a specific version or binary of Kubernetes, or using CRI-O as a backend.
 
-## IPv6 Laboratory
-
-Using the `ipv6_enabled` variable set to true, you can set up a lab for testing
-IPv6. For more detailed instructions, visit the
-[IPv6 documentation contained in this repository](ipv6.md).
-
 ## Setting a specific version
 
 You may optionally set the `kube_version` variable to install a specific

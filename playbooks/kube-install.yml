@@ -1,7 +1,5 @@
 ---
 - import_playbook: ka-init/init.yml
-- import_playbook: ka-lab-ipv6/ipv6-lab.yml
-  when: ipv6_enabled
 
 - hosts: master,nodes
   become: true
