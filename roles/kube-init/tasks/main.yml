@@ -5,9 +5,38 @@
 #    reset       Run this to revert any changes made to this host by 'kubeadm init' or 'kubeadm join'.
 
 - name: create kubeadm config file
-  template:
-    src: kubeadm.cfg.j2
-    dest: /root/kubeadm.cfg
+  block:
+    - name: Install jq binary
+      get_url:
+        url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+        dest: /usr/bin/jq
+
+    - name: set jq binary permission
+      file:
+        path: /usr/bin/jq
+        mode: 0755
+
+    - name: check kubeadm version (major)
+      shell: >
+        kubeadm version -o json | jq -r .clientVersion.major
+      register: kubeadm_version_major
+
+    - name: check kubeadm version (minor)
+      shell: >
+        kubeadm version -o json | jq -r .clientVersion.minor
+      register: kubeadm_version_minor
+
+    - name: create kubeadm config file (<= 1.12)
+      template:
+        src: kubeadm.cfg.v1alpha.j2
+        dest: /root/kubeadm.cfg
+      when: kubeadm_version_minor.stdout|int <= 12
+
+    - name: create kubeadm config file (>= 1.13)
+      template:
+        src: kubeadm.cfg.v1beta.j2
+        dest: /root/kubeadm.cfg
+      when: kubeadm_version_minor.stdout|int >= 13
 
 - name: Default cri-o flags to empty
   set_fact:
