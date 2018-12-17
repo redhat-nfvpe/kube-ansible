@@ -43,7 +43,7 @@
 - hosts: master
   tasks: []
   roles:
-    - { role: kube-cni }
+    - { role: kube-cni, when : "pod_network_type != 'none'"}
     - { role: kube-niceties }
 
 
