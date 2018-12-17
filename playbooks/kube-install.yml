@@ -8,9 +8,6 @@
   become_user: root
   tasks: []
   roles:
-    - { role: bridge-setup,
-        when: pod_network_type == 'bridge' or pod_network_type == 'kokonet-bridge' }
-    - { role: kokonet-setup, when: pod_network_type == 'kokonet-bridge' }
     - { role: npwg-poc1-setup, when: pod_network_type == 'multus' and multus_npwg_demo }
     - { role: optional-packages }
     - { role: install-go, when: container_runtime == 'crio' }
@@ -20,9 +17,6 @@
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
-
-- import_playbook: ka-lab-kokonet/kokonet-lab.yml
-  when: pod_network_type == 'kokonet-bridge'
 
 - hosts: master,nodes
   become: true
