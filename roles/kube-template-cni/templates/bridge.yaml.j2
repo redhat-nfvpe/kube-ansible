@@ -16,17 +16,30 @@ metadata:
 data:
   cni-conf.json: |
     {
-      "name": "bridge0",
-      "type": "bridge",
-      "bridge": "cni0",
-      "hairpinMode": true,
-      "ipam": {
-        "type": "dhcp",
-        "routes": [ { "dst": "0.0.0.0/0" } ]
-      },
-      "dns": {
-        "nameservers": [ "192.168.122.1" ]
-      }
+      "cniVersion": "0.3.1",
+      "name": "bridge0-conflist",
+      "plugins": [
+        {
+          "name": "bridge0",
+          "type": "bridge",
+          "bridge": "cni0",
+          "hairpinMode": true,
+          "ipam": {
+            "type": "dhcp",
+            "routes": [ { "dst": "0.0.0.0/0" } ]
+          },
+          "dns": {
+            "nameservers": [ "192.168.122.1" ]
+          }
+        },
+        {
+          "capabilities": {
+            "portMappings": true
+          },
+          "externalSetMarkChain": "KUBE-MARK-MASQ",
+          "type": "portmap"
+        }
+      ]
     }
 ---
 apiVersion: extensions/v1beta1
@@ -48,13 +61,13 @@ spec:
       # nodeSelector:
       #  beta.kubernetes.io/arch: amd64
       tolerations:
-      - key: node-role.kubernetes.io/master
+      - operator: Exists
         effect: NoSchedule
       serviceAccountName: bridge
       containers:
       - name: install-cni
         image: alpine:3.6
-        command: [ "/bin/sh", "-c", "set -e -x; cp -f /etc/kube-bridge/cni-conf.json /etc/cni/net.d/10-bridge.conf; while true; do sleep 3600; done" ]
+        command: [ "/bin/sh", "-c", "set -e -x; cp -f /etc/kube-bridge/cni-conf.json /etc/cni/net.d/10-bridge.conflist; while true; do sleep 3600; done" ]
         volumeMounts:
         - name: cni
           mountPath: /etc/cni/net.d
