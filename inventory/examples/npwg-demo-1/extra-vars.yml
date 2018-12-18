@@ -2,4 +2,4 @@
 pod_network_type: "multus"
 multus_use_crd: true
 multus_npwg_demo: true
-multus_version: "dev/network-plumbing-working-group-crd-change" 
+multus_version: "master"
