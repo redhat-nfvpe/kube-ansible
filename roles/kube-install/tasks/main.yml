@@ -86,6 +86,11 @@
   include: kube-16-workaround.yml
   when: kube_16_workaround
 
+- name: Create /etc/cni/net.d
+  file:
+    path: /etc/cni/net.d
+    state: directory
+
 - name: make sure kubelet is started and enabled
   service:
     name: "kubelet"

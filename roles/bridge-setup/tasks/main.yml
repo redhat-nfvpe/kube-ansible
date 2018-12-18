@@ -14,9 +14,7 @@
 - name: Accept bridge forwarding and accept packets
   shell: >
     firewall-cmd --permanent --direct --passthrough ipv4 -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT;
-    firewall-cmd --direct --passthrough ipv4 -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT;
-    firewall-cmd --permanent --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited;
-    firewall-cmd --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited
+    firewall-cmd --permanent --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited
 
 - name: Enable IPv4 Forwarding
   sysctl:
