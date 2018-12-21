@@ -9,10 +9,9 @@
     - { role: npwg-poc1-setup, when: pod_network_type == 'multus' and multus_npwg_demo }
     - { role: bridge-setup, when: pod_network_type == 'bridge' }
     - { role: optional-packages }
-    - { role: install-go, when: container_runtime == 'crio' }
     # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
-    - { role: buildah-install, when: container_runtime == 'crio' }
+    - { role: buildah-install, when: buildah_install|bool }
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }

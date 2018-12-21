@@ -23,3 +23,9 @@ apiVersion: kubeadm.k8s.io/v1beta1
 nodeRegistration:
   criSocket: /var/run/crio/crio.sock
 {% endif %}
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+{% if container_runtime == "crio" %}
+cgroupDriver: systemd
+{% endif %}
