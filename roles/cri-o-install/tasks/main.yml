@@ -12,8 +12,14 @@
   register: crio_semaphor
 
 - name: Include the crio install plays
-  include: install.yml
-  when: crio_semaphor.stat.exists == False
+  block:
+    - name: Get package and install crio
+      include: pkg_install.yml
+      when: not crio_build_install|bool
+    - name: Build and install crio
+      include: build_install.yml
+      when: crio_build_install|bool
+  when: not crio_semaphor.stat.exists
 
 - name: Set .crio-installed semaphor file
   file:

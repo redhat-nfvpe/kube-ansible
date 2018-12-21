@@ -54,11 +54,14 @@ It's recommended you spin up the machines with 4 gigs of ram or greater during
 the VM creation phase, should you use it. One may wish to add the parameters
 `-e "system_default_ram_mb=4096"` to your playbook run of `virthost-setup.yml`.
 
+Set `crio_build_install=True' if you download and build crio from git repo.
+You may also need to set `crio_build_version` to match kubernetes version. See [Compatibility matrix](https://github.com/kubernetes-sigs/cri-o#compatibility-matrix-cri-o---kubernetes-clusters) for the detail.
+
 ## Using Fedora
 
 Use of Fedora is currently suggested should you require the use of Buildah.
 Buildah requires functionality in later Linux kernels that are unavailable in
-recent versions of CentOS.
+recent versions of CentOS. Set `buildah_install=True` to build/install Buildah.
 
 Take a gander at the `./inventory/examples/crio/crio.inventory` for an example
 of how to override the proper variables to use Fedora.

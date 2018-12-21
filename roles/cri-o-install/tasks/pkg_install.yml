@@ -1,0 +1,55 @@
+---
+# Some (lots!) borrowed from https://github.com/cri-o/cri-o-ansible
+
+- name: Add CRI-O repo
+  yum_repository:
+    name: crio
+    description: cri-o container runtime repo
+    baseurl: "{{ crio_baseurl }}"
+    gpgcheck: no
+
+- name: Install CRI-O
+  yum:
+    name: cri-o
+    state: present
+    disable_gpg_check: yes
+
+- name: enable and start CRI-O
+  systemd:
+    name: crio
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: modprobe br_netfilter
+  command: "modprobe br_netfilter"
+  ignore_errors: true
+
+# TODO: see if we can switch to the 'sysctl' module here
+- name: tune sysctl
+  lineinfile:
+    line: "net/bridge/bridge-nf-call-iptables = 1"
+    dest: /etc/sysctl.conf
+    insertafter: 'EOF'
+    regexp: '\/net\/bridge\/bridge-nf-call-iptables = 1'
+    state: present
+  ignore_errors: true
+
+- name: reload sysctl
+  command: "sysctl -p"
+  ignore_errors: true
+
+- name: Make directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+       - /etc/systemd/system/kubelet.service.d/
+
+- name: systemd dropin for kubeadm
+  shell: |
+          sh -c 'echo "[Service]
+          Environment=\"KUBELET_EXTRA_ARGS=--cgroup-driver=systemd --container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+
+- name: flush iptables
+  command: "iptables -F"
