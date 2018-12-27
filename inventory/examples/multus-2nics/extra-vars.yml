@@ -1,0 +1,6 @@
+# Note:
+# You need to set -e 'network_type=multus-2nics' in case of playbooks/virthost-setup.yml
+# to create 2nic environment.
+---
+pod_network_type: "multus-2nics"
+multus_version: "master"

@@ -23,9 +23,3 @@ virtual_machines:
 optional_packages:
   - tcpdump
   - bind-utils
-multus_use_crd: true
-multus_ipam_subnet: "192.168.1.0/24"
-multus_ipam_rangeStart: "192.168.1.200"
-multus_ipam_rangeEnd: "192.168.1.216"
-multus_ipam_gateway: "192.168.1.1"
-multus_macvlan_master: "eth0"
