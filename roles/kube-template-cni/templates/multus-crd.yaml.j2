@@ -19,25 +19,19 @@ data:
       "name": "multus-cni-network",
       "type": "multus",
       "delegates": [
-      {% if multus_npwg_demo %}
         {
           "type": "flannel",
           "name": "flannel.1",
           "delegate": {
+      {% if pod_network_type == "multus-2nics" %}
             "bridge": "kbr0",
-            "isDefaultGateway": true
-          }
-        }
-      {% else %}
-        {
-          "type": "flannel",
-          "name": "flannel.1",
-          "delegate": {
-            "isDefaultGateway": true
-          }
-        }
       {% endif %}
+            "isDefaultGateway": true
+          }
+        }
       ],
+      "logFile": "/var/log/multus.log",
+      "logLevel": "debug",
       "kubeconfig": "/etc/kubernetes/kubelet.conf"
     }
   net-conf.json: |
@@ -67,8 +61,7 @@ spec:
       nodeSelector:
         beta.kubernetes.io/arch: amd64
       tolerations:
-      - key: node-role.kubernetes.io/master
-        operator: Exists
+      - operator: Exists
         effect: NoSchedule
       serviceAccountName: flannel
       initContainers:

@@ -1,16 +1,10 @@
 ---
 
-- name: Template multus.yaml
-  template:
-    src: multus.yaml.j2
-    dest: /etc/multus.yaml
-  when: not multus_use_crd
-
 - name: Template CRD flavored multus.yaml
   template:
     src: multus-crd.yaml.j2
     dest: /etc/multus-crd.yaml
-  when: multus_use_crd
+  when: pod_network_type == 'multus' or pod_network_type == 'multus-2nics'
 
 - name: Template flannel.yaml
   template:

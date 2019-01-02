@@ -1,5 +1,0 @@
----
-pod_network_type: "multus"
-multus_use_crd: true
-multus_npwg_demo: true
-multus_version: "master"

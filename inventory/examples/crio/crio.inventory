@@ -1,3 +1,4 @@
+# This file is used for build/install crio, with crio_build_install
 kube-master ansible_host=master.example.local
 kube-node-1 ansible_host=node.example.local
 vmhost ansible_host=virt-host.example.local ansible_ssh_user=root
@@ -25,6 +26,7 @@ kubectl_home=/home/fedora
 kubectl_user=fedora
 kubectl_group=fedora
 # Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
+# crio_build_install=true
 # container_runtime=crio
 
 [nodes:vars]
@@ -35,6 +37,7 @@ kubectl_home=/home/fedora
 kubectl_user=fedora
 kubectl_group=fedora
 # Using CRI-O (you must set this as an extra var, e.g. `-e "container_runtime=crio"`)
+# crio_build_install=true
 # container_runtime=crio
 
 # Need to set crio_versions for installed kubernetes version, see following URL for details.

@@ -15,7 +15,7 @@
 
 - name: Compile cni-plugins
   shell: >
-    ./build.sh
+    ./build_linux.sh
   args:
     chdir: /usr/src/cni-plugins
   when: cni_clone.changed
@@ -35,16 +35,21 @@
     chdir: /usr/src/multus-cni
   when: multus_clone.changed or force_multus_rebuild is defined
 
+- name: Install required packages for sriov-cni
+  shell: >
+    go get github.com/Masterminds/glide && \
+    go install github.com/Masterminds/glide
+
 - name: Clone sriov-cni
   git:
-    repo: https://github.com/Intel-Corp/sriov-cni.git
+    repo: https://github.com/intel/sriov-cni.git
     dest: /usr/src/sriov-cni
     version: master
   register: sriov_clone
 
 - name: Compile sriov-cni
   shell: >
-    ./build
+    PATH=${PATH}:${GOPATH}/bin make
   args:
     chdir: /usr/src/sriov-cni
   when: sriov_clone.changed

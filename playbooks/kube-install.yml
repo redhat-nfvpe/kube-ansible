@@ -6,7 +6,7 @@
   become_user: root
   tasks: []
   roles:
-    - { role: npwg-poc1-setup, when: pod_network_type == 'multus' and multus_npwg_demo }
+    - { role: multus-2nics-setup, when: pod_network_type == 'multus-2nics' }
     - { role: bridge-setup, when: pod_network_type == 'bridge' }
     - { role: optional-packages }
     # You can add "crio_force: true" if you need to run the builds again.
@@ -14,7 +14,7 @@
     - { role: buildah-install, when: buildah_install|bool }
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
-    - { role: multus-cni, when: pod_network_type == "multus" }
+    - { role: multus-cni, when: multus_build|bool }
 
 - hosts: master,nodes
   become: true
@@ -41,14 +41,8 @@
 - hosts: master
   tasks: []
   roles:
-    - { role: kube-cni, when : "pod_network_type != 'none'"}
+    - { role: kube-cni, when : "pod_network_type != 'none'" }
     - { role: kube-niceties }
-
-
-- hosts: master
-  tasks: []
-  roles:
-    - { role: multus-crd, when: "pod_network_type == 'multus' and multus_use_crd and not multus_npwg_demo"}
 
 - hosts: nodes
   become: true

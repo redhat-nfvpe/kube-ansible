@@ -26,7 +26,8 @@
     kubectl create -f /etc/flannel-rbac.yaml
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "flannel" or pod_network_type == "multus"
+  when: >
+    pod_network_type == "flannel"
 
 - name: Apply the flannel podnetwork
   shell: >
@@ -45,19 +46,26 @@
   when: pod_network_type == "weave"
 
 # ----------- multus
-- name: Apply the multus podnetwork
+- name: Apply the multus podnetwork from github
   shell: >
-    kubectl apply -f /etc/multus.yaml > /tmp/podnetwork-apply.log
+    kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/master/images/flannel-daemonset.yml > /tmp/podnetwork-apply.log && \
+    kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/master/images/multus-daemonset.yml >> /tmp/podnetwork-apply.log
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "multus" and not multus_use_crd
+  when: 
+    - pod_network_type == "multus" or pod_network_type == "multus-2nics"
+    - not (multus_build|bool)
 
-- name: Apply the multus podnetwork (CRD style)
+# ----------- multus
+- name: Apply the multus podnetwork from local
   shell: >
-    kubectl apply -f /etc/multus-crd.yaml > /tmp/podnetwork-apply.log
+    kubectl create -f /etc/flannel-rbac.yaml > /tmp/podnetwork-apply.log && \
+    kubectl apply -f /etc/multus-crd.yaml >> /tmp/podnetwork-apply.log
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
-  when: pod_network_type == "multus" and multus_use_crd
+  when:
+    - pod_network_type == "multus" or pod_network_type == "multus-2nics"
+    - multus_build|bool
 
 
 # ----------- calico
