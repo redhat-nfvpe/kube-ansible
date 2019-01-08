@@ -22,7 +22,7 @@ pipeline {
             }
         }
 
-        state('Install Kubernetes') {
+        stage('Install Kubernetes') {
             steps {
                 sh "mkdir -p .ssh && chmod 0700 .ssh"
                 configFileProvider([configFile(fileId: 'kube-ansible-ssh-privkey', targetLocation: '.ssh/id_rsa')]) {}
