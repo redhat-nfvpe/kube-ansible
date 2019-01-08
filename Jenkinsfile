@@ -18,13 +18,13 @@ pipeline {
 
         stage('Build virtual machines') {
             steps {
-                sh "ansible-playbook -i inventory/ci/virthost2.home.61will.space/engine.yml playbooks/ovirt_vm_infra.yml -e 'vm_state=running'"
+                sh "ansible-playbook -c local -i inventory/ci/virthost2.home.61will.space/engine.yml playbooks/ovirt_vm_infra.yml -e 'vm_state=running'"
             }
         }
     }
     post {
         always {
-            sh "ansible-playbook -i inventory/ci/virthost2.home.61will.space/engine.yml playbooks/ovirt_vm_infra.yml -e 'vm_state=absent'"
+            sh "ansible-playbook -c local -i inventory/ci/virthost2.home.61will.space/engine.yml playbooks/ovirt_vm_infra.yml -e 'vm_state=absent'"
         }
     }
 }
