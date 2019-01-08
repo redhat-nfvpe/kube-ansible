@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'kube-ansible'
+        label 'jenkins-agent-ansible-274-centos7'
     }
 
     environment {
