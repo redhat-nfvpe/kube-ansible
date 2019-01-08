@@ -11,7 +11,7 @@ all:
       vars:
         wait_for_ip: yes
         vm_infra_wait_for_ip_retries: 20
-        vm_infra_wait_for_ip_delay: 10
+        vm_infra_wait_for_ip_delay: 30
 
         engine_url: https://engine.management.61will.space/ovirt-engine/api
 

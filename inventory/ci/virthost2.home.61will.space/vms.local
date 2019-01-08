@@ -1,0 +1,15 @@
+kube-master ansible_host=ka-master.management.61will.space
+kube-node-1 ansible_host=ka-compute-1.management.61will.space
+kube-node-2 ansible_host=ka-compute-2.management.61will.space
+
+[master]
+kube-master
+
+[nodes]
+kube-node-1
+kube-node-2
+
+[all:vars]
+ansible_user=root
+ansible_ssh_private_key_file=.ssh/id_rsa
+
