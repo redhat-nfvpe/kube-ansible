@@ -21,6 +21,15 @@ pipeline {
                 sh "ansible-playbook -c local -i inventory/ci/virthost2.home.61will.space/engine.yml playbooks/ovirt_vm_infra.yml -e 'vm_state=running'"
             }
         }
+
+        state('Install Kubernetes') {
+            steps {
+                sh "mkdir -p .ssh && chmod 0700 .ssh"
+                configFileProvider([configFile(fileId: 'kube-ansible-ssh-privkey', targetLocation: '.ssh/id_rsa')]) {}
+                sh "chmod 0400 .ssh/id_rsa"
+                sh "ansible-playbook -i inventory/ci/virthost2.home.61will.space/vms.local playbooks/kube-install.yml"
+            }
+        }
     }
     post {
         always {
