@@ -1,0 +1,15 @@
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: userspace-ovs
+spec:
+  config: '{
+    "cniVersion": "0.3.0",
+    "type": "userspace",
+    "LogLevel": "debug",
+    "LogFile": "/var/log/userspace.log",
+    "host": {
+      "engine": "ovs-dpdk",
+      "iftype": "vhostuser"
+    }
+  }'

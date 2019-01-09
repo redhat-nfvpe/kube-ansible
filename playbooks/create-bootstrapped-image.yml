@@ -82,6 +82,7 @@
     - name: Gen an ssh key
       shell: >
         ssh-keygen -b 2048 -t rsa -f /home/centos/.ssh/id_rsa -q -N ""
+      creates: /home/centos/.ssh/id_rsa
 
     - name: Clone virt-network-device-plugin locally
       git:
@@ -110,9 +111,9 @@
 
     - name: Jimmy in the custom api server image
       shell: >
-        docker tag k8s.gcr.io/kube-apiserver-amd64:v1.11.2 k8s.gcr.io/kube-apiserver-amd64:orig.v1.11.2;
-        docker rmi k8s.gcr.io/kube-apiserver-amd64:v1.11.2;
-        docker tag docker.io/nfvpe/kube-api-server-amd64:deviceid k8s.gcr.io/kube-apiserver-amd64:v1.11.2
+        docker tag k8s.gcr.io/kube-apiserver-amd64:{{ kubeadm_version }} k8s.gcr.io/kube-apiserver-amd64:orig.{{ kubeadm_version }};
+        docker rmi k8s.gcr.io/kube-apiserver-amd64:{{ kubeadm_version }};
+        docker tag docker.io/nfvpe/kube-api-server-amd64:deviceid k8s.gcr.io/kube-apiserver-amd64:{{ kubeadm_version }}
 
     - name: Re-install cloud-init goodies
       yum:

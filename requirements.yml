@@ -1,5 +1,5 @@
 ---
-- src: https://github.com/redhat-nfvpe/ansible-role-install-go
+- src: https://github.com/gantsign/ansible-role-golang
   name: install-go
   version: master
 - src: https://github.com/redhat-nfvpe/ansible-role-install-docker

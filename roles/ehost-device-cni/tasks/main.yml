@@ -8,18 +8,18 @@
 - name: Clone ehost-device-cni Plugin repo
   git:
     repo: https://github.com/zshi-redhat/ehost-device-cni.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
+    dest: /usr/src/ehost-device-cni
     force: true
 
 - name: Build it
   shell: >
-    ./build.sh
+    source /etc/profile.d/golang.sh;./build.sh
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
+    chdir: /usr/src/ehost-device-cni
 
 - name: Copy Userspace CNI plugin to CNI bin dir
   shell: >
     cp bin/ehost-device /opt/cni/bin/ehost-device
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/ehost-device-cni"
+    chdir: /usr/src/ehost-device-cni
     creates: "/opt/cni/bin/ehost-device"

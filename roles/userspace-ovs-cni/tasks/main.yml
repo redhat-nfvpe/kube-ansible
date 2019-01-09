@@ -1,0 +1,20 @@
+---
+- name: Clone Userspace CNI Plugin repo
+  git:
+    repo: https://github.com/intel/userspace-cni-network-plugin.git
+    dest: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
+    force: true
+
+- name: Build Userspace CNI plugin
+  shell: >
+    source /etc/profile.d/golang.sh; make install-dep; make install; make
+  args:
+    chdir: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin/userspace/userspace"
+
+- name: Copy Userspace CNI plugin to CNI bin dir
+  shell: >
+    cp userspace/userspace /opt/cni/bin/userspace
+  args:
+    chdir: "{{ ansible_env.HOME }}/go/src/github.com/intel/userspace-cni-network-plugin"
+    creates: "/opt/cni/bin/userspace"

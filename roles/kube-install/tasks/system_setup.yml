@@ -2,14 +2,17 @@
 - name: "Disable SELinux :("
   selinux:
     state: disabled
+  register: selinux
 
 - name: "reboot machine"
   shell: "sleep 2 && reboot"
   async: 1
   poll: 0
+  when: selinux.reboot_required
 
 - name: "Wait for VM up"
   local_action: wait_for host={{ ansible_host }} port=22 delay=30
+  when: selinux.reboot_required
 
 - name: "Stop iptables :("
   service:

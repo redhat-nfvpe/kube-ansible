@@ -8,14 +8,14 @@
 - name: Clone repo
   git:
     repo: https://github.com/zshi-redhat/virt-network-device-plugin.git
-    dest: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
+    dest: /usr/src/virt-network-device-plugin
     force: true
 
 - name: Build it
   shell: >
-    ./build.sh
+    source /etc/profile.d/golang.sh;./build.sh
   args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
+    chdir: /usr/src/virt-network-device-plugin
 
 # - name: Copy bin... to where?
 #   shell: >
@@ -24,11 +24,11 @@
 #     chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin"
 #     creates: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin/bin/virtdp"
 
-- name: Build docker image
-  shell: >
-    ./build_docker.sh
-  args:
-    chdir: "{{ ansible_env.HOME }}/src/go/src/github.com/zshi-redhat/virt-network-device-plugin/deployments"
+#- name: Build docker image
+#  shell: >
+#    ./build_docker.sh
+#  args:
+#    chdir: /usr/src/virt-network-device-plugin
 
 
 # - name: Build Userspace CNI plugin
@@ -58,4 +58,4 @@
 # - name: Template userspace CNI config
 #   template:
 #     src: 90-userspace.conf.j2
-#     dest: /etc/alternate.net.d/90-userspace.conf 
+#     dest: /etc/alternate.net.d/90-userspace.conf

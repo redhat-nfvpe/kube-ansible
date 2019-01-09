@@ -15,7 +15,7 @@
 
 - name: Compile cni-plugins
   shell: >
-    ./build.sh
+    source /etc/profile.d/golang.sh;./build.sh
   args:
     chdir: /usr/src/cni-plugins
   when: cni_clone.changed
@@ -30,7 +30,7 @@
 
 - name: Compile multus-cni
   shell: >
-    ./build
+    source /etc/profile.d/golang.sh;./build
   args:
     chdir: /usr/src/multus-cni
   when: multus_clone.changed or force_multus_rebuild is defined
@@ -44,7 +44,7 @@
 
 - name: Compile sriov-cni
   shell: >
-    ./build
+    source /etc/profile.d/golang.sh;./build
   args:
     chdir: /usr/src/sriov-cni
   when: sriov_clone.changed

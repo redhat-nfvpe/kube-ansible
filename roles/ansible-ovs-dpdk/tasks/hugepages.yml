@@ -1,0 +1,45 @@
+---
+- name: Fetch default kernel
+  command: grubby --default-kernel
+  register: default_kernel
+- name: Check existing hugepages
+  command: cat /sys/devices/system/node/node0/hugepages/hugepages-1048576kB/nr_hugepages
+  register: huge_1G
+- name: Update GRUB configuration
+  command: "grubby --update-kernel {{ default_kernel.stdout }} --args 'iommu=pt intel_iommu=on default_hugepagesz=1G hugepagesz=1G hugepages={{ nr_hugepages }}'"
+- name: Add hugepages mount to fstab - 1G
+  lineinfile: >
+    dest=/etc/fstab
+    line='hugetlbfs    /dev/hugepages    hugetlbfs    pagesize=1G 0 0'
+    insertafter=EOF
+- name: Reboot server
+  block:
+    - name: Schedule reboot
+      command: /usr/bin/systemd-run --on-active=5 /usr/bin/systemctl reboot
+      async: 0
+      poll: 0
+      ignore_errors: true
+    - name: "Wait until {{ ansible_host }} ssh is DOWN"
+      wait_for:
+        host: "{{ ansible_host }}"
+        state: stopped
+        port: 22
+        timeout: 60
+        delay: 5
+      delegate_to: localhost 
+    - name: "Wait until {{ ansible_host }} ssh is UP"
+      wait_for:
+        host: "{{ ansible_host }}"
+        state: started
+        port: 22
+        timeout: 60
+        delay: 5
+      delegate_to: localhost
+    - name: "Wait until {{ ansible_host }} system is READY"
+      command: systemctl list-jobs
+      ignore_errors: true
+      register: result
+      until: result.stdout.find("No jobs running.") != -1
+      retries: 6
+      delay: 5
+  when: "huge_1G.stdout != {{ nr_hugepages }}"

@@ -13,23 +13,29 @@
   become: true
   become_user: root
   tasks: []
+  pre_tasks:
+    - set_fact:
+        calc_proxy_env: "{{ proxy_env|calculate_no_proxy }}"
+    - group_by: key={{ ansible_os_family }}
   roles:
+    - { role: set-proxy, when: calc_proxy_env }
     - { role: bridge-setup,
         when: pod_network_type == 'bridge' or pod_network_type == 'kokonet-bridge' }
     - { role: kokonet-setup, when: pod_network_type == 'kokonet-bridge' }
     - { role: npwg-poc1-setup, when: pod_network_type == 'multus' and multus_npwg_demo }
     - { role: optional-packages }
-    - { role: install-go, when: container_runtime == 'crio' }
     # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
     - { role: buildah-install, when: container_runtime == 'crio' }
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
     - { role: multus-cni, when: pod_network_type == "multus" }
-    - { role: install-go, when: enable_userspace_cni }
     - { role: userspace-cni, when: enable_userspace_cni }
     - { role: ehost-device-cni, when: enable_ehost_device_cni }
     - { role: virt-network-device-plugin, when: enable_virt_network_device_plugin }
+
+- import_playbook: userspace-ovs-cni.yml
+  when: enable_userspace_ovs_cni
 
 - import_playbook: ka-lab-kokonet/kokonet-lab.yml
   when: pod_network_type == 'kokonet-bridge'

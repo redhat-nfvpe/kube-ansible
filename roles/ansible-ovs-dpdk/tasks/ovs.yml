@@ -1,0 +1,87 @@
+---
+- name: Checkout OVS
+  git: >
+    repo={{ ovs_repo }}
+    dest={{ ovs_dir }}
+    version={{ ovs_version | default("master") }}
+  register: ovs_changed
+- name: Check if OVS configure script exists
+  stat: path={{ ovs_dir }}/configure
+  register: ovs_config_status
+- name: Bootstrap OVS if required
+  command: ./boot.sh chdir={{ ovs_dir }}
+  when: ovs_config_status.stat.exists == false or (ovs_rebuild is defined) or ovs_changed.changed
+- name: Check if OVS Makefile exists
+  stat: path={{ ovs_dir }}/Makefile
+  register: ovs_makefile_status
+- name: Configure OVS
+  command: ./configure --with-dpdk={{ dpdk_build }} CFLAGS="-g -O2 -Wno-cast-align" chdir={{ ovs_dir }}
+  when: ovs_makefile_status.stat.exists == false or (ovs_rebuild is defined) or ovs_changed.changed
+- name: Check if OVS distribution files exists
+  stat: path={{ ovs_dir }}/distfiles
+  register: ovs_distfiles_status
+- name: Build OVS
+  command: make CFLAGS='-O3 -march=native' chdir={{ ovs_dir }}
+  when: ovs_distfiles_status.stat.exists == false or (ovs_rebuild is defined) or ovs_changed.changed
+- name: Check if OVS tools are installed
+  stat: path=/usr/local/bin/ovsdb-tool
+  register: ovs_tools_status
+- name: Install OVS tools
+  command: make install chdir={{ ovs_dir }}
+  when: ovs_tools_status.stat.exists == false or (ovs_rebuild is defined) or ovs_changed.changed
+- name: Create folders
+  file: path={{ item }} state=directory
+  with_items: 
+    - /usr/local/etc/openvswitch
+    - /usr/local/var/run/openvswitch
+- name: Clear database configuration if required
+  file: path=/usr/local/etc/openvswitch/conf.db state=absent
+  when: ovs_rebuild is defined or ovs_changed.changed
+- name: Check if database configuration exists
+  stat: path=/usr/local/etc/openvswitch/conf.db
+  register: ovs_dbconfig_status
+- name: Create database configuration
+  command: /usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
+  when: ovs_dbconfig_status.stat.exists == false
+- name: Start OVS database server
+  command: /usr/local/share/openvswitch/scripts/ovs-ctl --no-ovs-vswitchd start
+- name: Configure OVS dpdk-socket-mem
+  openvswitch_db:
+    table: open_vswitch
+    record: .
+    col: other_config
+    key: dpdk-socket-mem
+    value: "2048,0"
+#  command: '/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048,0"'
+- name: Configure OVS dpdk-init
+  openvswitch_db:
+    table: open_vswitch
+    record: .
+    col: other_config
+    key: dpdk-init
+    value: true
+#  command: '/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true'
+- name: Configure OVS pmd-cpu-mask
+  openvswitch_db:
+    table: open_vswitch
+    record: .
+    col: other_config
+    key: pmd-cpu-mask
+    value: 0x3
+#  command: '/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x3'
+- name: Configure OVS dpdk-lcore-mask
+  openvswitch_db:
+    table: open_vswitch
+    record: .
+    col: other_config
+    key: dpdk-lcore-mask
+    value: 0xc
+#  command: '/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-lcore-mask=0xc'
+- name: Start OVS daemon
+  command: /usr/local/share/openvswitch/scripts/ovs-ctl --no-ovsdb-server --db-sock="/usr/local/var/run/openvswitch/db.sock" restart
+- name: Add OVS bridge
+  openvswitch_bridge:
+    bridge: br0
+    state: present
+    set: 'bridge br0 datapath_type=netdev'
+#  command: /usr/local/bin/ovs-vsctl --may-exist add-br br0 -- set bridge br0 datapath_type=netdev

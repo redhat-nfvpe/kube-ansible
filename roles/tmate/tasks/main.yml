@@ -7,3 +7,9 @@
     mode: 0755
     owner: centos
     group: centos
+
+- name: Clone container-experience-kits-demo-area locally
+  git:
+    repo: https://github.com/intel/container-experience-kits-demo-area
+    dest: "/home/centos/container-experience-kits-demo-area"
+    force: yes

@@ -22,8 +22,21 @@ pod_network_type: "flannel"
 pod_network_cidr: "10.244.0.0"
 
 # General config
-https_proxy: ""
-http_proxy: ""
+# require empty dict by default
+proxy_env: {}
+
+## if proxies are needed set them in proxy_env dictionary
+# HTTP proxy full URL
+# !!!! NOTE ansible does not support https:// for https_proxy, only http://
+# Configure socks proxy if required for git:// protocol
+# If in proxy env, uncomment no_proxy as its used to make exceptions and specify,
+# which domains or IP addresses should be reached directly
+
+#proxy_env:
+#  http_proxy: http://proxy.example.com:8080
+#  https_proxy: http://proxy.example.com:8080
+#  socks_proxy: http://proxy.example.com:1080
+#  no_proxy: "localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/12,192.168.122.0/24,.intel.com"
 
 # Sometimes, you gotta skip 'em, but, by default we try not to.
 skip_preflight_checks: false
@@ -46,7 +59,7 @@ kubeadm_version: ""
 
 # Binary install
 # Essentially replaces the RPM installed binaries with a specific set of binaries from URLs.
-# binary_install: true
+# binary_install: false
 # binary_install_force_redownload: false
 # binary_kubectl_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubectl
 # binary_kubeadm_url: https://github.com/leblancd/kubernetes/releases/download/v1.9.0-alpha.1.ipv6.1b/kubeadm
@@ -147,6 +160,7 @@ attach_additional_virtio_device: false
 # userspace CNI
 # ----------------------------
 enable_userspace_cni: false
+enable_userspace_ovs_cni: false
 enable_ehost_device_cni: false
 enable_virt_network_device_plugin: false
 

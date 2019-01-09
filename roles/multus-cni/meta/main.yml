@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - install-go
+  - { role: install-go, golang_gopath: '/root/go' }
