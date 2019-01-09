@@ -4,12 +4,8 @@
     state: disabled
 
 - name: "reboot machine"
-  shell: "sleep 2 && reboot"
-  async: 1
-  poll: 0
-
-- name: "Wait for VM up"
-  local_action: wait_for host={{ ansible_host }} port=22 delay=30
+  reboot:
+    reboot_timeout: 600
 
 - name: "Stop iptables :("
   service:

@@ -1,6 +1,6 @@
-kube-master ansible_host=ka-master.management.61will.space
-kube-node-1 ansible_host=ka-compute-1.management.61will.space
-kube-node-2 ansible_host=ka-compute-2.management.61will.space
+kube-master ansible_host=192.168.3.100
+kube-node-1 ansible_host=192.168.3.101
+kube-node-2 ansible_host=192.168.3.102
 
 [master]
 kube-master
@@ -10,6 +10,6 @@ kube-node-1
 kube-node-2
 
 [all:vars]
-ansible_user=root
-ansible_ssh_private_key_file=.ssh/id_rsa
-
+ansible_user=centos
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_ssh_private_key_file=/home/jenkins/.ssh/id_rsa
