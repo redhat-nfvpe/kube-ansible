@@ -23,6 +23,7 @@ attach_additional_virtio_device: true
 # ----------------------------
 # userspace CNI
 # ----------------------------
+enable_userspace_cni: false
 enable_userspace_ovs_cni: true
 enable_ehost_device_cni: true
 enable_virt_network_device_plugin: true
@@ -32,3 +33,8 @@ multus_macvlan_master: 'eth0'
 
 # optional packages
 optional_packages: "@Development tools"
+
+# disable customization
+enable_compute_device: false
+customize_kube_config: false
+skip_init: false
