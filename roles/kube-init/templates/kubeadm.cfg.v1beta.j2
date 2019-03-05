@@ -2,6 +2,9 @@
 # for v1.13 (https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1)
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta1
+apiServer:
+  extraArgs:
+    enable-admission-plugins: NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook
 networking:
   podSubnet: {{ pod_network_cidr }}/16
 {% if control_plane_listen_all %}
