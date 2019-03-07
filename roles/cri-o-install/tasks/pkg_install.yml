@@ -21,6 +21,16 @@
     enabled: yes
     daemon_reload: yes
 
+- name: remove default CNI for further k8s cni plugin install
+  file:
+    path: /etc/cni/net.d
+    state: absent
+
+- name: re-create default CNI for further k8s cni plugin install
+  file:
+    path: /etc/cni/net.d
+    state: directory
+
 - name: modprobe br_netfilter
   command: "modprobe br_netfilter"
   ignore_errors: true
