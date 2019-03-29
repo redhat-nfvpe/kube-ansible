@@ -72,7 +72,7 @@
 
 - name: Get join command
   shell: >
-    cat /var/log/kubeadm.init.log | grep "kubeadm join"
+    cat /var/log/kubeadm.init.log | grep -A1 "kubeadm join" | tr -d '\n' | sed -e 's/\\//'
   register: kubeadm_join_output
 
 - name: Set fact with join command
