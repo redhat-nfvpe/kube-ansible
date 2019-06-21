@@ -48,7 +48,7 @@
 # ----------- multus
 - name: Apply the multus podnetwork from github
   shell: >
-    kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/master/images/flannel-daemonset.yml > /tmp/podnetwork-apply.log && \
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml > /tmp/podnetwork-apply.log && \
     kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/master/images/multus-daemonset.yml >> /tmp/podnetwork-apply.log
   args:
     creates: "{{ kubectl_home }}/.kubeadm-podnetwork-complete"
