@@ -16,7 +16,6 @@
     - gcc
     - tar
     - libseccomp-devel
-    - go-md2man
     - glib2-devel
     - glibc-static
     - container-selinux
@@ -51,8 +50,14 @@
 
 - name: clone CRI-O
   git:
-    repo: https://github.com/kubernetes-incubator/cri-o
-    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-incubator/cri-o"
+    repo: https://github.com/cri-o/cri-o.git
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o"
+    version: "{{ crio_version }}"
+
+- name: clone cri-tools
+  git:
+    repo: https://github.com/kubernetes-sigs/cri-tools.git
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-sigs/cri-tools"
     version: "{{ crio_version }}"
 
 - name: clone CNI
@@ -85,11 +90,21 @@
           make install.config
   environment:
     PATH: "{{ extended_path }}"
+    GO111MODULE: "off"
+    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
+
+- name: build cri-tools
+  shell: |
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-sigs/cri-tools && \
+          make && \
+          make install
+  environment:
+    PATH: "{{ extended_path }}"
 
 - name: build CNI stuff
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins && \
-          ./build.sh && \
+          ./build_linux.sh && \
           mkdir -p /opt/cni/bin && \
           cp bin/* /opt/cni/bin/
   environment:
@@ -99,31 +114,6 @@
   replace:
     regexp: 'cgroupfs'
     replace: 'systemd'
-    name: /etc/crio/crio.conf
-    backup: yes
-
-- name: run with overlay2
-  replace:
-    regexp: '^#storage_driver = "overlay"'
-    replace: 'storage_driver = "overlay2"'
-    name: /etc/crio/crio.conf
-    backup: yes
-
-- name: add overlay2 storage opts on RHEL/CentOS
-  lineinfile:
-    dest: /etc/crio/crio.conf
-    line: "{{ item }}"
-    insertbefore: '^#storage_option = \['
-    state: present
-  with_items:
-    - 'storage_option = ['
-    - '"overlay2.override_kernel_check=true",'
-    - ']'
-
-- name: change runtime (runc) path
-  replace:
-    regexp: '^runtime =.*$'
-    replace: 'runtime = "/usr/local/sbin/runc"'
     name: /etc/crio/crio.conf
     backup: yes
 
