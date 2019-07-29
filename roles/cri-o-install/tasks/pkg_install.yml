@@ -14,6 +14,20 @@
     state: present
     disable_gpg_check: yes
 
+- name: patch crio-wipe/lib.bash
+  block:
+    - replace: >-
+        dest='/usr/libexec/crio/crio-wipe/lib.bash'
+        regexp='new=\$\(\(\"\$1\" \+ 0\)\)'
+        replace='new=$(($1 + 0))'
+    - replace: >-
+        dest='/usr/libexec/crio/crio-wipe/lib.bash'
+        regexp='old=\$\(\(\\"\$2\" \+ 0\)\)'
+        replace='old=$(($2 + 0))'
+  when:
+    - ansible_distribution == "CentOS"
+
+
 - name: enable and start CRI-O
   systemd:
     name: crio
