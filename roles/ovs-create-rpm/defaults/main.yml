@@ -1,0 +1,4 @@
+---
+ovs_release_url: "http://openvswitch.org/releases/openvswitch-2.9.2.tar.gz"
+# Make this match the name between the last slash and .tar.gz
+ovs_tar_basename: "openvswitch-2.9.2"

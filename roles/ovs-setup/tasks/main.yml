@@ -1,0 +1,31 @@
+---
+
+- name: Add the ovs user
+  user:
+    name: ovs
+
+- name: Install OvS from RPM
+  yum:
+    name: "{{ rpm_location }}"
+    state: present
+
+- name: Start & enable ovs service
+  service:
+    name: openvswitch.service
+    state: started
+    enabled: yes
+
+- name: Create an OvS bridge
+  openvswitch_bridge:
+    bridge: ovs-br0
+    state: present
+
+- name: Template script to set IP address on OVS bridge
+  template:
+    src: ovs-set-ip.sh.j2
+    dest: /root/ovs-set-ip.sh
+    mode: '0755'
+
+- name: Execute set ip script
+  shell: /root/ovs-set-ip.sh &> /var/log/ovs-set-ip.log
+  async: 45

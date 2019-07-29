@@ -1,0 +1,15 @@
+# before
+BOOTPROTO=dhcp
+DEVICE=eth0
+HWADDR=52:54:00:4b:dd:73
+ONBOOT=yes
+TYPE=Ethernet
+USERCTL=no
+
+# after
+DEVICE=eno16777736
+HWADDR="00:0c:29:c1:c3:4e"
+TYPE=OVSPort
+DEVICETYPE=ovs
+OVS_BRIDGE=ovs-br0
+ONBOOT=yes

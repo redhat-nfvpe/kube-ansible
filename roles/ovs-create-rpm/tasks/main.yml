@@ -1,0 +1,61 @@
+---
+
+- name: Install prereqs
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - wget
+    - openssl-devel
+    - python-sphinx
+    - gcc
+    - make
+    - python-devel
+    - openssl-devel
+    - kernel-devel
+    - graphviz
+    - kernel-debug-devel
+    - autoconf
+    - automake
+    - rpm-build
+    - redhat-rpm-config
+    - libtool
+    - python-twisted-core
+    - python-zope-interface
+    - PyQt4
+    - desktop-file-utils
+    - libcap-ng-devel
+    - groff
+    - checkpolicy
+    - selinux-policy-devel
+
+- name: Create a rpmbuild/SOURCES directory in root's home.
+  file:
+    path: "{{ ansible_env.HOME }}/rpmbuild/SOURCES"
+    state: directory
+
+- name: Download OvS tarball
+  get_url:
+    url: "{{ ovs_release_url }}"
+    dest: "{{ ansible_env.HOME }}/rpmbuild/SOURCES"
+    mode: '0755'
+
+- name: Unarchive OvS tarball
+  unarchive:
+    src: "{{ ansible_env.HOME }}/rpmbuild/SOURCES/{{ ovs_tar_basename }}.tar.gz"
+    dest: "{{ ansible_env.HOME }}/rpmbuild/SOURCES"
+    remote_src: yes
+
+- name: Build the RPM
+  shell: >
+    rpmbuild -bb --nocheck {{ ansible_env.HOME }}/rpmbuild/SOURCES/{{ ovs_tar_basename }}/rhel/openvswitch-fedora.spec
+
+
+# ovs@compute02 ~]$ mkdir -p ~/rpmbuild/SOURCES
+# [ovs@compute02 ~]$ wget http://openvswitch.org/releases/openvswitch-2.9.2.tar.gz
+# [ovs@compute02 ~]$ cp openvswitch-2.9.2.tar.gz ~/rpmbuild/SOURCES/
+# [ovs@compute02 ~]$ tar xfz openvswitch-2.9.2.tar.gz
+# [ovs@compute02 ~]$ rpmbuild -bb --nocheck openvswitch-2.9.2/rhel/openvswitch-fedora.spec
+# [ovs@compute02 ~]$ exit
+# logout
+# [root@compute02 ~]#

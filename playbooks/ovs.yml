@@ -1,0 +1,33 @@
+---
+
+# - hosts: master
+#   become: true
+#   become_user: root
+#   tasks: []
+#   roles:
+#     - { role: ovs-create-rpm }
+#   post_tasks:
+#     - name: Download RPM to local machine
+#       fetch:
+#         src: /root/rpmbuild/RPMS/x86_64/openvswitch-2.9.2-1.el7.x86_64.rpm
+#         dest: /tmp/ovs.rpm
+#         flat: yes
+
+# - hosts: master,nodes
+#   become: true
+#   become_user: root
+#   tasks:
+#     - name: copy OvS RPM to all nodes
+#       copy:
+#         src: /tmp/ovs.rpm
+#         dest: /usr/src/ovs.rpm
+
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: ovs-setup, rpm_location: /usr/src/ovs.rpm }
+
+
+

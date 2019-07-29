@@ -1,0 +1,5 @@
+#!/bin/bash
+ip addr flush dev eth0
+ip addr add {{ ansible_default_ipv4.address }}/24 dev ovs-br0
+ovs-vsctl add-port ovs-br0 eth0
+ip link set ovs-br0 up

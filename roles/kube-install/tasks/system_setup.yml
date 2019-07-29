@@ -3,9 +3,9 @@
   selinux:
     state: disabled
 
-- name: "reboot machine"
-  reboot:
-    reboot_timeout: 600
+#- name: "reboot machine"
+#  reboot:
+#    reboot_timeout: 600
 
 - name: "Stop iptables :("
   service:
