@@ -1,0 +1,52 @@
+---
+- import_playbook: ka-init/init.yml
+
+- hosts: bmhosts
+  become: true
+  become_user: root
+  gather_facts: True
+  tasks:
+    - name: Turn off swap
+      shell: swapoff -a
+      when: ansible_virtualization_role == "host"
+
+    # Fedora cloud image doesn't necessarily come with Python2 by default, so...
+    # https://trello.com/c/XaiXEocS/239-bz-to-track-adding-python-to-the-fedora-cloud-images
+    - name: Check to see if there is a separate BM host.
+      set_fact:
+    - name: set host_type
+      set_fact:
+       host_type: "{{ host_type | default('centos') }}"
+    - name: install epel, python2, and dnf stuff
+      raw: (dnf -y install epel-release python-dnf python2-dnf libselinux-python)
+      when: host_type == "fedora"|default("centos")
+    - name: install packages
+      package:
+        name: ansible
+        state: present
+
+    # We will run NFV workloads and cluster and are using user space networking.
+    # We may need to install provision and compile specific versions of dpdk such as
+    # 1811 from upstream.
+    - name: install dpdk
+      package:
+        name: dpdk
+        state: present
+
+    # Add all bm hosts to inventory group nodes.
+    - name: Add bmhosts to inventory group nodes
+      add_host:
+        hostname: "{{ [bmhosts] }}"
+        groups:
+          - nodes
+
+    # Add bmhosts to nodes in all inventory file.
+    # Nodes have already been written by set up vmhost play
+    - name: add bmhosts to nodes in in all inventory fileadd bmhosts to nodes in in all inventory file
+      connection: local
+      command:
+       sed -i '/\[nodes/a {{item}}' {{ playbook_dir }}/../inventory/{{ all_inventory }}
+      args:
+        warn: false
+      with_inventory_hostnames:
+        - all:bhmosts
