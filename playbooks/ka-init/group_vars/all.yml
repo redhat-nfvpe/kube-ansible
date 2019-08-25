@@ -1,4 +1,10 @@
 ---
+# --------------------------- -
+# Changes for bare metal    - -
+# Name of inventory file    - -
+# --------------------------- -
+all_inventory: "all.local.generated"
+
 # What container runtime do we use?
 # valid values:
 # - docker
@@ -68,8 +74,6 @@ virtual_machines:
   - name: kube-node-1
     node_type: nodes
   - name: kube-node-2
-    node_type: nodes
-  - name: kube-node-3
     node_type: nodes
 #  - name: builder
 #    node_type: builder

@@ -1,0 +1,7 @@
+---
+- import_playbook: ka-init/init.yml
+
+- import_playbook: virthost-setup.yml
+
+- import_playbook: bmhost-setup.yml
+

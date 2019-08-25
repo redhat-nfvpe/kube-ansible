@@ -1,4 +1,6 @@
 *.retry
+*.swp
+*.swo
 
 # ignore inventory except for the example inventory (allow for override)
 inventory/*

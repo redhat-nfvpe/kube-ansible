@@ -19,8 +19,10 @@ Playbooks are located in the `playbooks/` directory.
 | Playbook                                 | Inventory                             | Purpose                                                            |
 | ---------------------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
 | `virthost-setup.yml`                     | `./inventory/virthost/`               | Provision a virtual machine host                                   |
-| `kube-install.yml`                       | `./inventory/vms.local.generated`     | Install and configure a k8s cluster                                |
-| `kube-teardown.yml`                      | `./inventory/vms.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
+| `bmhost-setup.yml`                       | `./inventory/bmhost/`                 | Provision a bare metal host and add to group nodes.                |
+| `allost-setup.yml`                       | `./inventory/allhosts/`               | Provision both a virtual machine host and a bare metal host.       |
+| `kube-install.yml`                       | `./inventory/all.local.generated`     | Install and configure a k8s cluster using all hosts in group nodes |
+| `kube-teardown.yml`                      | `./inventory/all.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
 | `vm-teardown.yml`                        | `./inventory/virthost/`               | Destroys VMs on the virtual machine host                           |
 | `ka-multus-cni/multus-cni.yml`           | `./inventory/vms.local.generated`     | Compiles [multus-cni](https://github.com/intel/multus-cni)         |
 | `ka-gluster-install/gluster-install.yml` | `./inventory/vms.local.generated`     | Install a GlusterFS cluster across VMs (requires vm-attach-disk)   |
@@ -78,6 +80,10 @@ cp -r inventory/examples/virthost inventory/virthost/
 
 Modify `./inventory/virthost/virthost.inventory` to setup a virtual
 host (skip to step 3 if you already have an inventory).
+
+### Step 2A. Optionally, set up both virtual host and bare metal inventory.
+Create  or modify `./inventory/allhosts/allhosts.inventory` to set up both bare metal
+and virtual hosts.
 
 Want more VMs? Edit `inventory/virthost/group_vars/virthost.yml` and add an
 override list via `virtual_machines` (template in
