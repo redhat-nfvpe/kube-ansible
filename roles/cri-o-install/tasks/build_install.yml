@@ -82,8 +82,7 @@
 
 - name: build cri-o
   shell: |
-          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-incubator/cri-o && \
-          make install.tools && \
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o && \
           make && \
           make install && \
           make install.systemd && \
