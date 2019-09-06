@@ -89,7 +89,6 @@
           make install.config
   environment:
     PATH: "{{ extended_path }}"
-    GO111MODULE: "off"
     GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
 
 - name: build cri-tools
@@ -99,6 +98,7 @@
           make install
   environment:
     PATH: "{{ extended_path }}"
+    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
 
 - name: build CNI stuff
   shell: |
