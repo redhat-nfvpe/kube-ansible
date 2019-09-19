@@ -54,6 +54,12 @@
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o"
     version: "{{ crio_version }}"
 
+- name: clone conmon
+  git:
+    repo: https://github.com/containers/conmon.git
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containers/conmon"
+    version: master
+
 - name: clone cri-tools
   git:
     repo: https://github.com/kubernetes-sigs/cri-tools.git
@@ -87,6 +93,15 @@
           make install && \
           make install.systemd && \
           make install.config
+  environment:
+    PATH: "{{ extended_path }}"
+    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
+
+- name: build conmon
+  shell: |
+          cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containers/conmon && \
+          make && \
+          make install
   environment:
     PATH: "{{ extended_path }}"
     GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
