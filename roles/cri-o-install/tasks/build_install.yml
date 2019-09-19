@@ -58,7 +58,7 @@
   git:
     repo: https://github.com/kubernetes-sigs/cri-tools.git
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-sigs/cri-tools"
-    version: "{{ crio_version }}"
+    version: master
 
 - name: clone CNI
   git:
