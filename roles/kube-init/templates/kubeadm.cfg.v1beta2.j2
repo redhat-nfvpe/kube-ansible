@@ -1,0 +1,34 @@
+# Full parameters @ https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
+# for v1.13 (https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1)
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta2
+apiServer:
+  extraArgs:
+    enable-admission-plugins: NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook
+networking:
+  podSubnet: {{ pod_network_cidr }}/16
+{% if control_plane_listen_all %}
+controllerManager:
+  extraArgs:
+    address: 0.0.0.0
+scheduler:
+  extraArgs:
+    address: 0.0.0.0
+{% endif %}
+{% if enable_device_plugins %}
+featureGates:
+  DevicePlugins: true
+{% endif %}
+---
+kind: InitConfiguration
+apiVersion: kubeadm.k8s.io/v1beta2
+{% if container_runtime == "crio" %}
+nodeRegistration:
+  criSocket: /var/run/crio/crio.sock
+{% endif %}
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+{% if container_runtime == "crio" %}
+cgroupDriver: systemd
+{% endif %}
