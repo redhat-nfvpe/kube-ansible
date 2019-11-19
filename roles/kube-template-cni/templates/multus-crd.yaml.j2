@@ -42,7 +42,7 @@ data:
       }
     }
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-multus-ds
@@ -51,6 +51,9 @@ metadata:
     tier: node
     app: multus
 spec:
+  selector:
+    matchLabels:
+      app: kube-multus-ds
   template:
     metadata:
       labels:

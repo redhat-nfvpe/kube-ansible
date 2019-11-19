@@ -19,6 +19,7 @@ data:
   cni-conf.json: |
     {
       "name": "cbr0",
+      "cniVersion": "0.2.0",
       "plugins": [
         {
           "type": "flannel",
@@ -43,7 +44,7 @@ data:
       }
     }
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds
@@ -52,6 +53,9 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      app: flannel
   template:
     metadata:
       labels:
