@@ -38,6 +38,12 @@
         dest: /root/kubeadm.cfg
       when: kubeadm_version_minor.stdout|int >= 13
 
+    - name: create kubeadm config file (>= 1.16)
+      template:
+        src: kubeadm.cfg.v1beta2.j2
+        dest: /root/kubeadm.cfg
+      when: kubeadm_version_minor.stdout|int >= 16
+
 - name: Default cri-o flags to empty
   set_fact:
     arg_crio: ""
