@@ -1,5 +1,5 @@
 bmhost ansible_host=10.8.125.31 ansible_ssh_user=therbert
 
-[bmhost]
+[bmhosts]
 bmhost
 
