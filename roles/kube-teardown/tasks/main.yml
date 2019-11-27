@@ -1,7 +1,7 @@
 ---
 - name: Teardown kube nodes
   shell: >
-    kubeadm reset
+    kubeadm reset -f
 
 - name: Remove all semaphores
   file:
