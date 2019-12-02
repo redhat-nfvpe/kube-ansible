@@ -8,7 +8,6 @@
   template:
     src: kubernetes.repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
-  when: not artifacts_install
 
 - name: Default kube version fact
   set_fact:
@@ -17,24 +16,32 @@
 - name: Set kube version fact to specific version when specified
   set_fact:
     kube_version_parameter: "-{{ kube_version }}"
-  when: kube_version != "latest" and not artifacts_install
+  when: kube_version != "latest"
 
-- name: Get Kubernetes version when doing an artifacts-based installation
+- name: copy/install Kubernetes packages
   block:
-    - name: get contents
-      command: tar xfO {{ artifacts_sync_path }}/kube-proxy.tar manifest.json
-      register: raw_manifest
-      tags:
-        - skip_ansible_lint  # needs to use tar to unpack and return file contents
-
-    - name: Set contents of raw manifest.json from kube-proxy container archive
-      set_fact:
-        manifest: "{{ raw_manifest.stdout|from_json }}"
-
-    - name: Get version of kube-proxy container archive from manifest variable
-      set_fact:
-        kube_version: "{{ manifest.0.RepoTags.0.split(':')[1] | replace('_', '+') }}"
-  when: artifacts_install
+    - name: copy rpm file
+      copy:
+        src: "{{ item }}"
+        dest: /root
+        owner: root
+        group: root
+        mode: "u=rw,g=r,o=r"
+      with_items:
+        - "{{ k8s_use_rpms }}/kubectl.rpm"
+        - "{{ k8s_use_rpms }}/kubelet.rpm"
+        - "{{ k8s_use_rpms }}/kubeadm.rpm"
+        - "{{ k8s_use_rpms }}/kubernetes-cni.rpm"
+    - name: Install required packages for Kubernetes deployment
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "/root/kubectl.rpm"
+        - "/root/kubelet.rpm"
+        - "/root/kubeadm.rpm"
+        - "/root/kubernetes-cni.rpm"
+  when:  k8s_use_rpms|default("") != ""
 
 - name: Install required packages for Kubernetes deployment
   package:
@@ -45,38 +52,7 @@
     - kubelet{{ kube_version_parameter }}
     - kubeadm{{ kube_version_parameter }}
     - kubernetes-cni
-  when: not artifacts_install
-
-
-# TODO: only install when packages are not already installed
-- name: Install required packages from artifacts for Kubernetes deployment
-  block:
-    - name: Install RPMs for Kubernetes from artifacts
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - "{{ artifacts_sync_path }}/kubeadm-x86_64.rpm"
-        - "{{ artifacts_sync_path }}/kubectl-x86_64.rpm"
-        - "{{ artifacts_sync_path }}/kubelet-x86_64.rpm"
-        - "{{ artifacts_sync_path }}/kubernetes-cni-x86_64.rpm"
-
-    - name: Get list of container image archives
-      find:
-        paths: "{{ artifacts_sync_path }}"
-        patterns: "*.tar"
-      register: container_image_archives
-
-    - name: Load container images
-      command: |
-        docker load -i {{ item.path }}
-      with_items: "{{ container_image_archives.files }}"
-
-    - name: Retag the container images
-      shell: >
-        docker images --format "docker tag {{'{{'}}.Repository{{'}}'}}:{{'{{'}}.Tag{{'}}'}} {{'{{'}}.Repository{{'}}'}}-amd64:{{'{{'}}.Tag{{'}}'}}" | sh
-
-  when: artifacts_install
+  when:  k8s_use_rpms|default("") == ""
 
 - name: Optionally include playbook for binary install
   include: binary_install.yml

@@ -19,6 +19,12 @@ scheduler:
 featureGates:
   DevicePlugins: true
 {% endif %}
+{% if k8s_image_repository|default("") != "" %}
+imageRepository: {{ k8s_image_repository }}
+{% endif %}
+{% if kube_version != "latest" %}
+kubernetesVersion: {{ kube_version }}
+{% endif %}
 ---
 kind: InitConfiguration
 apiVersion: kubeadm.k8s.io/v1beta2
