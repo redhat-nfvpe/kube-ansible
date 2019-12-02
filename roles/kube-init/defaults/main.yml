@@ -1,5 +1,4 @@
 kubectl_user: centos
 kubectl_group: centos
 kubectl_home: /home/centos
-artifacts_install: false
 control_plane_listen_all: false

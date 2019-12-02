@@ -23,7 +23,7 @@
 
     - name: check kubeadm version (minor)
       shell: >
-        kubeadm version -o json | jq -r .clientVersion.minor
+        kubeadm version -o json | jq -r .clientVersion.minor | sed -e 's/\+//g'
       register: kubeadm_version_minor
 
     - name: create kubeadm config file (<= 1.12)
@@ -56,11 +56,6 @@
 - name: Default k8s version to empty
   set_fact:
     k8s_version: ""
-
-- name: Set custom Kubernetes version when installing via artifacts
-  set_fact:
-    k8s_version: "--kubernetes-version {{ kube_version }}"
-  when: artifacts_install
 
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
