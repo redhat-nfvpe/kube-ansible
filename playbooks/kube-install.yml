@@ -11,10 +11,8 @@
     - { role: optional-packages }
     # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
-    - { role: buildah-install, when: buildah_install|bool }
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
-    - { role: multus-cni, when: multus_build|bool }
 
 - hosts: master,nodes
   become: true

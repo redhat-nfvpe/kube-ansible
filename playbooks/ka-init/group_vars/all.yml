@@ -25,9 +25,6 @@ crio_build_version: v1.11.1
 crio_build_install: False
 crio_baseurl: https://cbs.centos.org/repos/paas7-crio-115-candidate/x86_64/os
 
-# buildah variables
-buildah_install: False
-
 # Pod net work types
 # A value of "none" will create no networking and will not join nodes to cluster.
 # Valid values:
@@ -83,43 +80,11 @@ virtual_machines:
 #    system_ram_mb: 8192
 #    system_cpus: 8
 
-# Implement a work-around for this:
-# https://github.com/kubernetes/kubernetes/issues/43815
-kube_16_workaround: false
-
 # Kubectl proxy.
 kubectl_proxy_port: 8088
 
 # Allow the kubernetes control plane to listen on all interfaces
 #control_plane_listen_all: true
-
-# --------------------------- -
-# multus-cni vars          - -
-# ------------------------- -
-# Usually use "master" for multus version, but, otherwise...
-multus_build: false
-multus_version: master
-multus_git_url: "https://github.com/intel/multus-cni.git"
-
-# ----------------------------
-# glusterfs vars
-# ----------------------------
-
-# Hey what's that treeish?
-# It's the last known point Doug knows is good.
-# e.g. https://github.com/gluster/gluster-kubernetes/commit/e7799c152bf456dd7692bcb7c86bcef422c7b6c8
-gluster_kubernetes_version: "e7799c152bf456dd7692bcb7c86bcef422c7b6c8"
-gluster_attach_disk: true
-# New heketi image version gave Doug some trouble @ https://github.com/gluster/gluster-kubernetes/issues/363
-heketi_image_name: heketi/heketi:5
-
-# Disk sizes (for virtual machines)
-spare_disk_size_megs: 10240
-spare_disk_location: "/var/lib/libvirt/images"
-spare_disk_dev: vdb
-# Default size is megs, "2G" would be 2 gigs.
-# This is likely deprecated, Doug (9/25/17)
-brick_size: "1980"
 
 # ----------------------------
 # virt-host vars.
