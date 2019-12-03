@@ -5,14 +5,9 @@
 - src: https://github.com/redhat-nfvpe/ansible-role-install-docker
   name: install-docker
   version: master
-- src: https://github.com/redhat-nfvpe/auto-kube-dev
-  name: auto-kube-dev
-  version: master
 - src: https://github.com/redhat-nfvpe/ansible-role-vm-spinup
   name: redhat-nfvpe.vm-spinup
   version: master
-- src: oVirt.vm-infra
-  version: 1.1.11
 - src: https://github.com/redhat-nfvpe/ansible-role-prometheus-operator
   name: redhat-nfvpe.prometheus-operator
   version: master

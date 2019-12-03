@@ -59,10 +59,6 @@ You may also need to set `crio_build_version` to match kubernetes version. See [
 
 ## Using Fedora
 
-Use of Fedora is currently suggested should you require the use of Buildah.
-Buildah requires functionality in later Linux kernels that are unavailable in
-recent versions of CentOS. Set `buildah_install=True` to build/install Buildah.
-
 Take a gander at the `./inventory/examples/crio/crio.inventory` for an example
 of how to override the proper variables to use Fedora.
 

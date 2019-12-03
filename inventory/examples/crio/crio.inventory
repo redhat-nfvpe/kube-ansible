@@ -43,4 +43,3 @@ kubectl_group=fedora
 # Need to set crio_versions for installed kubernetes version, see following URL for details.
 # https://github.com/kubernetes-incubator/cri-o#compatibility-matrix-cri-o---kubernetes-clusters
 # crio_versions=v1.11.1
-# buildah_install=True

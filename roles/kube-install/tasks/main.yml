@@ -58,10 +58,6 @@
   include: binary_install.yml
   when: binary_install
 
-- name: Include kube 1.6.0 work-around
-  include: kube-16-workaround.yml
-  when: kube_16_workaround
-
 - name: Create /etc/cni/net.d
   file:
     path: /etc/cni/net.d
