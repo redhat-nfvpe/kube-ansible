@@ -24,10 +24,7 @@ Playbooks are located in the `playbooks/` directory.
 | `kube-install.yml`                       | `./inventory/all.local.generated`     | Install and configure a k8s cluster using all hosts in group nodes |
 | `kube-teardown.yml`                      | `./inventory/all.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
 | `vm-teardown.yml`                        | `./inventory/virthost/`               | Destroys VMs on the virtual machine host                           |
-| `ka-multus-cni/multus-cni.yml`           | `./inventory/vms.local.generated`     | Compiles [multus-cni](https://github.com/intel/multus-cni)         |
-| `ka-gluster-install/gluster-install.yml` | `./inventory/vms.local.generated`     | Install a GlusterFS cluster across VMs (requires vm-attach-disk)   |
 | `fedora-python-bootstrapper.yml`         | `./inventory/vms.local.generated`     | Bootstrapping Python dependencies on cloud images                  |
-| `ka-builder/builder.yml`                 | `./inventory/vms.local.generated`     | Build a Kubernetes release in a dedicated virtual machine          |
 
 *(Table generated with [markdown tables](http://www.tablesgenerator.com/markdown_tables))*
 
