@@ -1,0 +1,69 @@
+---
+- import_playbook: ka-init/init.yml
+
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: ovn-setup }
+    - { role: multus-2nics-setup, when: pod_network_type == 'multus-2nics' or pod_network_type == 'none-2nics' }
+    - { role: bridge-setup, when: pod_network_type == 'bridge' }
+    - { role: optional-packages }
+    # You can add "crio_force: true" if you need to run the builds again.
+    - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
+    - { role: install-docker, when: container_runtime == 'docker' }
+    - { role: kube-install }
+
+- hosts: master,nodes
+  become: true
+  become_user: root
+  tasks:
+    - name: Set bridge-nf-call-iptables to 1
+      shell: >
+        if [ ! -f /proc/sys/net/bridge/bridge-nf-call-iptables ]; then \
+          modprobe br_netfilter; \
+        fi && \
+        echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: kube-init }
+    - { role: kube-template-cni }
+
+# ---- placeholder: kube-cni
+# without become.
+
+- hosts: master
+  tasks: []
+  roles:
+    - { role: kube-cni, when : "pod_network_type != 'none' and pod_network_type != 'none-2nics'" }
+    - { role: kube-niceties }
+
+- hosts: nodes
+  become: true
+  become_user: root
+  pre_tasks:
+    - name: Get kubeadm_join_command from master
+      set_fact:
+        kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
+  tasks: []
+  roles:
+    - { role: kube-join-cluster }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: kubectl-proxy-systemd }
+
+- hosts: master
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: ovnkube-setup }
