@@ -1,0 +1,55 @@
+- name: update kernel
+  block:
+    - name: rpm import
+      rpm_key:
+        state: present
+        key: https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+    - name: install elrepo
+      yum:
+        name: https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm
+        state: present
+    - name: install kernel-ml
+      yum:
+        name: kernel-ml
+        enablerepo: elrepo-kernel
+        state: present
+    - name: update grub default conf
+      lineinfile:
+        regexp: "GRUB_DEFAULT=saved"
+        dest: /etc/default/grub
+        line: "GRUB_DEFAULT=0"
+    - name: update grub conf
+      shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+    # Todo: may skip if kernel is already installed....
+    - name: "reboot machine"
+      reboot:
+        reboot_timeout: 600
+
+- name: install openvswitch/ovn
+  block:
+    - name: install openstack repo
+      yum_repository:
+        name: cloud7-openstack-train-release
+        description: cloud7-openstack-train-release
+        file: cloud7-openstack-train-release
+        baseurl: https://cbs.centos.org/repos/cloud7-openstack-train-release/x86_64/os
+        gpgcheck: no
+    - name: install openvswitch and so on
+      yum:
+        name:
+          - ovn
+          - ovn-central
+          - ovn-vtep
+          - ovn-host
+        enablerepo: cloud7-openstack-train-release
+        state: present
+    - name: install libibverbs
+      yum:
+        name: libibverbs
+        state: present
+
+- name: install git
+  yum:
+    name: git
+    state: present
+

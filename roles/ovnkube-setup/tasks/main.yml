@@ -1,0 +1,35 @@
+- name: Taint master nodes
+  shell : kubectl taint nodes --all node-role.kubernetes.io/master-
+  failed_when: false
+
+- name: setup ovn-kubernetes
+  block:
+    - name: mkdir
+      file:
+        path: ${HOME}/work/src/github.com/ovn-org
+        state: directory
+    - name: git clone
+      git:
+        repo: https://github.com/ovn-org/ovn-kubernetes
+        dest: ${HOME}/work/src/github.com/ovn-org/ovn-kubernetes
+
+    - name: log
+      shell: |
+        ./daemonset.sh --image=docker.io/ovnkube/ovn-daemonset-u:latest \
+                --net-cidr=10.244.0.0/16 --svc-cidr=10.96.0.0/12 \
+                --gateway-mode="local" \
+                --k8s-apiserver=https://{{ ansible_default_ipv4.address }}:6443
+      args:
+        chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/images
+
+- name: Add ovn-kube ymls
+  block:
+    - name: ovn-setup
+      shell: kubectl create -f {{ item }}
+      args:
+        chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
+      with_items:
+        - ovn-setup.yaml
+        - ovnkube-db.yaml
+        - ovnkube-master.yaml
+        - ovnkube-node.yaml

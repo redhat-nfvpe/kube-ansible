@@ -22,6 +22,7 @@ Playbooks are located in the `playbooks/` directory.
 | `bmhost-setup.yml`                       | `./inventory/bmhost/`                 | Provision a bare metal host and add to group nodes.                |
 | `allhost-setup.yml`                      | `./inventory/allhosts/`               | Provision both a virtual machine host and a bare metal host.       |
 | `kube-install.yml`                       | `./inventory/all.local.generated`     | Install and configure a k8s cluster using all hosts in group nodes |
+| `kube-install-ovn.yml`                   | `./inventory/all.local.generated`     | Install and configure a k8s cluster with OVN network using all hosts in group nodes |
 | `kube-teardown.yml`                      | `./inventory/all.local.generated`     | Runs `kubeadm reset` on all nodes to tear down k8s                 |
 | `vm-teardown.yml`                        | `./inventory/virthost/`               | Destroys VMs on the virtual machine host                           |
 | `fedora-python-bootstrapper.yml`         | `./inventory/vms.local.generated`     | Bootstrapping Python dependencies on cloud images                  |
