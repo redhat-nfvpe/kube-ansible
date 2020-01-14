@@ -63,7 +63,7 @@
 
 - hosts: master
   become: true
-  become_user: root
+  become_user: centos
   tasks: []
   roles:
     - { role: ovnkube-setup }
