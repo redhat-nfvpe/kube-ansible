@@ -20,10 +20,10 @@
         line: "GRUB_DEFAULT=0"
     - name: update grub conf
       shell: grub2-mkconfig -o /boot/grub2/grub.cfg
-    # Todo: may skip if kernel is already installed....
     - name: "reboot machine"
       reboot:
         reboot_timeout: 600
+  when: ansible_kernel is  version('4.6','<')
 
 - name: install openvswitch/ovn
   block:
