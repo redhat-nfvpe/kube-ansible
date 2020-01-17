@@ -25,15 +25,7 @@ crio_build_version: v1.11.1
 crio_build_install: False
 crio_baseurl: https://cbs.centos.org/repos/paas7-crio-115-candidate/x86_64/os
 
-# Pod net work types
-# A value of "none" will create no networking and will not join nodes to cluster.
-# Valid values:
-# - flannel
-# - weave
-# - none
-# - multus
-# - bridge
-pod_network_type: "flannel"
+# Pod net work CIDR
 pod_network_cidr: "10.244.0.0"
 
 # General config

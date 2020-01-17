@@ -1,5 +1,4 @@
-vmhost ansible_host=192.168.1.42 ansible_ssh_user=root
+vmhost ansible_host=127.0.0.1 ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3
 
 [virthost]
 vmhost
-

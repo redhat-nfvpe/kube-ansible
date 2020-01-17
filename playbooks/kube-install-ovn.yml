@@ -7,8 +7,8 @@
   tasks: []
   roles:
     - { role: ovn-setup }
-    - { role: multus-2nics-setup, when: pod_network_type == 'multus-2nics' or pod_network_type == 'none-2nics' }
-    - { role: bridge-setup, when: pod_network_type == 'bridge' }
+    - { role: multus-2nics-setup, when: network_type == '2nics' }
+    - { role: bridge-setup, when: network_type == 'bridge' }
     - { role: optional-packages }
     # You can add "crio_force: true" if you need to run the builds again.
     - { role: cri-o-install, when: container_runtime == 'crio', crio_force: false }
@@ -32,7 +32,6 @@
   tasks: []
   roles:
     - { role: kube-init }
-    - { role: kube-template-cni }
 
 # ---- placeholder: kube-cni
 # without become.
@@ -40,7 +39,6 @@
 - hosts: master
   tasks: []
   roles:
-    - { role: kube-cni, when : "pod_network_type != 'none' and pod_network_type != 'none-2nics'" }
     - { role: kube-niceties }
 
 - hosts: nodes

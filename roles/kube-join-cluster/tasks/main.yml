@@ -27,10 +27,8 @@
     {{ kubeadm_join_command }}
   args:
     creates: /etc/.kubeadm-joined
-  # when: pod_network_type != "none"
 
 - name: Mark the nodes as joined
   file:
     path: /etc/.kubeadm-joined
     state: directory
-  # when: pod_network_type != "none"
