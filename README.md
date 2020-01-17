@@ -158,6 +158,26 @@ content.
 ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
 ```
 
+#### Options
+
+kube-ansible supports following options
+
+- `network_type`: specify network topology for the virthost, each master/worker has one interface (eth0) in default:
+  - `2nics`: each master/worker node has two interfaces: eth0 and eth1
+  - `bridge`: add linux bridge (`cni0`) and move `eth0` under `cni0`. This is useful to use linux bridge CNI for Kubernetes Pod's network
+- `container_runtime`: sepcify container runtime that Kubernetess uses. Default uses Docker.
+  - `crio`: install [cri-o](https://cri-o.io/) for the container runtime
+
+Here's the example:
+
+- Install Kubernetes with cri-o runtime, each host has two NICs (eth0, eth1):
+
+```
+# ansible-playbook -i inventory/virthost.inventory -e 'network_type=2nics' playbooks/virthost-setup.yml
+# ansible-playbook -i inventory/vms.local.generated -e 'network_type=2nics' -e 'container_runtime=crio' playbooks/kube-install.yml
+```
+
+
 Once you've done that, you should be able to connect to your Kubernetes master
 virtual machine and run `kubectl get nodes` and see that all your nodes are in
 a _Ready_ state. (It may take some time for everything to coalesce and the

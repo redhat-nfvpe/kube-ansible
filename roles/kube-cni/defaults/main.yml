@@ -1,3 +1,0 @@
-kubectl_user: centos
-kubectl_group: centos
-kubectl_home: /home/centos
