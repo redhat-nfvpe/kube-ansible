@@ -55,7 +55,7 @@ kube_version: "latest"
 # binary_install_force_redownload: false
 
 images_directory: /home/images
-system_default_ram_mb: 2048
+system_default_ram_mb: 4096
 system_default_cpus: 4
 virtual_machines:
   - name: kube-master
