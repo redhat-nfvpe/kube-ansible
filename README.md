@@ -167,6 +167,7 @@ kube-ansible supports following options
   - `bridge`: add linux bridge (`cni0`) and move `eth0` under `cni0`. This is useful to use linux bridge CNI for Kubernetes Pod's network
 - `container_runtime`: sepcify container runtime that Kubernetess uses. Default uses Docker.
   - `crio`: install [cri-o](https://cri-o.io/) for the container runtime
+- 'enable_endpointslice': set true if endpointslice is used instead of endpoints
 
 Here's the example:
 
