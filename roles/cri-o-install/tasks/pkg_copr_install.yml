@@ -1,0 +1,98 @@
+---
+# Some (lots!) borrowed from https://github.com/cri-o/cri-o-ansible
+
+- name: install copr plugin
+  yum:
+    name: yum-plugin-copr
+    state: present
+    disable_gpg_check: yes
+
+- name: yum-enable-copr
+  block:
+    - name: enable conmon
+      command: yum copr enable -y s1061123/conmon
+      args:
+        warn: no
+    - name: enable cri-o
+      command: yum copr enable -y s1061123/cri-o
+      args:
+        warn: no
+    - name: enable cri-tools
+      command: yum copr enable -y s1061123/cri-tools
+      args:
+        warn: no
+
+- name: Install CRI-O/conmon/critools
+  block:
+    - name: conmon
+      yum:
+        name: conmon
+        state: present
+        disable_gpg_check: yes
+    - name: cri-o
+      yum:
+        name: cri-o
+        state: present
+        disable_gpg_check: yes
+    - name: cri-tools
+      yum:
+        name: cri-tools
+        state: present
+        disable_gpg_check: yes
+
+- name: enable and start CRI-O
+  systemd:
+    name: crio
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: remove default CNI for further k8s cni plugin install
+  file:
+    path: /etc/cni/net.d
+    state: absent
+
+- name: re-create default CNI for further k8s cni plugin install
+  file:
+    path: /etc/cni/net.d
+    state: directory
+
+- name: modprobe br_netfilter
+  command: "modprobe br_netfilter"
+  ignore_errors: true
+
+# TODO: see if we can switch to the 'sysctl' module here
+- name: tune sysctl
+  lineinfile:
+    line: "net/bridge/bridge-nf-call-iptables = 1"
+    dest: /etc/sysctl.conf
+    insertafter: 'EOF'
+    regexp: '\/net\/bridge\/bridge-nf-call-iptables = 1'
+    state: present
+  ignore_errors: true
+
+- name: reload sysctl
+  command: "sysctl -p"
+  ignore_errors: true
+
+- name: Make directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+       - /etc/systemd/system/kubelet.service.d/
+
+- name: systemd dropin for kubeadm
+  shell: |
+          sh -c 'echo "[Service]
+          Environment=\"KUBELET_EXTRA_ARGS=--cgroup-driver=systemd --container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+
+- name: flush iptables
+  command: "iptables -F"
+
+- name: enable and start CRI-O
+  systemd:
+    name: crio
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

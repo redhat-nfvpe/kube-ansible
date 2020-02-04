@@ -14,7 +14,11 @@
 - name: Include the crio install plays
   block:
     - name: Get package and install crio
-      include: pkg_install.yml
+      block:
+        - include: pkg_install.yml
+          when: not crio_use_copr|bool
+        - include: pkg_copr_install.yml
+          when: crio_use_copr|bool
       when: not crio_build_install|bool
     - name: Build and install crio
       include: build_install.yml
