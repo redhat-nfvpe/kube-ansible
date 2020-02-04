@@ -23,6 +23,7 @@ docker_install_suppress_newgrp: true
 # (doesn't matter if docker is container runtime)
 crio_build_version: v1.11.1
 crio_build_install: False
+crio_use_copr: True
 crio_baseurl: https://cbs.centos.org/repos/paas7-crio-115-candidate/x86_64/os
 
 # Pod net work CIDR
