@@ -47,6 +47,15 @@
       yum:
         name: libibverbs
         state: present
+    - name: enable epel
+      yum:
+        name: epel-release
+        state: present
+    - name: enable python-pip
+      yum:
+        name: python-pip
+        state: present
+        enablerepo: epel
 
 - name: install git
   yum:
