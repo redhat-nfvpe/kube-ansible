@@ -169,6 +169,7 @@ kube-ansible supports following options
   - `crio`: install [cri-o](https://cri-o.io/) for the container runtime
 - `crio_use_copr`: (only in case of cri-o) set true if [copr cri-o RPM](http://copr.fedorainfracloud.org/coprs/s1061123/cri-o) is used
 - 'enable_endpointslice': set true if endpointslice is used instead of endpoints
+- 'enable_auditlog': set true if auditing logs
 
 Here's the example:
 

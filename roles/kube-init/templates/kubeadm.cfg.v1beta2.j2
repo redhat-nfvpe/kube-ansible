@@ -5,6 +5,26 @@ apiVersion: kubeadm.k8s.io/v1beta2
 apiServer:
   extraArgs:
     enable-admission-plugins: NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook
+{% if enable_auditlog|default(false) %}
+    audit-log-path: /var/log/kubernetes/audit.log
+    audit-log-maxage: "30"
+    audit-log-maxbackup: "10"
+    audit-log-maxsize: "100"
+    audit-policy-file: /etc/kubernetes/audit/audit.yaml
+    authorization-mode: Node,RBAC
+  timeoutForControlPlane: 4m0s
+  extraVolumes:
+  - name: "audit-policy"
+    hostPath: /etc/kubernetes/audit
+    mountPath: /etc/kubernetes/audit
+    readOnly: false
+    type: DirectoryOrCreate
+  - name: "audit-log"
+    hostPath: /var/log/kubernetes
+    mountPath: /var/log/kubernetes
+    readOnly: false
+    type: DirectoryOrCreate
+{% endif %}
 {% if enable_endpointslice|default(false) %}
     feature-gates: "EndpointSlice=true"
 {% endif %}
