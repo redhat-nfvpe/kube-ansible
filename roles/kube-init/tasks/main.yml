@@ -44,6 +44,19 @@
         dest: /root/kubeadm.cfg
       when: kubeadm_version_minor.stdout|int >= 16
 
+- name: configure audit
+  block:
+    - name: create audit directory
+      file:
+        path: /etc/kubernetes/audit
+        state: directory
+
+    - name: create audit policy file
+      template:
+        src: audit.yaml.j2
+        dest: /etc/kubernetes/audit/audit.yaml
+  when: enable_auditlog | default(false) | bool
+
 - name: Default cri-o flags to empty
   set_fact:
     arg_crio: ""
