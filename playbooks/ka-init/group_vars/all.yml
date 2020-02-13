@@ -26,6 +26,8 @@ crio_build_install: False
 crio_use_copr: True
 crio_baseurl: https://cbs.centos.org/repos/paas7-crio-115-candidate/x86_64/os
 
+# Network type (2nics or default)
+network_type: "default"
 # Pod net work CIDR
 pod_network_cidr: "10.244.0.0"
 
