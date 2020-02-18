@@ -52,7 +52,7 @@
   git:
     repo: https://github.com/cri-o/cri-o.git
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o"
-    version: "{{ crio_version }}"
+    version: "{{ crio_version|default('master') }}"
 
 - name: clone conmon
   git:
@@ -72,21 +72,21 @@
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins"
     version: master
 
-- name: build runc
+- name: build runc # noqa 301
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/opencontainers/runc && \
-          export GOPATH={{ ansible_env.HOME}}/{{ gopath }} && \
+          export GOPATH={{ ansible_env.HOME }}/{{ gopath }} && \
           make BUILDTAGS="seccomp selinux" && make install
   environment:
     PATH: "{{ extended_path }}"
 
-- name: link runc
+- name: link runc # noqa 301
   file:
     src: /usr/local/sbin/runc
     dest: /usr/bin/runc
     state: link
 
-- name: build cri-o
+- name: build cri-o # noqa 301
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o && \
           make && \
@@ -95,27 +95,27 @@
           make install.config
   environment:
     PATH: "{{ extended_path }}"
-    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
+    GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build conmon
+- name: build conmon # noqa 301
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containers/conmon && \
           make && \
           make install
   environment:
     PATH: "{{ extended_path }}"
-    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
+    GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build cri-tools
+- name: build cri-tools # noqa 301
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-sigs/cri-tools && \
           make && \
           make install
   environment:
     PATH: "{{ extended_path }}"
-    GOPATH: "{{ ansible_env.HOME}}/{{ gopath }}"
+    GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build CNI stuff
+- name: build CNI stuff # noqa 301
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins && \
           ./build_linux.sh && \
@@ -139,27 +139,28 @@
     daemon_reload: yes
 
 - name: modprobe br_netfilter
-  command: "modprobe br_netfilter"
-  ignore_errors: true
-
-# TODO: see if we can switch to the 'sysctl' module here
-- name: tune sysctl
-  lineinfile:
-    line: "net/bridge/bridge-nf-call-iptables = 1"
-    dest: /etc/sysctl.conf
-    insertafter: 'EOF'
-    regexp: '\/net\/bridge\/bridge-nf-call-iptables = 1'
+  modprobe:
+    name: br_netfilter
     state: present
-  ignore_errors: true
 
-- name: reload sysctl
-  command: "sysctl -p"
-  ignore_errors: true
+- name: tune sysctl
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    reload: yes
+    state: present
+    sysctl_set: yes
+    sysctl_file: /etc/sysctl.conf
 
-- name: systemd dropin for kubeadm
-  shell: |
+- name: systemd dropin for kubeadm # noqa 301
+  shell: >
           sh -c 'echo "[Service]
-          Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+          Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote
+          --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock
+          --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
 
 - name: flush iptables
-  command: "iptables -F"
+  iptables:
+    chain: "{{ item }}"
+    flush: yes
+  with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]

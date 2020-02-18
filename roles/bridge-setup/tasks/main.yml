@@ -1,6 +1,5 @@
 ---
-
-- name: Install bridge-utils and firewalld
+- name: Install bridge-utils and firewalld # noqa 403
   yum:
     name: bridge-utils,firewalld
     state: latest
@@ -11,7 +10,7 @@
     state: started
     enabled: yes
 
-- name: Accept bridge forwarding and accept packets
+- name: Accept bridge forwarding and accept packets # noqa 301
   shell: >
     firewall-cmd --permanent --direct --passthrough ipv4 -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT;
     firewall-cmd --permanent --direct --passthrough ipv4 -D INPUT -j REJECT --reject-with icmp-host-prohibited

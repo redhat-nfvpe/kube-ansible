@@ -1,0 +1,6 @@
+- name: Restart proxy when changed
+  systemd:
+    name: kubectl-proxy
+    state: restarted
+    daemon_reload: yes
+  listen: template_kubectlproxy_unit_changed

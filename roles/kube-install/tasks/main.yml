@@ -41,7 +41,7 @@
         - "/root/kubelet.rpm"
         - "/root/kubeadm.rpm"
         - "/root/kubernetes-cni.rpm"
-  when:  k8s_use_rpms|default("") != ""
+  when: k8s_use_rpms is defined
 
 - name: Install required packages for Kubernetes deployment
   package:
@@ -52,7 +52,7 @@
     - kubelet{{ kube_version_parameter }}
     - kubeadm{{ kube_version_parameter }}
     - kubernetes-cni
-  when:  k8s_use_rpms|default("") == ""
+  when: k8s_use_rpms is not defined
 
 - name: Optionally include playbook for binary install
   include: binary_install.yml

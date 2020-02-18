@@ -19,12 +19,18 @@
   become: true
   become_user: root
   tasks:
-    - name: Set bridge-nf-call-iptables to 1
+    - name: Load module if parameter is not in node # noqa 301
       shell: >
         if [ ! -f /proc/sys/net/bridge/bridge-nf-call-iptables ]; then \
           modprobe br_netfilter; \
-        fi && \
-        echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+        fi
+    - name: Set bridge-nf-call-iptables to 1
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
 
 - hosts: master
   become: true

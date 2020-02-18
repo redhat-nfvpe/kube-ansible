@@ -1,27 +1,29 @@
 ---
 
 - name: shut down eth1
-  shell: ifdown eth1
+  command: ifdown eth1
   listen: "restart eth1"
 
-- pause:
+- name: restart eth1
+  pause:
     seconds: 2
   listen: "restart eth1"
 
 - name: bring up eth1
-  shell: ifup eth1
+  command: ifup eth1
   listen: "restart eth1"
 
 - name: shut down eth1.1
-  shell: ifdown eth1.1
+  command: ifdown eth1.1
   listen: "restart eth1.1"
   when: "'master' in group_names"
 
-- pause:
+- name: restart eth1.1
+  pause:
     seconds: 2
   listen: "restart eth1.1"
 
 - name: bring up eth1.1
-  shell: ifup eth1.1
+  command: ifup eth1.1
   listen: "restart eth1.1"
   when: "'master' in group_names"

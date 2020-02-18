@@ -84,7 +84,7 @@
     path: /etc/.kubeadm-complete
     state: directory
 
-- name: Get join command
+- name: Get join command # noqa 301
   shell: >
     kubeadm token create --print-join-command
   register: kubeadm_join_output

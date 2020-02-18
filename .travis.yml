@@ -19,5 +19,6 @@ install:
     - ansible-galaxy install -r requirements.yml
 
 script:
-    - ansible-lint virthost-setup.yml
-    - ansible-lint builder.yml
+    - ansible-lint playbooks/virthost-setup.yml
+    - ansible-lint playbooks/kube-install.yml
+    - ansible-lint playbooks/kube-install-ovn.yml
