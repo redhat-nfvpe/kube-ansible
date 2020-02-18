@@ -38,6 +38,11 @@ scheduler:
   extraArgs:
     address: 0.0.0.0
 {% endif %}
+{% if groups.lb is defined and groups.lb|length > 0 %}
+{% for node in groups["lb"] %}
+controlPlaneEndpoint: {{ hostvars[node]['ansible_host'] }}:6443
+{% endfor %}
+{% endif %}
 {% if enable_endpointslice|default(false) %}
 controllerManager:
   extraArgs:

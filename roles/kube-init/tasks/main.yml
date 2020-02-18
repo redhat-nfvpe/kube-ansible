@@ -70,12 +70,21 @@
   set_fact:
     k8s_version: ""
 
+- name: set upload-certs in kubeadm option
+  set_fact:
+    k8s_upload_certs: ""
+
+- name: set upload-certs in kubeadm option
+  set_fact:
+    k8s_upload_certs: "--upload-certs"
+  when: groups.master_slave is defined and groups.master_slave|length > 0
+
 # Was trying to use flannel and running with:
 #     kubeadm init > /etc/kubeadm.init.txt
 # abandonded for now...
 - name: Run kubeadm init
   shell: >
-    kubeadm init {{ k8s_version }} {{ arg_crio }} --config=/root/kubeadm.cfg > /var/log/kubeadm.init.log
+    kubeadm init {{ k8s_version }} {{ arg_crio }} {{ k8s_upload_certs }} --config=/root/kubeadm.cfg > /var/log/kubeadm.init.log
   args:
     creates: /etc/.kubeadm-complete
 
@@ -93,6 +102,16 @@
   set_fact:
     kubeadm_join_command: "{{ kubeadm_join_output.stdout }}"
 
+- name: Get certificate-key
+  shell: >
+          set -o pipefail && kubeadm init phase upload-certs --upload-certs -v 0 2> /dev/null | tail -n 1
+  register: kubeadm_cert_key_output
+  when: groups.master_slave is defined and groups.master_slave|length > 0
+
+- name: Set fact with certificate-key
+  set_fact:
+    kubeadm_cert_key: "{{ kubeadm_cert_key_output.stdout }}"
+  when: groups.master_slave is defined and groups.master_slave|length > 0
 # -------- Copy in admin.conf
 
 # ---- Kube 1.6, apparently you can't use kubectl as root? weird/awesome.

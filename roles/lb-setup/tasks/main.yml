@@ -1,0 +1,24 @@
+- name: "Disable SELinux :("
+  selinux:
+    state: disabled
+
+- name: Install haproxy
+  package:
+    name: haproxy
+    state: present
+
+- name: backup original
+  copy:
+    src: /etc/haproxy/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg.orig
+
+- name: create haproxy.cfg
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: start haproxy
+  systemd:
+    name: haproxy.service
+    state: started
+    enabled: yes
