@@ -61,12 +61,20 @@ images_directory: /home/images
 system_default_ram_mb: 4096
 system_default_cpus: 4
 virtual_machines:
-  - name: kube-master
+  - name: kube-master1
     node_type: master
   - name: kube-node-1
     node_type: nodes
   - name: kube-node-2
     node_type: nodes
+# Uncomment following (lb/master_slave) for k8s master HA cluster
+#  - name: kube-lb
+#    node_type: lb
+#  - name: kube-master2
+#    node_type: master_slave
+#  - name: kube-master3
+#    node_type: master_slave
+
 #  - name: builder
 #    node_type: builder
 #    system_ram_mb: 24576

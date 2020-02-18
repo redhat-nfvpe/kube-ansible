@@ -1,0 +1,27 @@
+- name: Default cri-o flags to empty
+  set_fact:
+    arg_crio: ""
+
+- name: Set cri-o flags
+  set_fact:
+    arg_crio: "--ignore-preflight-errors=all"
+  when: container_runtime == "crio"
+
+- name: Default cri-o flags to empty
+  set_fact:
+    kubeadm_master_cert: ""
+
+- name: set master config in kubeadm option
+  set_fact:
+    kubeadm_master_cert: "--control-plane --certificate-key {{ kubeadm_cert_key }}"
+
+- name: Join each node to the master with the join command
+  shell: >
+    {{ kubeadm_join_command }} {{ kubeadm_master_cert }}
+  args:
+    creates: /etc/.kubeadm-joined
+
+- name: Mark the nodes as joined
+  file:
+    path: /etc/.kubeadm-joined
+    state: directory

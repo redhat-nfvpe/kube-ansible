@@ -91,6 +91,24 @@ default values are setup via `system_default_ram_mb` and `system_default_cpus`
 which can also be overridden if you wish different default values. (Current
 defaults are 2048MB and 4 vCPU.)
 
+In case of HA (stacked control plane nodes), you will need to change `roles/ka-init/group_vars/all.yml` to add lb and master_slave in `virtual_machines` as following.
+
+```
+virtual_machines:
+  - name: kube-lb
+    node_type: lb
+  - name: kube-master1
+    node_type: master
+  - name: kube-master2
+    node_type: master_slave
+  - name: kube-master3
+    node_type: master_slave
+  - name: kube-node-1
+    node_type: nodes
+  - name: kube-node-2
+    node_type: nodes
+```
+
 > **WARNING**
 >
 > If you're not going to be connecting to the virtual machines from the same
@@ -135,7 +153,6 @@ ansible-playbook -i inventory/virthost/ -e ssh_proxy_enabled=true playbooks/virt
 > * `ssh_proxy_host: virthost`  _hostname or IP of virthost_
 > * `ssh_proxy_port: 2222` _port of the virthost (optional, default 22)_
 > * `vm_ssh_key_path: /home/lmadsen/.ssh/id_vm_rsa`  _path to local SSH key_
-
 
 ### Step 3. Install Kubernetes
 

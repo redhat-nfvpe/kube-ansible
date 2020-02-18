@@ -1,7 +1,14 @@
 ---
 - import_playbook: ka-init/init.yml
 
-- hosts: master,nodes
+- hosts: lb
+  become: true
+  become_user: root
+  tasks: []
+  roles:
+    - { role: lb-setup }
+
+- hosts: master,nodes,master_slave
   become: true
   become_user: root
   tasks: []
@@ -15,10 +22,17 @@
     - { role: install-docker, when: container_runtime == 'docker' }
     - { role: kube-install }
 
-- hosts: master,nodes
+- hosts: master,nodes,master_slave
   become: true
   become_user: root
   tasks:
+    - name: Set ipv4 ip_forward to 1
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
     - name: Load module if parameter is not in node # noqa 301
       shell: >
         if [ ! -f /proc/sys/net/bridge/bridge-nf-call-iptables ]; then \
@@ -38,6 +52,20 @@
   tasks: []
   roles:
     - { role: kube-init }
+
+- hosts: master_slave
+  become: true
+  become_user: root
+  pre_tasks:
+    - name: Get cert related args from master
+      set_fact:
+        kubeadm_cert_key: "{{ hostvars[groups['master'][0]]['kubeadm_cert_key'] }}"
+    - name: Get kubeadm_join_command from master
+      set_fact:
+        kubeadm_join_command: "{{ hostvars[groups['master'][0]]['kubeadm_join_command'] }}"
+  tasks: []
+  roles:
+    - { role: kube-master-join-cluster }
 
 # ---- placeholder: kube-cni
 # without become.
