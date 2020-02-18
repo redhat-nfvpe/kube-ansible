@@ -1,8 +1,6 @@
 ---
-- hosts: all
+- name: Prerequisites
+  hosts: all
   tasks:
-    - include_vars: group_vars/all.yml
-
-- hosts: builder
-  tasks:
-    - include_vars: groups_vars/builder.yml
+    - name: include group vars
+      include_vars: group_vars/all.yml

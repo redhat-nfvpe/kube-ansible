@@ -58,22 +58,18 @@
     state: directory
 
 - name: modprobe br_netfilter
-  command: "modprobe br_netfilter"
-  ignore_errors: true
-
-# TODO: see if we can switch to the 'sysctl' module here
-- name: tune sysctl
-  lineinfile:
-    line: "net/bridge/bridge-nf-call-iptables = 1"
-    dest: /etc/sysctl.conf
-    insertafter: 'EOF'
-    regexp: '\/net\/bridge\/bridge-nf-call-iptables = 1'
+  modprobe:
+    name: br_netfilter
     state: present
-  ignore_errors: true
 
-- name: reload sysctl
-  command: "sysctl -p"
-  ignore_errors: true
+- name: tune sysctl
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    reload: yes
+    state: present
+    sysctl_set: yes
+    sysctl_file: /etc/sysctl.conf
 
 - name: Make directories
   file:
@@ -82,13 +78,19 @@
   with_items:
        - /etc/systemd/system/kubelet.service.d/
 
-- name: systemd dropin for kubeadm
-  shell: |
+- name: systemd dropin for kubeadm # noqa 301
+  shell: >
           sh -c 'echo "[Service]
-          Environment=\"KUBELET_EXTRA_ARGS=--cgroup-driver=systemd --container-runtime=remote --runtime-request-timeout=15m --image-service-endpoint /var/run/crio/crio.sock --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
+          Environment=\"KUBELET_EXTRA_ARGS=--cgroup-driver=systemd
+          --container-runtime=remote --runtime-request-timeout=15m
+          --image-service-endpoint /var/run/crio/crio.sock
+          --container-runtime-endpoint /var/run/crio/crio.sock\"" > /etc/systemd/system/kubelet.service.d/0-crio.conf'
 
 - name: flush iptables
-  command: "iptables -F"
+  iptables:
+    chain: "{{ item }}"
+    flush: yes
+  with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
 
 - name: enable and start CRI-O
   systemd:

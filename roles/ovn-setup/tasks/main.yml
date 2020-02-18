@@ -19,7 +19,7 @@
         dest: /etc/default/grub
         line: "GRUB_DEFAULT=0"
     - name: update grub conf
-      shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+      command: grub2-mkconfig -o /boot/grub2/grub.cfg
     - name: "reboot machine"
       reboot:
         reboot_timeout: 600

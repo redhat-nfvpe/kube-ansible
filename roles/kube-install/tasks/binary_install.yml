@@ -18,7 +18,7 @@
       url_is_set: "{{ binary_kubeadm_url is defined }}"
   when: >
     item.url_is_set and
-    (download_complete_semaphor.stat.exists == False or binary_install_force_redownload)
+    (not download_complete_semaphor.stat.exists|bool or binary_install_force_redownload)
 
 - name: Download kubelet/kubectl/kubeadm
   get_url:

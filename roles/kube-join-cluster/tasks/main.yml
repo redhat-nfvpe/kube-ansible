@@ -13,7 +13,7 @@
 
 - name: Change the given command
   shell: >
-    echo {{ kubeadm_join_command }} | sed -e 's/join/join {{ arg_crio }} /'
+    set -o pipefail && echo {{ kubeadm_join_command }} | sed -e 's/join/join {{ arg_crio }} /'
   register: modified_command
   when: container_runtime == "crio"  or skip_preflight_checks
 

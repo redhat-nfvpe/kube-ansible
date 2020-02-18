@@ -1,5 +1,5 @@
-- name: Taint master nodes
-  shell : kubectl taint nodes --all node-role.kubernetes.io/master-
+- name: Taint master nodes # noqa 301
+  command: kubectl taint nodes --all node-role.kubernetes.io/master-
   failed_when: false
 
 - name: setup ovn-kubernetes
@@ -8,7 +8,8 @@
       file:
         path: ${HOME}/work/src/github.com/ovn-org
         state: directory
-    - name: git clone
+
+    - name: git clone # noqa 401
       git:
         repo: https://github.com/ovn-org/ovn-kubernetes
         dest: ${HOME}/work/src/github.com/ovn-org/ovn-kubernetes
@@ -25,7 +26,7 @@
 - name: Add ovn-kube ymls
   block:
     - name: ovn-setup
-      shell: kubectl create -f {{ item }}
+      command: kubectl create -f {{ item }}
       args:
         chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
       with_items:
