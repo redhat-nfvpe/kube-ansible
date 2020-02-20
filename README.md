@@ -179,14 +179,21 @@ ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
 
 kube-ansible supports following options
 
-- `network_type`: specify network topology for the virthost, each master/worker has one interface (eth0) in default:
+- `network_type` (optional, string): specify network topology for the virthost, each master/worker has one interface (eth0) in default:
   - `2nics`: each master/worker node has two interfaces: eth0 and eth1
   - `bridge`: add linux bridge (`cni0`) and move `eth0` under `cni0`. This is useful to use linux bridge CNI for Kubernetes Pod's network
-- `container_runtime`: sepcify container runtime that Kubernetess uses. Default uses Docker.
+- `container_runtime` (optional, string): sepcify container runtime that Kubernetess uses. Default uses Docker.
   - `crio`: install [cri-o](https://cri-o.io/) for the container runtime
-- `crio_use_copr`: (only in case of cri-o) set true if [copr cri-o RPM](http://copr.fedorainfracloud.org/coprs/s1061123/cri-o) is used
-- 'enable_endpointslice': set true if endpointslice is used instead of endpoints
-- 'enable_auditlog': set true if auditing logs
+- `crio_use_copr` (optional, boolean): (only in case of cri-o) set true if [copr cri-o RPM](http://copr.fedorainfracloud.org/coprs/s1061123/cri-o) is used
+- 'ovn_image_repo' (optional, string): set the container image (e.g. `docker.io/ovnkube/ovn-daemonset-u:latest`)
+- 'enable_endpointslice' (optional, boolean): set `True` if endpointslice is used instead of endpoints
+- 'enable_auditlog' (optional, boolean): set `True` if auditing logs
+- 'enable_ovn_raft' (optional, boolean): (`kube-install-ovn.yml` only) set `True` if you want to ovn with raft mode
+
+> **NOTE**
+>
+> In case of `enable_ovn_raft=True`, you need to configure `ovn_image_repo` as well because current official
+> ovn-kubernetes image does not support raft.
 
 Here's the example:
 

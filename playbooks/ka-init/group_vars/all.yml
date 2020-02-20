@@ -90,6 +90,11 @@ kubectl_proxy_port: 8088
 #control_plane_listen_all: true
 
 # ----------------------------
+# ovn vars.
+# ----------------------------
+ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
+
+# ----------------------------
 # virt-host vars.
 # ----------------------------
 
