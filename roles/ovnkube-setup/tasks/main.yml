@@ -14,23 +14,48 @@
         repo: https://github.com/ovn-org/ovn-kubernetes
         dest: ${HOME}/work/src/github.com/ovn-org/ovn-kubernetes
 
-    - name: log
+    - name: set kube_api_server
+      set_fact:
+        kube_api_server: "https://{{ ansible_default_ipv4.address }}:6443"
+
+    - name: overwrite kube_api_server in case of HA
+      set_fact:
+        kube_api_server: "https://{{ hostvars[groups['lb'][0]]['ansible_host'] }}:6443"
+      when: groups.master_slave is defined and groups.master_slave|length > 0
+
+    - name: create ovn yaml file
       shell: |
-        ./daemonset.sh --image=docker.io/ovnkube/ovn-daemonset-u:latest \
+        ./daemonset.sh --image={{ ovn_image_repo }} \
                 --net-cidr=10.244.0.0/16 --svc-cidr=10.96.0.0/12 \
-                --gateway-mode="local" \
-                --k8s-apiserver=https://{{ ansible_default_ipv4.address }}:6443
+                --gateway-mode="local" --k8s-apiserver={{ kube_api_server }}
       args:
         chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/images
 
+- name: Add label to master node for ovn raft mode
+  command: kubectl label nodes {{ item }} ovn.org/ovnkube-db=true
+  with_items:
+    - "{{ groups['master'] }}"
+    - "{{ groups['master_slave'] }}"
+  when: enable_ovn_raft is defined and enable_ovn_raft
+
 - name: Add ovn-kube ymls
-  block:
-    - name: ovn-setup
-      command: kubectl create -f {{ item }}
-      args:
-        chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
-      with_items:
-        - ovn-setup.yaml
-        - ovnkube-db.yaml
-        - ovnkube-master.yaml
-        - ovnkube-node.yaml
+  command: kubectl create -f {{ item }}
+  args:
+    chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
+  with_items:
+    - ovn-setup.yaml
+    - ovnkube-db-raft.yaml
+    - ovnkube-master.yaml
+    - ovnkube-node.yaml
+  when: enable_ovn_raft is defined and enable_ovn_raft
+
+- name: Add ovn-kube ymls
+  command: kubectl create -f {{ item }}
+  args:
+    chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
+  with_items:
+    - ovn-setup.yaml
+    - ovnkube-db.yaml
+    - ovnkube-master.yaml
+    - ovnkube-node.yaml
+  when: enable_ovn_raft is not defined and not enable_ovn_raft
