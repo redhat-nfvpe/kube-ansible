@@ -7,10 +7,16 @@
     name: haproxy
     state: present
 
+- name: check if haproxy config file exist
+  local_action:
+    stat path="/etc/haproxy/haproxy.cfg"
+  register: file_status
+
 - name: backup original
   copy:
     src: /etc/haproxy/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg.orig
+  when: file_status.stat.exists
 
 - name: create haproxy.cfg
   template:
