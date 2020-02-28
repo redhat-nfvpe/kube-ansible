@@ -8,9 +8,9 @@
     state: present
 
 - name: check if haproxy config file exist
-  local_action:
-    stat path="/etc/haproxy/haproxy.cfg"
+  stat path="/etc/haproxy/haproxy.cfg"
   register: file_status
+  delegate_to: localhost
 
 - name: backup original
   copy:
