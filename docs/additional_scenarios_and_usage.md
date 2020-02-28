@@ -54,8 +54,15 @@ It's recommended you spin up the machines with 4 gigs of ram or greater during
 the VM creation phase, should you use it. One may wish to add the parameters
 `-e "system_default_ram_mb=4096"` to your playbook run of `virthost-setup.yml`.
 
-Set `crio_build_install=True' if you download and build crio from git repo.
+Set `crio_build_install=True` if you download and build crio from git repo.
 You may also need to set `crio_build_version` to match kubernetes version. See [Compatibility matrix](https://github.com/kubernetes-sigs/cri-o#compatibility-matrix-cri-o---kubernetes-clusters) for the detail.
+
+## Deploying Cluster with OVN-Kubernetes CNI
+```
+ansible-playbook -i inventory/vms.local.generated -e 'network_type=2nics' \
+        -e 'container_runtime=crio' -e 'ovn_image_repo=<repo-url>' \
+        playbooks/kube-install-ovn.yml
+```
 
 ## Using Fedora
 

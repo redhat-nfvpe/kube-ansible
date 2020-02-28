@@ -60,6 +60,12 @@ kube_version: "latest"
 images_directory: /home/images
 system_default_ram_mb: 4096
 system_default_cpus: 4
+
+# Define all VM's that need to be created and their respective roles.
+# There are three roles user can defined
+#  - master: Kubernets primary master node
+#  - master_slave: Kubernets secondary master nodes that joins primary master
+#  - nodes : Kubernetes nodes (worker)
 virtual_machines:
   - name: kube-master1
     node_type: master
@@ -93,6 +99,7 @@ kubectl_proxy_port: 8088
 # ovn vars.
 # ----------------------------
 ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
+enable_ovn_raft: True
 
 # ----------------------------
 # virt-host vars.
