@@ -8,7 +8,8 @@
     state: present
 
 - name: check if haproxy config file exist
-  stat path="/etc/haproxy/haproxy.cfg"
+  stat:
+    path: /etc/haproxy/haproxy.cfg
   register: file_status
   delegate_to: localhost
 
