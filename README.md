@@ -283,18 +283,19 @@ nodes when proxying.
 >
 > **Usage**: `source ~/.bashrc ; ssh-virthost centos@kube-master`
 
-### Step 5. Checking your installation
+### Step 5. Verify the installation
 
 Once you're logged into your Kubernetes master node, run the following command
 to check the state of your cluster.
 
 ```
-kubectl get nodes
-NAME          STATUS    ROLES     AGE       VERSION
-kube-master   Ready     master    10m       v1.8.3
-kube-node-1   Ready     <none>    9m        v1.8.3
-kube-node-2   Ready     <none>    9m        v1.8.3
-kube-node-3   Ready     <none>    9m        v1.8.3
+$ kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+kube-master1   Ready    master   18h   v1.17.3
+kube-master2   Ready    master   18h   v1.17.3
+kube-master3   Ready    master   18h   v1.17.3
+kube-node-1    Ready    <none>   18h   v1.17.3
+kube-node-2    Ready    <none>   18h   v1.17.3
 ```
 
 Everything should be marked as ready. If so, you're good to go!
@@ -395,7 +396,7 @@ ansible_ssh_private_key_file=/root/.ssh/dev-server/id_vm_rsa
 **Install Kubernetes**
 
 ```
-ansible-playbook -i inventory/vms.local.generated playbooks/kube-install.yml
+ansible-playbook -i inventory/vms.local.generated playbooks/kube-install-ovn.yml
 ```
 **Verify Setup**
 Login to Kubernets master node
