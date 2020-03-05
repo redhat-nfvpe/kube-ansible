@@ -25,7 +25,7 @@
         reboot_timeout: 600
   when: ansible_kernel is  version('4.6','<')
 
-- name: install openvswitch/ovn
+- name: install openvswitch and required dependencies on the master/worker nodes
   block:
     - name: install openstack repo
       yum_repository:
@@ -34,13 +34,10 @@
         file: cloud7-openstack-train-release
         baseurl: https://cbs.centos.org/repos/cloud7-openstack-train-release/x86_64/os
         gpgcheck: no
-    - name: install openvswitch and so on
+    - name: install openvswitch
       yum:
         name:
-          - ovn
-          - ovn-central
-          - ovn-vtep
-          - ovn-host
+          - openvswitch
         enablerepo: cloud7-openstack-train-release
         state: present
     - name: install libibverbs
