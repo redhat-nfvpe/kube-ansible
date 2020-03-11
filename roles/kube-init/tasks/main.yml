@@ -112,36 +112,3 @@
   set_fact:
     kubeadm_cert_key: "{{ kubeadm_cert_key_output.stdout }}"
   when: groups.master_slave is defined and groups.master_slave|length > 0
-# -------- Copy in admin.conf
-
-# ---- Kube 1.6, apparently you can't use kubectl as root? weird/awesome.
-
-  # sudo cp /etc/kubernetes/admin.conf $HOME/
-  # sudo chown $(id -u):$(id -g) $HOME/admin.conf
-  # export KUBECONFIG=$HOME/admin.conf
-
-- name: Ensure .kube folder exists
-  file:
-    path: "{{ kubectl_home }}/.kube/"
-    state: directory
-    owner: "{{ kubectl_user }}"
-    group: "{{ kubectl_group }}"
-    mode: 0755
-
-- name: Copy admin.conf to kubectl user's home
-  shell: >
-    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/.kube/admin.conf
-  args:
-    creates: "{{ kubectl_home }}/admin.conf"
-
-- name: Set admin.conf ownership
-  file:
-    path: "{{ kubectl_home }}/.kube/admin.conf"
-    owner: "{{ kubectl_user }}"
-    group: "{{ kubectl_group }}"
-
-- name: Add KUBECONFIG env for admin.conf to .bashrc
-  lineinfile:
-    dest: "{{ kubectl_home }}/.bashrc"
-    regexp: "KUBECONFIG"
-    line: "export KUBECONFIG={{ kubectl_home }}/.kube/admin.conf"

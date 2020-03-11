@@ -1,0 +1,31 @@
+# -------- Configure kubectl -------------
+# It does the following
+# sudo cp /etc/kubernetes/admin.conf $HOME/.kube
+# sudo chown $(id -u):$(id -g) $HOME/.kube/admin.conf
+# export KUBECONFIG=$HOME/.kube/admin.conf
+
+- name: Ensure .kube folder exists
+  file:
+    path: "{{ kubectl_home }}/.kube/"
+    state: directory
+    owner: "{{ kubectl_user }}"
+    group: "{{ kubectl_group }}"
+    mode: 0755
+
+- name: Copy admin.conf to kubectl user's home
+  shell: >
+    cp -f /etc/kubernetes/admin.conf {{ kubectl_home }}/.kube/admin.conf
+  args:
+    creates: "{{ kubectl_home }}/admin.conf"
+
+- name: Set admin.conf ownership
+  file:
+    path: "{{ kubectl_home }}/.kube/admin.conf"
+    owner: "{{ kubectl_user }}"
+    group: "{{ kubectl_group }}"
+
+- name: Add KUBECONFIG env for admin.conf to .bashrc
+  lineinfile:
+    dest: "{{ kubectl_home }}/.bashrc"
+    regexp: "KUBECONFIG"
+    line: "export KUBECONFIG={{ kubectl_home }}/.kube/admin.conf"

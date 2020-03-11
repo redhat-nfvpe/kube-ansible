@@ -51,6 +51,7 @@
   tasks: []
   roles:
     - { role: kube-init }
+    - { role: configure-kubectl }
 
 - hosts: master_slave
   become: true
@@ -65,9 +66,10 @@
   tasks: []
   roles:
     - { role: kube-master-join-cluster }
+    - { role: configure-kubectl }
 
 # without become.
-- hosts: master
+- hosts: master, master_slave
   tasks: []
   roles:
     - { role: kube-niceties }
