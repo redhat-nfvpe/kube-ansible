@@ -29,5 +29,6 @@ in the example logs above. OVN-Kubernetes picks the IP address of the host using
 address from `getent ahostsv4 <hostname>` & `ifconfig` on that host, it means your DNS cache is stale and needs refresh.
 
 **Workaround** Make sure that the dnsmasq service is in correct state on your physical machine where libvirt is running.
-In the VM, you can fire `pkill -HUP dnsmasq`, it will result in loading the fresh configuration and
-now `getent ahostsv4 <hostname>` should show the same ip address as `ifconfig`. Once DNS caches are refresh, you can trigger the ansible-playbook that installs the k8s deployment.
+Fire `pkill -HUP dnsmasq` on the physical machine, it will result in `dnsmasq` loading the fresh configuration and
+now `getent ahostsv4 <hostname>` should in VM should show the same ip address as `ifconfig`. Once DNS caches are refresh,
+ you can trigger the ansible-playbook that installs the k8s deployment.
