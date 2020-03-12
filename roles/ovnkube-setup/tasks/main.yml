@@ -59,3 +59,7 @@
     - ovnkube-master.yaml
     - ovnkube-node.yaml
   when: enable_ovn_raft is not defined and not enable_ovn_raft
+
+- name: Stop kube-proxy daemonset
+  command: kubectl -n kube-system delete ds kube-proxy
+  failed_when: false

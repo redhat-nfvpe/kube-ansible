@@ -88,13 +88,6 @@
 
 - hosts: master
   become: true
-  become_user: root
-  tasks: []
-  roles:
-    - { role: kubectl-proxy-systemd }
-
-- hosts: master
-  become: true
   become_user: centos
   tasks: []
   roles:
