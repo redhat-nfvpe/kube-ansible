@@ -32,7 +32,7 @@
         chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/images
 
 - name: Add label to master node for ovn raft mode
-  command: kubectl label nodes {{ item }} ovn.org/ovnkube-db=true
+  command: kubectl label nodes {{ item }} k8s.ovn.org/ovnkube-db=true
   with_items:
     - "{{ groups['master'] }}"
     - "{{ groups['master_slave'] }}"
