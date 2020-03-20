@@ -30,5 +30,6 @@ address from `getent ahostsv4 <hostname>` & `ifconfig` on that host, it means yo
 
 **Workaround** Make sure that the dnsmasq service is in correct state on your physical machine where libvirt is running.
 Fire `pkill -HUP dnsmasq` on the physical machine, it will result in `dnsmasq` loading the fresh configuration and
-now `getent ahostsv4 <hostname>` should in VM should show the same ip address as `ifconfig`. Once DNS caches are refresh,
+now `getent ahostsv4 <hostname>` in VM should show the same ip address as `ifconfig`. Once DNS cache is refreshed,
  you can trigger the ansible-playbook that installs the k8s deployment.
+ ***Note*** This workaround is already part kube-ansible playbook. If you want to skip this workaround please run `virthost.yml` playbook with `--skip-tags dns-workaround`.
