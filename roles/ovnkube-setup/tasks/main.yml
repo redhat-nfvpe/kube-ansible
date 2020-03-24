@@ -11,8 +11,9 @@
 
     - name: git clone # noqa 401
       git:
-        repo: https://github.com/ovn-org/ovn-kubernetes
+        repo: "{{ ovn_kubernetes_repo | default('https://github.com/ovn-org/ovn-kubernetes') }}"
         dest: ${HOME}/work/src/github.com/ovn-org/ovn-kubernetes
+        version: "{{ ovn_kubernetes_branch | default('master') }}"
 
     - name: set kube_api_server
       set_fact:

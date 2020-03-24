@@ -100,6 +100,9 @@ kubectl_proxy_port: 8088
 # ----------------------------
 ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
 
+# OVN Kubernets repo and branch
+#ovn_kubernetes_repo: https://github.com/ovn-org/ovn-kubernetes
+#ovn_kubernetes_branch: master
 # Setup ovn-kubernetes in clustered HA mode (Raft based)
 #enable_ovn_raft: True
 
