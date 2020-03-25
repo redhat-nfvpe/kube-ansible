@@ -101,10 +101,32 @@ kubectl_proxy_port: 8088
 ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
 
 # OVN Kubernets repo and branch
-#ovn_kubernetes_repo: https://github.com/ovn-org/ovn-kubernetes
-#ovn_kubernetes_branch: master
+# ovn_kubernetes_repo: https://github.com/ovn-org/ovn-kubernetes
+# ovn_kubernetes_branch: master
 # Setup ovn-kubernetes in clustered HA mode (Raft based)
-#enable_ovn_raft: True
+# enable_ovn_raft: True
+
+# Set logging parameters for different OVN components
+# Log level for ovnkube master
+# ovnkube_master_loglevel: "5"
+
+# Log level for ovnkube node
+# ovnkube_node_loglevel: "5"
+
+# Log config for ovn northd
+# ovn_loglevel_northd: "-vconsole:info -vfile:info"
+
+# Log config for OVN Northbound Database
+# ovn_loglevel_nb: "-vconsole:info -vfile:info"
+
+# Log config for OVN Southbound Database
+# ovn_loglevel_sb: "-vconsole:info -vfile:info"
+
+# Log config for OVN Controller
+# ovn_loglevel_controller: "-vconsole:info"
+
+# Log config for OVN NBCTL daemon
+# ovn_loglevel_nbctld: "-vconsole:info"
 
 # ----------------------------
 # virt-host vars.

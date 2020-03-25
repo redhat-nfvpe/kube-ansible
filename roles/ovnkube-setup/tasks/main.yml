@@ -27,8 +27,17 @@
     - name: create ovn yaml file
       shell: |
         ./daemonset.sh --image={{ ovn_image_repo }} \
-                --net-cidr=10.244.0.0/16 --svc-cidr=10.96.0.0/12 \
-                --gateway-mode="local" --k8s-apiserver={{ kube_api_server }}
+                --net-cidr=10.244.0.0/16 \
+                --svc-cidr=10.96.0.0/12 \
+                --gateway-mode="local" \
+                --k8s-apiserver={{ kube_api_server }} \
+                --master-loglevel="{{ ovnkube_master_loglevel | default('5') }}" \
+                --node-loglevel="{{ ovnkube_node_loglevel | default('4') }}" \
+                --ovn-loglevel-northd="{{ ovn_loglevel_northd | default('-vfile:info') }}" \
+                --ovn-loglevel-nb="{{ ovn_loglevel_nb | default('-vfile:info') }}" \
+                --ovn-loglevel-sb="{{ ovn_loglevel_sb | default('-vfile:info') }}" \
+                --ovn-loglevel-controller="{{ ovn_loglevel_controller | default('-vfile:info') }}" \
+                --ovn-loglevel-nbctld="{{ ovn_loglevel_nbctld | default('-vfile:info') }}"
       args:
         chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/images
 
