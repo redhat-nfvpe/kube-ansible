@@ -29,16 +29,16 @@
   block:
     - name: install openstack repo
       yum_repository:
-        name: cloud7-openstack-train-release
-        description: cloud7-openstack-train-release
-        file: cloud7-openstack-train-release
-        baseurl: https://cbs.centos.org/repos/cloud7-openstack-train-release/x86_64/os
+        name: openstack-train
+        description: openstack-train
+        file: openstack-train
+        baseurl: http://mirror.centos.org/centos/7/cloud/x86_64/openstack-train/
         gpgcheck: no
     - name: install openvswitch
       yum:
         name:
           - openvswitch
-        enablerepo: cloud7-openstack-train-release
+        enablerepo: openstack-train
         state: present
     - name: install libibverbs
       yum:
