@@ -48,6 +48,12 @@
     - "{{ groups['master_slave'] }}"
   when: enable_ovn_raft is defined and enable_ovn_raft
 
+# see https://github.com/ovn-org/ovn-kubernetes/pull/1351 for the detail
+- name: Patch ovnkube-node yaml
+  patch:
+    src: ovnkube-node.diff
+    dest: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml/ovnkube-node.yaml
+
 - name: Add ovn-kube ymls
   command: kubectl create -f {{ item }}
   args:

@@ -92,6 +92,15 @@
 
 - hosts: master
   become: true
+  become_user: root
+  tasks:
+    - name: Install patch package
+      yum:
+        name: patch
+        state: present
+
+- hosts: master
+  become: true
   become_user: centos
   tasks: []
   roles:
