@@ -50,7 +50,7 @@
 
 - name: clone CRI-O
   git:
-    repo: https://github.com/cri-o/cri-o.git
+    repo: "{{ crio_giturl|default('https://github.com/cri-o/cri-o.git') }}"
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o"
     version: "{{ crio_version|default('master') }}"
 
