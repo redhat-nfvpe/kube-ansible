@@ -15,7 +15,7 @@
   block:
     - name: Get package and install crio
       block:
-        - include: pkg_install.yml
+        - include: binary_install.yml
           when: not crio_use_copr|bool
         - include: pkg_copr_install.yml
           when: crio_use_copr|bool
