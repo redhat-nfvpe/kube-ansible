@@ -4,7 +4,7 @@
   file:
     dest: /etc/.crio-installed
     state: absent
-  when: crio_force
+  when: crio_force|default(false)
 
 - name: Check for .crio-installed semaphor
   stat:
