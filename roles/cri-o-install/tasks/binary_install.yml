@@ -1,0 +1,95 @@
+---
+
+- name: Create a path for us
+  set_fact:
+    extended_path: "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/usr/local/go/bin"
+
+- name: Ensure src dir
+  file:
+    path: ${HOME}/src
+    state: directory
+
+- name: Ensure requried packages for cri-o
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - make
+    - iptables
+
+- name: Install cri-o
+  block:
+    - name: Ensure required dir for cri-o
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - /opt/cni/bin
+        - /etc/crio
+        - /usr/share/containers/oci/hooks.d
+        - /usr/local/share/oci-umount/oci-umount.d
+        - /usr/local/lib/systemd/system
+    - name: Get cri-o
+      get_url:
+        url: "{{ crio_binary_url }}"
+        dest: ${HOME}/src/crio.tar.gz
+    - name: Extract cri-o
+      unarchive:
+        src: ${HOME}/src/crio.tar.gz
+        dest: ${HOME}/src
+        remote_src: yes
+    - name: Install cri-o
+      shell: |
+        cd {{ ansible_env.HOME }}/src/crio-v1.18.2 && \
+        make install
+      environment:
+       PATH: "{{ extended_path }}"
+    - name: remove CNI config
+      file:
+        path: /etc/cni/net.d/10-crio-bridge.conf
+        state: absent
+
+- name: Install crictl
+  block:
+    - name: Get crictl
+      get_url:
+        url: "{{ crictl_binary_url }}"
+        dest: ${HOME}/src/crictl.tar.gz
+    - name: Extract crictl
+      unarchive:
+        src: ${HOME}/src/crictl.tar.gz
+        dest: ${HOME}/src
+        remote_src: yes
+    - name: Copy crictl
+      copy:
+        src: ${HOME}/src/crictl
+        dest: /usr/bin/crictl
+        owner: root
+        group: root
+        mode: '755'
+        remote_src: yes
+
+- name: Install conmon
+  block:
+    - name: Get conmon
+      get_url:
+        url: "{{ conmon_binary_url }}"
+        dest: ${HOME}/src/conmon
+    - name: Copy conmon
+      copy:
+        src: ${HOME}/src/conmon
+        dest: /usr/local/bin/conmon
+        owner: root
+        group: root
+        mode: '755'
+        remote_src: yes
+
+- name: systemd daemon-reload
+  systemd:
+    daemon_reload: yes
+
+- name: Enable cri-o
+  systemd:
+    name: crio.service
+    state: started
+    enabled: yes

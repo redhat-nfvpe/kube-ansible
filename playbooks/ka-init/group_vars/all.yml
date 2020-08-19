@@ -23,8 +23,13 @@ docker_install_suppress_newgrp: true
 # (doesn't matter if docker is container runtime)
 crio_build_version: v1.11.1
 crio_build_install: False
-crio_use_copr: True
-crio_baseurl: https://cbs.centos.org/repos/paas7-crio-115-candidate/x86_64/os
+crio_use_copr: False
+# for binary install
+crio_binary_url: https://storage.googleapis.com/k8s-conform-cri-o/artifacts/crio-v1.18.2.tar.gz
+crictl_binary_url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.18.0/crictl-v1.18.0-linux-amd64.tar.gz
+conmon_binary_url: https://github.com/containers/conmon/releases/download/v2.0.20/conmon
+
+
 
 # Network type (2nics or default)
 network_type: "default"

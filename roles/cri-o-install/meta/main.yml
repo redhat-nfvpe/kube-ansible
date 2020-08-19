@@ -1,3 +1,0 @@
----
-dependencies: # noqa 701
-  - { role: install-go, when: crio_build_install|bool }
