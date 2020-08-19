@@ -1,19 +1,23 @@
 DEVICE=eth1
 NAME=eth1
-NM_CONTROLLED=no
+USERCTL=no
 {% if ansible_hostname == 'kube-master' %}
+BOOTPROTO=static
 ONBOOT=yes
 IPADDR=10.1.1.1
 NETMASK=255.255.255.0
 {% elif ansible_hostname == 'kube-node-1' %}
+BOOTPROTO=static
 ONBOOT=yes
 IPADDR=10.1.1.11
 NETMASK=255.255.255.0
 {% elif ansible_hostname == 'kube-node-2' %}
+BOOTPROTO=static
 ONBOOT=yes
 IPADDR=10.1.1.12
 NETMASK=255.255.255.0
 {% elif ansible_hostname == 'kube-node-3' %}
+BOOTPROTO=static
 ONBOOT=yes
 IPADDR=10.1.1.13
 NETMASK=255.255.255.0

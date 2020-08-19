@@ -1,4 +1,18 @@
 ---
+- name: Ensure requried packages for cri-o
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - NetworkManager
+
+- name: Enable NetworkManager
+  systemd:
+    name: NetworkManager.service
+    daemon_reload: yes
+    state: started
+    enabled: yes
+
 - name: create /etc/cni/multus/net.d
   file:
     path: /etc/cni/multus/net.d
@@ -8,15 +22,33 @@
     group: root
     mode: 0755
 
+- name: Delete automatically created connection # noqa 301
+  shell: |
+    nmcli d disconnect eth1 && \
+    nmcli c delete 'Wired connection 1'
+  ignore_errors: true
+
 - name: Configure eth1 for data plane
   template:
     src: ifcfg-eth1.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-eth1
-  notify: "restart eth1"
 
 - name: Configure eth1.1 for data plane
   template:
     src: ifcfg-eth1.1.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-eth1.1
-  notify: "restart eth1.1"
+  when: "'master' in group_names"
+
+- name: Reload NetworkManager connection # noqa 301
+  command: nmcli connection reload
+
+- name: bring up eth1 # noqa 301
+  command: nmcli c up eth1
+
+- name: rename eth1.1 connection name
+  command: nmcli c modify 'Vlan eth1.1' connection.id 'eth1.1'
+  when: "'master' in group_names"
+
+- name: bring up eth1.1
+  command: nmcli c up 'eth1.1'
   when: "'master' in group_names"
