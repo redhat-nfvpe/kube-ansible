@@ -34,7 +34,7 @@ conmon_binary_url: https://github.com/containers/conmon/releases/download/v2.0.2
 # Network type (2nics or default)
 network_type: "default"
 # Pod net work CIDR
-pod_network_cidr: "10.244.0.0"
+pod_network_cidr: "10.244.0.0/16"
 
 # General config
 

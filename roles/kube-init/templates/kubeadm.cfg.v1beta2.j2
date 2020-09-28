@@ -29,7 +29,7 @@ apiServer:
     feature-gates: "EndpointSlice=true"
 {% endif %}
 networking:
-  podSubnet: {{ pod_network_cidr }}/16
+  podSubnet: {{ pod_network_cidr }}
 {% if control_plane_listen_all %}
 controllerManager:
   extraArgs:
