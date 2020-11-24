@@ -40,7 +40,7 @@
         remote_src: yes
     - name: Install cri-o
       shell: |
-        cd {{ ansible_env.HOME }}/src/crio-v1.18.2 && \
+        cd {{ ansible_env.HOME }}/src/crio-v1.18.4 && \
         make install
       environment:
        PATH: "{{ extended_path }}"
