@@ -90,6 +90,8 @@
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o && \
           make && \
+          echo "fs.may_detach_mounts=1" >> /etc/sysctl.conf && \
+          sysctl -p && \
           make install && \
           make install.systemd && \
           make install.config
