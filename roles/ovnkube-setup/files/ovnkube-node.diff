@@ -1,19 +1,11 @@
-*** ovnkube-node.yaml.orig	Wed May 20 06:48:33 2020
---- ovnkube-node.yaml	Wed May 20 06:48:59 2020
-***************
-*** 162,168 ****
-          securityContext:
-            runAsUser: 0
-            capabilities:
-!             add: ["NET_ADMIN", "SYS_ADMIN", "SYS_PTRACE"]
-            
-  
-          terminationMessagePolicy: FallbackToLogsOnError
---- 162,168 ----
-          securityContext:
-            runAsUser: 0
-            capabilities:
-!             add: ["NET_BIND_SERVICE", "NET_ADMIN", "NET_RAW", "SYS_RAWIO", "SYS_CHROOT", "SYS_ADMIN", "SYS_PTRACE"]
-            
-  
-          terminationMessagePolicy: FallbackToLogsOnError
+--- ovnkube-node.yaml 2021-01-08 19:41:10.824333892 +0000
++++ change.ovnkube-node.yaml  2021-01-08 19:45:09.061758500 +0000
+@@ -101,7 +101,7 @@
+         securityContext:
+           runAsUser: 0
+           privileged: true
+-          
++          add: ["NET_BIND_SERVICE", "NET_ADMIN", "NET_RAW", "SYS_RAWIO", "SYS_CHROOT", "SYS_ADMIN", "SYS_PTRACE"]
+ 
+         terminationMessagePolicy: FallbackToLogsOnError
+         volumeMounts:
