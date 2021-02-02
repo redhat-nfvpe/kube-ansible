@@ -103,7 +103,8 @@ kubectl_proxy_port: 8088
 # ----------------------------
 # ovn vars.
 # ----------------------------
-ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
+#ovn_image_repo: "docker.io/ovnkube/ovn-daemonset-u:latest"
+ovn_image_repo: "docker.io/nfvpe/ovn-daemonset-u:latest"
 
 # OVN Kubernets repo and branch
 # ovn_kubernetes_repo: https://github.com/ovn-org/ovn-kubernetes

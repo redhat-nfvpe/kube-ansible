@@ -60,6 +60,7 @@
     chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
   with_items:
     - ovn-setup.yaml
+    - ovs-node.yaml
     - ovnkube-db-raft.yaml
     - ovnkube-master.yaml
     - ovnkube-node.yaml
@@ -71,10 +72,15 @@
     chdir: $HOME/work/src/github.com/ovn-org/ovn-kubernetes/dist/yaml
   with_items:
     - ovn-setup.yaml
+    - ovs-node.yaml
     - ovnkube-db.yaml
     - ovnkube-master.yaml
     - ovnkube-node.yaml
   when: enable_ovn_raft is not defined and not enable_ovn_raft
+
+- name: Patch coredns
+  command: |
+          kubectl -n kube-system patch deploy coredns -p '{"spec":{"template":{"metadata":{"annotations": {"kubernetes.io/egress-bandwidth": "1M", "kubernetes.io/ingress-bandwidth": "1M"}}}}}'
 
 - name: Stop kube-proxy daemonset  # noqa 301
   command: kubectl -n kube-system delete ds kube-proxy
