@@ -88,6 +88,12 @@
   systemd:
     daemon_reload: yes
 
+- name: add docker.io registry in /etc/crio/crio.conf
+  lineinfile:
+    path: /etc/crio/crio.conf
+    insertafter: '^#registries = \['
+    line: 'registries = [ "docker.io" ]'
+
 - name: Enable cri-o
   systemd:
     name: crio.service
