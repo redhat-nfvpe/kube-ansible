@@ -22,7 +22,7 @@
     group: root
     mode: 0755
 
-- name: Delete automatically created connection # noqa 301
+- name: Delete automatically created connection # noqa no-changed-when
   shell: |
     nmcli d disconnect eth1 && \
     nmcli c delete 'Wired connection 1'
@@ -39,10 +39,10 @@
     dest: /etc/sysconfig/network-scripts/ifcfg-eth1.1
   when: "'master' in group_names"
 
-- name: Reload NetworkManager connection # noqa 301
+- name: Reload NetworkManager connection # noqa no-changed-when
   command: nmcli connection reload
 
-- name: bring up eth1 # noqa 301
+- name: bring up eth1 # noqa no-changed-when
   command: nmcli c up eth1
 
 - name: rename eth1.1 connection name

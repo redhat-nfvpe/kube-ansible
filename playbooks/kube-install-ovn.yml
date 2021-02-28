@@ -33,7 +33,7 @@
         sysctl_set: yes
         state: present
         reload: yes
-    - name: Load module if parameter is not in node # noqa 301
+    - name: Load module if parameter is not in node # noqa no-changed-when
       shell: >
         if [ ! -f /proc/sys/net/bridge/bridge-nf-call-iptables ]; then \
           modprobe br_netfilter; \

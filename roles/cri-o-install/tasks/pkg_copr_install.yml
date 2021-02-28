@@ -78,7 +78,7 @@
   with_items:
        - /etc/systemd/system/kubelet.service.d/
 
-- name: systemd dropin for kubeadm # noqa 301
+- name: systemd dropin for kubeadm # noqa no-changed-when
   shell: >
           sh -c 'echo "[Service]
           Environment=\"KUBELET_EXTRA_ARGS=--cgroup-driver=systemd

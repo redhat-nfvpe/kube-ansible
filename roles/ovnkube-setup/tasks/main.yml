@@ -1,4 +1,4 @@
-- name: Taint master nodes # noqa 301
+- name: Taint master nodes # noqa no-changed-when
   command: kubectl taint nodes --all node-role.kubernetes.io/master-
   failed_when: false
 
@@ -9,7 +9,7 @@
         path: ${HOME}/work/src/github.com/ovn-org
         state: directory
 
-    - name: git clone # noqa 401
+    - name: git clone # noqa git-latest
       git:
         repo: "{{ ovn_kubernetes_repo | default('https://github.com/ovn-org/ovn-kubernetes') }}"
         dest: ${HOME}/work/src/github.com/ovn-org/ovn-kubernetes
@@ -78,10 +78,11 @@
     - ovnkube-node.yaml
   when: enable_ovn_raft is not defined and not enable_ovn_raft
 
-- name: Patch coredns
+- name: Patch coredns # noqa no-changed-when
   command: |
-          kubectl -n kube-system patch deploy coredns -p '{"spec":{"template":{"metadata":{"annotations": {"kubernetes.io/egress-bandwidth": "1M", "kubernetes.io/ingress-bandwidth": "1M"}}}}}'
+    kubectl -n kube-system patch deploy coredns -p \
+    '{"spec":{"template":{"metadata":{"annotations": {"kubernetes.io/egress-bandwidth": "1M", "kubernetes.io/ingress-bandwidth": "1M" }}}}}'
 
-- name: Stop kube-proxy daemonset  # noqa 301
+- name: Stop kube-proxy daemonset  # noqa no-changed-when
   command: kubectl -n kube-system delete ds kube-proxy
   failed_when: false

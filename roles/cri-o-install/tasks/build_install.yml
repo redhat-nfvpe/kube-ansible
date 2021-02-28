@@ -72,7 +72,7 @@
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins"
     version: master
 
-- name: build runc # noqa 301
+- name: build runc # noqa no-changed-when
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/opencontainers/runc && \
           export GOPATH={{ ansible_env.HOME }}/{{ gopath }} && \
@@ -80,13 +80,13 @@
   environment:
     PATH: "{{ extended_path }}"
 
-- name: link runc # noqa 301
+- name: link runc # noqa no-changed-when
   file:
     src: /usr/local/sbin/runc
     dest: /usr/bin/runc
     state: link
 
-- name: build cri-o # noqa 301
+- name: build cri-o # noqa no-changed-when
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/cri-o/cri-o && \
           make && \
@@ -99,7 +99,7 @@
     PATH: "{{ extended_path }}"
     GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build conmon # noqa 301
+- name: build conmon # noqa no-changed-when
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containers/conmon && \
           make && \
@@ -108,7 +108,7 @@
     PATH: "{{ extended_path }}"
     GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build cri-tools # noqa 301
+- name: build cri-tools # noqa no-changed-when
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/kubernetes-sigs/cri-tools && \
           make && \
@@ -117,7 +117,7 @@
     PATH: "{{ extended_path }}"
     GOPATH: "{{ ansible_env.HOME }}/{{ gopath }}"
 
-- name: build CNI stuff # noqa 301
+- name: build CNI stuff # noqa no-changed-when
   shell: |
           cd {{ ansible_env.HOME }}/{{ gopath }}/src/github.com/containernetworking/plugins && \
           ./build_linux.sh && \
@@ -154,7 +154,7 @@
     sysctl_set: yes
     sysctl_file: /etc/sysctl.conf
 
-- name: systemd dropin for kubeadm # noqa 301
+- name: systemd dropin for kubeadm # noqa no-changed-when
   shell: >
           sh -c 'echo "[Service]
           Environment=\"KUBELET_EXTRA_ARGS=--container-runtime=remote
