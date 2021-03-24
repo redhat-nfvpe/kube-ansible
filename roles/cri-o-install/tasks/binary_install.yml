@@ -40,7 +40,7 @@
         remote_src: yes
     - name: Install cri-o
       shell: |
-        cd {{ ansible_env.HOME }}/src/crio-v1.18.4 && \
+        cd {{ ansible_env.HOME }}/src/crio-v1.20.1 && \
         make install
       environment:
        PATH: "{{ extended_path }}"
@@ -83,6 +83,13 @@
         group: root
         mode: '755'
         remote_src: yes
+
+- name: set fs.may_detach_mounts
+  sysctl:
+    name: fs.may_detach_mounts
+    value: '1'
+    sysctl_file: /etc/sysctl.d/crio.conf
+    reload: yes
 
 - name: systemd daemon-reload
   systemd:
